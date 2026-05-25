@@ -1,20 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Lock, EyeOff, Eye } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 import loginBg from "../../assets/images/login_background.png";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ usuario: "", senha: "" });
+  const [error, setError] = useState("");
 
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: integrar com API de autenticação
-    navigate("/");
+    setError("");
+    const result = login(form.usuario, form.senha);
+    if (result.success) {
+      navigate("/admin");
+    } else {
+      setError(result.error);
+    }
   };
 
   return (
@@ -51,6 +59,13 @@ export default function Login() {
         <h1 className="text-white font-bold text-2xl md:text-3xl tracking-tight">
           Faça o seu login
         </h1>
+
+        {/* Erro */}
+        {error && (
+          <div className="w-full bg-red-500/20 border border-red-400/40 rounded-xl px-4 py-3 text-red-200 text-sm text-center animate-fade-in">
+            {error}
+          </div>
+        )}
 
         {/* Campo Usuário */}
         <div className="w-full flex flex-col gap-2">
