@@ -51,7 +51,7 @@ export default function ProcessoVoluntario() {
           </p>
         </div>
 
-        {/* Layout: steps + imagem */}
+        {/* Steps */}
         <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-center justify-between">
           {/* Lista de steps */}
           <div className="flex-1 flex flex-col w-full">
@@ -65,7 +65,7 @@ export default function ProcessoVoluntario() {
                   tabIndex={0}
                   className="w-full flex items-start gap-5 cursor-pointer outline-none mb-6 group"
                 >
-                  {/* Container do número e da linha */}
+                  {/* Indicador numérico */}
                   <div className="flex flex-col items-center min-w-[2rem] pt-1">
                     <span
                       className={`font-handwriting text-xl transition-colors duration-300 ${
@@ -74,7 +74,7 @@ export default function ProcessoVoluntario() {
                     >
                       {step.number}
                     </span>
-                    {/* Linha vertical que aparece quando ativo */}
+                    {/* Linha vertical */}
                     <div
                       className={`w-[1.5px] transition-all duration-500 bg-[#E4E4E4] mt-3 rounded-full ${
                         isActive ? "h-16 opacity-100" : "h-0 opacity-0"
@@ -92,7 +92,7 @@ export default function ProcessoVoluntario() {
                       {step.title}
                     </span>
 
-                    {/* Descrição — só visível no step ativo */}
+                    {/* Descrição */}
                     <div
                       className={`overflow-hidden transition-all duration-500 ease-in-out ${
                         isActive
@@ -125,7 +125,7 @@ export default function ProcessoVoluntario() {
             <div className="rounded-[2rem] overflow-hidden shadow-xl border-4 border-transparent">
               <img
                 src={processoImg}
-                alt="Voluntários IDB Jovem"
+                alt="Voluntários IDB Jovem & Teens"
                 className="w-full h-[400px] md:h-[500px] object-cover"
               />
             </div>

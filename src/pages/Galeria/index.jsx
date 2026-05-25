@@ -8,7 +8,7 @@ export default function Galeria() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#DC6803] flex items-center justify-center pt-[82px]">
+      <main className="min-h-screen bg-[#DC6803] flex items-center justify-center pt-[70px] md:pt-[82px]">
         <div className="animate-pulse text-white font-bold text-lg">
           Carregando galeria...
         </div>
@@ -17,8 +17,8 @@ export default function Galeria() {
   }
 
   return (
-    <main className="min-h-screen bg-[#DC6803] pt-[82px]">
-      {/* ── Cabeçalho da página ── */}
+    <main className="min-h-screen bg-[#DC6803] pt-[70px] md:pt-[82px]">
+      {/* Cabeçalho da página */}
       <section className="w-full max-w-6xl mx-auto px-6 pt-8 pb-4">
         {/* Botão voltar */}
         <button
@@ -44,7 +44,7 @@ export default function Galeria() {
         </h1>
       </section>
 
-      {/* ── Grid de fotos ── */}
+      {/* Grid de fotos */}
       <section className="w-full max-w-6xl mx-auto px-6 py-10 pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {photos.map((photo) => (

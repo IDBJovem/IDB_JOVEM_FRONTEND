@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 
-/* ── Event Row para o Dashboard ── */
+/* Event Row para o Dashboard */
 export default function DashboardEventRow({ event, isPast = false }) {
   return (
     <div className="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0 group hover:bg-gray-50/50 px-2 rounded-lg transition-colors">

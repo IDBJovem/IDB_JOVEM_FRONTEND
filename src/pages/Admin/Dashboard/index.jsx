@@ -5,7 +5,7 @@ import DashboardEventRow from "./components/DashboardEventRow";
 import DashboardProductCard from "./components/DashboardProductCard";
 import CalendarMini from "./components/CalendarMini";
 
-/* ── Mock Data ── */
+// mocks pra testar o layout
 const PROXIMOS_EVENTOS = [
   { id: 1, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
   { id: 2, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
@@ -31,15 +31,18 @@ const PRODUTOS = [
   { id: 8, name: "Nome do Item", image: "/images/galeria/idb-teen-camp.jpg" },
 ];
 
-/* ── Main Dashboard ── */
+// tela principal do admin
 export default function AdminDashboard() {
   return (
     <div className="space-y-8 animate-fade-in">
-      <SectionTitle title="Dashboard" />
+      <SectionTitle 
+        title="Dashboard" 
+        titleStyle={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(2.5rem, 5vw, 3.5rem)", fontWeight: 600 }} 
+      />
 
-      {/* Events row */}
+      {/* linha de eventos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Próximos Eventos */}
+        {/* próximos eventos */}
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-[#1E1E1E] text-lg">Próximos Eventos</h2>
@@ -57,7 +60,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Eventos Anteriores */}
+        {/* eventos passados */}
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-[#1E1E1E] text-lg">Eventos Anteriores</h2>
@@ -76,12 +79,12 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Calendar + Products row */}
+      {/* linha do caledário e produtos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Calendário */}
+        {/* calendário */}
         <CalendarMini />
 
-        {/* Produtos Cadastrados */}
+        {/* lista de produtos */}
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-[#1E1E1E] text-lg">Produtos Cadastrados</h2>
@@ -92,7 +95,7 @@ export default function AdminDashboard() {
               Ver todos <ChevronRight size={14} />
             </Link>
           </div>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
             {PRODUTOS.map((product) => (
               <DashboardProductCard key={product.id} product={product} />
             ))}

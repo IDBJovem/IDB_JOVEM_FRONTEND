@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
 import galeria1Img from "../../../assets/images/galeria1.png";
 import galeria2Img from "../../../assets/images/galeria2.png";
 import galeria3Img from "../../../assets/images/galeria3.png";
@@ -14,34 +16,6 @@ const tempGallery = [
 
 export default function GaleriaSection({ gallery = [] }) {
   const displayGallery = tempGallery;
-  const scrollRef = useRef(null);
-
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer) return;
-
-    const intervalId = setInterval(() => {
-      if (scrollContainer) {
-        const childWidth = scrollContainer.children[0]?.clientWidth || 0;
-        const gap = 24; // Equivalente a gap-6
-
-        // Se chegou ao fim ou perto do fim
-        if (
-          scrollContainer.scrollLeft + scrollContainer.clientWidth >=
-          scrollContainer.scrollWidth - 10
-        ) {
-          scrollContainer.scrollTo({ left: 0, behavior: "smooth" });
-        } else {
-          scrollContainer.scrollBy({
-            left: childWidth + gap,
-            behavior: "smooth",
-          });
-        }
-      }
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   return (
     <section className="w-full bg-[#DC6803] py-16 md:py-24">
@@ -59,23 +33,35 @@ export default function GaleriaSection({ gallery = [] }) {
           </h2>
         </div>
 
-        {/* Lista de fotos (Scroll horizontal) */}
-        <div
-          ref={scrollRef}
-          className="flex overflow-x-auto snap-x snap-mandatory gap-4 md:gap-6 px-4 md:px-8 pb-8 no-scrollbar"
-        >
-          {displayGallery.map((item) => (
-            <div
-              key={item.id}
-              className="snap-center shrink-0 w-[85vw] sm:w-[45vw] md:w-[32vw] overflow-hidden rounded-sm"
-            >
-              <img
-                src={item.image}
-                alt="Galeria"
-                className="w-full h-[300px] md:h-[400px] object-cover"
-              />
-            </div>
-          ))}
+        {/* Lista de fotos (Swiper) */}
+        <div className="w-full px-4 md:px-8 pb-8">
+          <Swiper
+            modules={[Autoplay]}
+            spaceBetween={16}
+            slidesPerView="auto"
+            loop={true}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            breakpoints={{
+              768: { spaceBetween: 24 }
+            }}
+            className="w-full"
+          >
+            {displayGallery.map((item) => (
+              <SwiperSlide
+                key={item.id}
+                className="!w-[85vw] sm:!w-[45vw] md:!w-[32vw] overflow-hidden rounded-sm"
+              >
+                <img
+                  src={item.image}
+                  alt="Galeria"
+                  className="w-full h-[300px] md:h-[400px] object-cover rounded-sm"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
 
         {/* CTA */}

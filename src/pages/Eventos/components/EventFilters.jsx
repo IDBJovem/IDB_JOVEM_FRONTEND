@@ -1,8 +1,8 @@
 import { ChevronDown } from "lucide-react";
 
-const tiposEvento = ["Todos", "Conferência", "Retiro", "Encontro", "Culto"];
-const regioes = ["Todas", "Brasília", "Manaus", "Fortaleza", "São Paulo", "Moçoro"];
-const datas = ["Qualquer data", "Esta semana", "Este mês", "Próximos 3 meses"];
+const tiposEvento = ["Tipo de evento", "Conferência", "Retiro", "Encontro", "Culto"];
+const regioes = ["Região", "Norte", "Nordeste", "Centro-Oeste", "Sul", "Sudeste"];
+const datas = ["Data", "Esta semana", "Este mês", "Próximos 3 meses"];
 
 function FilterSelect({ id, label, options, value, onChange }) {
   return (

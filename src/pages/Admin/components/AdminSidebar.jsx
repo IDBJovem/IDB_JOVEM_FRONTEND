@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, CalendarDays, Users, ShoppingCart, LogOut } from "lucide-react";
+import { Home, CalendarDays, Users, ShoppingCart, LogOut, X } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
+import logoSvg from "../../../assets/icons/logo.svg";
 
 const sidebarLinks = [
   { label: "Home", path: "/admin", icon: Home },
@@ -9,7 +10,7 @@ const sidebarLinks = [
   { label: "Produtos", path: "/admin/produtos", icon: ShoppingCart },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ isOpen, onClose }) {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -18,27 +19,51 @@ export default function AdminSidebar() {
     navigate("/login");
   };
 
+  const handleLinkClick = () => {
+    if (onClose) onClose();
+  };
+
   return (
-    <aside className="w-[240px] min-h-screen bg-gradient-to-b from-[#FF6D2C] to-[#E85A1B] flex flex-col shadow-xl fixed left-0 top-0 z-40">
-      {/* Logo */}
-      <div className="px-6 pt-6 pb-2">
-        <span className="font-['Faster_One'] text-white text-[28px] leading-none drop-shadow-md">
-          IDB Jovem
+    <>
+      {/* overlay p/ fechar menu no mobile */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={`
+        w-[240px] min-h-screen bg-gradient-to-b from-[#FF6D2C] to-[#E85A1B] flex flex-col shadow-xl fixed left-0 top-0 z-50
+        transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+      `}>
+      {/* logo e botão fechar */}
+      <div className="px-6 pt-6 pb-2 flex justify-between items-center">
+        <img src={logoSvg} alt="IDB Jovem & Teens" className="h-10 w-auto" />
+        <button onClick={onClose} className="md:hidden text-white/90 hover:text-white p-1">
+          <X size={24} />
+        </button>
+      </div>
+
+      {/* título */}
+      <div className="px-6 pb-4">
+        <span 
+          className="text-white font-bold tracking-wide"
+          style={{ fontFamily: "'Inter', sans-serif", fontSize: "1.75rem" }}
+        >
+          Dashboard
         </span>
       </div>
 
-      {/* Dashboard title */}
-      <div className="px-6 pb-4">
-        <span className="text-white/90 font-handwriting text-xl">Dashboard</span>
-      </div>
-
-      {/* Navigation links */}
+      {/* links do menu */}
       <nav className="flex-1 flex flex-col gap-1 px-3">
         {sidebarLinks.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             end={item.path === "/admin"}
+            onClick={handleLinkClick}
             className={({ isActive }) =>
               `flex items-center justify-between gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 group
               ${
@@ -82,7 +107,7 @@ export default function AdminSidebar() {
         ))}
       </nav>
 
-      {/* Logout button */}
+      {/* botão de sair */}
       <div className="px-3 pb-6">
         <button
           onClick={handleLogout}
@@ -96,5 +121,6 @@ export default function AdminSidebar() {
         </button>
       </div>
     </aside>
+    </>
   );
 }

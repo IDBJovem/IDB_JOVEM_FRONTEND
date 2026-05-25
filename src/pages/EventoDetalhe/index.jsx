@@ -10,7 +10,7 @@ export default function EventoDetalhe() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FDF3EA] flex items-center justify-center">
+      <main className="min-h-screen bg-[#FDF3EA] flex items-center justify-center pt-[70px] md:pt-[82px]">
         <div className="animate-pulse text-[#FF6D2C] font-bold text-lg">
           Carregando evento...
         </div>
@@ -20,7 +20,7 @@ export default function EventoDetalhe() {
 
   if (error || !event) {
     return (
-      <main className="min-h-screen bg-[#FDF3EA] flex flex-col items-center justify-center gap-4">
+      <main className="min-h-screen bg-[#FDF3EA] flex flex-col items-center justify-center gap-4 pt-[70px] md:pt-[82px]">
         <h2 className="text-[#1E1E1E] font-bold text-xl">Evento não encontrado</h2>
         <p className="text-[#1E1E1E]/50 text-sm">O evento que você procura não existe ou foi removido.</p>
         <Link
@@ -34,7 +34,7 @@ export default function EventoDetalhe() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FDF3EA]">
+    <main className="min-h-screen bg-[#FDF3EA] pt-[70px] md:pt-[82px]">
       <EventHero event={event} />
       <SpeakerList speakers={event.speakers} />
       <EventSchedule schedule={event.schedule} />

@@ -33,7 +33,7 @@ export const mockEvents = [
   },
   {
     id: 2,
-    title: "IDB Jovem One",
+    title: "IDB Jovem & Teens One",
     slug: "idb-jovem-one",
     date: "2026-07-10T09:00:00",
     endDate: "2026-07-10T18:00:00",

@@ -1,21 +1,24 @@
 import { Routes, Route } from "react-router-dom";
 
-/* ── Layouts ── */
+/* Layouts */
 import MainLayout from "../layouts/MainLayout";
 import MainLayoutNoFooter from "../layouts/MainLayoutNoFooter";
 import AdminLayout from "../layouts/AdminLayout";
 
-/* ── Route Guards ── */
+/* Route Guards */
 import AdminRoute from "./AdminRoute";
 
-/* ── Páginas Públicas ── */
+/* Páginas Públicas */
 import Home from "../pages/Home";
 import Eventos from "../pages/Eventos";
+import EventosProximos from "../pages/EventosProximos";
 import EventoDetalhe from "../pages/EventoDetalhe";
 import Galeria from "../pages/Galeria";
 import Login from "../pages/Login";
+import NotFound from "../pages/NotFound";
+import Unauthorized from "../pages/Unauthorized";
 
-/* ── Páginas Admin ── */
+/* Páginas Admin */
 import AdminDashboard from "../pages/Admin/Dashboard";
 import AdminEventos from "../pages/Admin/Eventos";
 import AdminEventoCreate from "../pages/Admin/Eventos/Create";
@@ -35,7 +38,7 @@ import AdminVoluntarioDetails from "../pages/Admin/Voluntarios/Details";
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Admin routes — guard + sidebar layout, sem Header/Footer */}
+      {/* Rotas admin */}
       <Route element={<AdminRoute />}>
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />
@@ -52,15 +55,18 @@ export default function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Public routes — com Header e Footer */}
+      {/* Rotas públicas */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/eventos" element={<Eventos />} />
+        <Route path="/eventos-proximos" element={<EventosProximos />} />
         <Route path="/eventos/:slug" element={<EventoDetalhe />} />
         <Route path="/galeria" element={<Galeria />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
 
-      {/* Public routes — com Header, sem Footer */}
+      {/* Rotas públicas */}
       <Route element={<MainLayoutNoFooter />}>
         <Route path="/login" element={<Login />} />
       </Route>

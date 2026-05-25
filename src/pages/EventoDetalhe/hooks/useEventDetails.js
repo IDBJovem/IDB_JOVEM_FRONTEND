@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-/* ── Dados mock — substituir por chamada real à API ── */
+/* Dados mock */
 const EVENTS_DB = {
   "evento-em-destaque": {
     slug: "evento-em-destaque",

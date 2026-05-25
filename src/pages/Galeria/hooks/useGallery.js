@@ -1,9 +1,9 @@
-/* ── Mock data para a galeria — substituir por chamada real à API ── */
+/* Dados locais */
 const GALLERY_DATA = [
   {
     id: 1,
     image: "/images/galeria/idb-jovem-one.jpg",
-    event: "IDB Jovem One",
+    event: "IDB Jovem & Teens One",
     location: "São Paulo, SP",
   },
   {
@@ -21,7 +21,7 @@ const GALLERY_DATA = [
   {
     id: 4,
     image: "/images/galeria/idb-jovem-one.jpg",
-    event: "IDB Jovem One",
+    event: "IDB Jovem & Teens One",
     location: "Manaus, AM",
   },
   {

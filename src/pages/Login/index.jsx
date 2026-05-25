@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { User, Lock, EyeOff, Eye } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import loginBg from "../../assets/images/login_background.png";
+import { BorderBeam } from "../../components/ui/border-beam";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function Login() {
 
   return (
     <main
-      className="min-h-screen flex items-center justify-center relative"
+      className="min-h-screen flex items-center justify-center relative pt-[70px] md:pt-[82px]"
       style={{
         backgroundImage: `url(${loginBg})`,
         backgroundSize: "cover",
@@ -42,7 +43,7 @@ export default function Login() {
       <form
         onSubmit={handleSubmit}
         className="
-          relative z-10
+          relative overflow-hidden z-10
           w-[90%] max-w-[480px]
           rounded-2xl
           border border-white/20
@@ -77,7 +78,7 @@ export default function Login() {
               name="usuario"
               value={form.usuario}
               onChange={handleChange}
-              className="flex-1 bg-transparent outline-none text-sm text-[#1E1E1E] placeholder:text-[#A0A0A0]"
+              className="flex-1 min-w-0 bg-transparent outline-none text-sm text-[#1E1E1E] placeholder:text-[#A0A0A0]"
               placeholder="Digite seu usuário"
             />
           </div>
@@ -93,7 +94,7 @@ export default function Login() {
               name="senha"
               value={form.senha}
               onChange={handleChange}
-              className="flex-1 bg-transparent outline-none text-sm text-[#1E1E1E] placeholder:text-[#A0A0A0]"
+              className="flex-1 min-w-0 bg-transparent outline-none text-sm text-[#1E1E1E] placeholder:text-[#A0A0A0]"
               placeholder="Digite sua senha"
             />
             <button
@@ -123,6 +124,7 @@ export default function Login() {
         >
           Login
         </button>
+        <BorderBeam duration={8} size={100} />
       </form>
     </main>
   );

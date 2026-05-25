@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { MapPin, Pencil, Trash2 } from "lucide-react";
 import { extractDayMonth } from "../../../../controllers/eventController";
 
-/* ── Event Row para Próximos Eventos ── */
+/* Event Row para Próximos Eventos */
 export function UpcomingEventRow({ event, onEdit, onDelete }) {
   const { day, month } = extractDayMonth(event.date);
 
@@ -44,7 +44,7 @@ export function UpcomingEventRow({ event, onEdit, onDelete }) {
   );
 }
 
-/* ── Event Row para Eventos Anteriores ── */
+/* Event Row para Eventos Anteriores */
 export function PastEventRow({ event }) {
   const { day, month } = extractDayMonth(event.date);
 

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import idbJovemOneImg from "../../../assets/images/idbJovemOne.png";
 import teencampImg from "../../../assets/images/teencamp.png";
 import eismeaquiImg from "../../../assets/images/eismeaqui.png";
+import { BlurFade } from "../../../components/ui/blur-fade";
 
 const reasons = [
   {
@@ -14,7 +15,7 @@ const reasons = [
       "Ninguém despreze a tua mocidade; mas sê o exemplo dos fiéis, na palavra, no trato, no amor, no espírito, na fé, na pureza. Persiste em ler, exortar e ensinar, até que eu vá. Não desprezes o dom que há em ti, o qual te foi dado por profecia, com a imposição das mãos do presbitério.",
     quoteAuthor: "1 Timóteo 4:12-14 ARC",
     image: idbJovemOneImg,
-    imageCaption: "IDB JOVEM ONE",
+    imageCaption: "IDB JOVEM & TEENS ONE",
     imageRight: true,
   },
   {
@@ -41,8 +42,8 @@ const reasons = [
     quoteAuthor: "Isaías 61",
     image: eismeaquiImg,
     imageCaption: '"EIS ME AQUI" com o Bp. Paulo Borges',
+    imageCaption: '"EIS ME AQUI" com o Bp. Paulo Borges',
     imageRight: true,
-    hasButton: true,
   },
 ];
 
@@ -51,31 +52,33 @@ export default function VolunteerSection() {
     <section className="w-full bg-[#FCF8F3] py-16 md:py-24">
       <div className="w-full max-w-5xl mx-auto px-4">
         {/* Título */}
-        <h2
-          className="text-center font-bold text-neutral-900 mb-20"
-          style={{ fontSize: "clamp(1.6rem, 4vw, 2.8rem)" }}
-        >
-          Por que você{" "}
-          <em
-            className="not-italic font-handwriting text-orange-500"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)" }}
+        <BlurFade delay={0.1} inView>
+          <h2
+            className="text-center font-bold text-neutral-900 mb-20"
+            style={{ fontSize: "clamp(1.6rem, 4vw, 2.8rem)" }}
           >
-            deveria
-          </em>{" "}
-          ser
-          <br className="hidden md:block" /> voluntário?
-        </h2>
+            Por que você{" "}
+            <em
+              className="not-italic font-handwriting text-orange-500"
+              style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)" }}
+            >
+              deveria
+            </em>{" "}
+            ser
+            <br className="hidden md:block" /> voluntário?
+          </h2>
+        </BlurFade>
 
         {/* Motivos */}
         <div className="flex flex-col gap-24">
-          {reasons.map((reason) => (
-            <div
-              key={reason.id}
-              className={`grid grid-cols-1 md:grid-cols-2 gap-12 items-center ${
-                reason.imageRight ? "" : "md:[direction:rtl]"
-              }`}
-            >
-              {/* Texto */}
+          {reasons.map((reason, index) => (
+            <BlurFade key={reason.id} delay={0.2 + index * 0.15} inView>
+              <div
+                className={`grid grid-cols-1 md:grid-cols-2 gap-12 items-center ${
+                  reason.imageRight ? "" : "md:[direction:rtl]"
+                }`}
+              >
+                {/* Texto */}
               <div
                 className={`flex flex-col ${
                   reason.imageRight ? "" : "md:[direction:ltr]"
@@ -93,9 +96,25 @@ export default function VolunteerSection() {
                 >
                   {reason.subtitle}
                 </h4>
-                <p className="text-neutral-700 text-base leading-relaxed mb-6">
+                <p className="text-neutral-700 text-base leading-relaxed mb-6 md:mb-0">
                   {reason.description}
                 </p>
+
+                {/* Imagem mobile (antes do quote) */}
+                <div
+                  className={`flex md:hidden flex-col items-center my-6 ${
+                    reason.imageRight ? "" : "md:[direction:ltr]"
+                  }`}
+                >
+                  <img
+                    src={reason.image}
+                    alt={reason.title}
+                    className="w-full h-auto object-cover rounded-3xl"
+                  />
+                  <span className="mt-4 text-black text-sm md:text-base font-black italic text-center">
+                    {reason.imageCaption}
+                  </span>
+                </div>
 
                 {reason.quoteText && (
                   <div className="mt-4 border border-neutral-300 rounded-xl p-6 relative">
@@ -111,21 +130,12 @@ export default function VolunteerSection() {
                   </div>
                 )}
 
-                {reason.hasButton && (
-                  <div className="mt-10">
-                    <Link
-                      to="/voluntarios"
-                      className="inline-block bg-orange-500 hover:bg-orange-600 transition-colors text-white font-bold px-8 py-3 rounded-lg uppercase tracking-wider text-sm shadow-md"
-                    >
-                      Seja voluntário
-                    </Link>
-                  </div>
-                )}
+
               </div>
 
-              {/* Imagem */}
+              {/* Imagem Desktop */}
               <div
-                className={`flex flex-col items-center ${
+                className={`hidden md:flex flex-col items-center ${
                   reason.imageRight ? "" : "md:[direction:ltr]"
                 }`}
               >
@@ -138,8 +148,19 @@ export default function VolunteerSection() {
                   {reason.imageCaption}
                 </span>
               </div>
-            </div>
+              </div>
+            </BlurFade>
           ))}
+        </div>
+
+        {/* Botão no final da seção */}
+        <div className="mt-16 flex justify-center">
+          <Link
+            to="/voluntarios"
+            className="inline-block bg-orange-500 hover:bg-orange-600 transition-colors text-white font-bold px-10 py-4 rounded-lg uppercase tracking-wider text-sm shadow-xl hover:shadow-2xl hover:scale-105 transform duration-300"
+          >
+            Seja voluntário
+          </Link>
         </div>
       </div>
     </section>
