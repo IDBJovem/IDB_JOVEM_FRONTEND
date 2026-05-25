@@ -121,7 +121,6 @@ function CarouselCard({ event }) {
   );
 }
 
-/* ── Página principal ── */
 export default function Eventos() {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({
@@ -132,7 +131,6 @@ export default function Eventos() {
 
   const carouselRef = useRef(null);
 
-  /* Filtrar eventos da grade (abaixo do carrossel) */
   const filtered = UPCOMING_EVENTS.filter((e) => {
     const matchSearch =
       search === "" ||

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Mail, MapPin } from "lucide-react";
 import { FaInstagram, FaYoutube } from "react-icons/fa6";
 
@@ -16,6 +16,29 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleClick = (e, link) => {
+    if (link.path.startsWith("/#")) {
+      e.preventDefault();
+      const sectionId = link.path.replace("/#", "");
+
+      if (location.pathname === "/") {
+        // Already on Home — just scroll
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      } else {
+        // Navigate to Home then scroll
+        navigate("/");
+        setTimeout(() => {
+          const el = document.getElementById(sectionId);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }
+  };
+
   return (
     <footer id="contato" className="w-full bg-[#1E1E1E] text-white">
       {/* Conteúdo principal */}
@@ -55,7 +78,8 @@ export default function Footer() {
               {footerLinks.map((link) => (
                 <li key={link.path}>
                   <Link
-                    to={link.path}
+                    to={link.path.startsWith("/#") ? "/" : link.path}
+                    onClick={(e) => handleClick(e, link)}
                     className="text-white/60 hover:text-orange-500 transition-colors text-sm font-medium"
                   >
                     {link.label}
