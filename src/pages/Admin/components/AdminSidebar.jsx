@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Home, CalendarDays, Users, ShoppingCart, LogOut, X } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
-import logoSvg from "../../../assets/icons/logo.svg";
+import logoSvg from "../../../assets/icons/Logo.svg";
 
 const sidebarLinks = [
   { label: "Home", path: "/admin", icon: Home },

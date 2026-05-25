@@ -2,7 +2,7 @@ import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Search, XCircle, MapPin, Menu, X, User } from "lucide-react";
 import { NAV_LINKS } from "./header.constants";
-import logoSvg from "../../../assets/icons/logo.svg";
+import logoSvg from "../../../assets/icons/Logo.svg";
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -84,7 +84,7 @@ export default function Header() {
           {/* Eventos Próximos */}
           <button
             onClick={() => navigate("/eventos-proximos")}
-            className="h-[45px] rounded-[10px] border border-primary/20 flex items-center justify-center gap-2 px-4 hover:bg-[#FF6D2C] group transition-all duration-300 shrink-0"
+            className="h-[45px] rounded-[10px] border border-[#E0E0E0] bg-[#F2F2F2]/95 shadow-search flex items-center justify-center gap-2 px-4 hover:bg-[#FF6D2C] group transition-all duration-300 shrink-0"
           >
             <span className="text-[#FF6D2C] text-[14px] font-bold group-hover:text-white transition-all whitespace-nowrap">
               Eventos próximos
