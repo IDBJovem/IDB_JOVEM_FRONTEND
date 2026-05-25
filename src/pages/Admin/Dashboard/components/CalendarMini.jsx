@@ -1,4 +1,4 @@
-/* ── Days of week for calendar ── */
+/* Days of week for calendar */
 const WEEK_DAYS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
 
 function generateCalendarDays() {
@@ -19,7 +19,7 @@ function generateCalendarDays() {
   return days;
 }
 
-/* ── Calendar Mini Component ── */
+/* Calendar Mini Component */
 export default function CalendarMini() {
   const days = generateCalendarDays();
   const hours = Array.from({ length: 10 }, (_, i) => i + 8); // 8 AM to 5 PM

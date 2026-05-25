@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Building2,
   Clock,
@@ -11,8 +11,9 @@ import EventFilters from "./components/EventFilters";
 import EventSearch from "./components/EventSearch";
 import EventList from "./components/EventList";
 import EmptyEvents from "./components/EmptyEvents";
+import { fuzzyMatch } from "../../utils/stringUtils";
 
-/* ── Dados mock ── */
+/* Dados mock */
 const FEATURED_EVENT = {
   id: 0,
   title: "Nome do evento",
@@ -80,7 +81,7 @@ const UPCOMING_EVENTS = [
   },
 ];
 
-/* ── Card do carrossel ── */
+/* Card do carrossel */
 function CarouselCard({ event }) {
   return (
     <div className="min-w-[260px] sm:min-w-[280px] flex-shrink-0 bg-white rounded-2xl overflow-hidden shadow-sm group">
@@ -91,28 +92,28 @@ function CarouselCard({ event }) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
       </div>
-      <div className="p-4">
-        <h3 className="font-semibold text-[#FF6D2C] text-sm mb-2">
+      <div className="p-4 flex flex-col items-center">
+        <h3 className="font-bold text-[#FFCB9A] text-xl mb-3 text-center">
           {event.title}
         </h3>
-        <div className="flex items-center gap-3 mb-3">
-          <span className="flex items-center gap-1 text-xs text-[#1E1E1E]/60">
-            <Building2 size={12} />
+        <div className="flex items-center gap-4 mb-4">
+          <span className="flex items-center gap-1.5 text-sm font-medium text-[#1E1E1E]">
+            <Building2 size={16} />
             {event.location}
           </span>
-          <span className="flex items-center gap-1 text-xs text-[#1E1E1E]/60">
-            <Clock size={12} />
+          <span className="flex items-center gap-1.5 text-sm font-medium text-[#1E1E1E]">
+            <Clock size={16} />
             {event.date} - {event.time}
           </span>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-3 w-full">
           <Link
             to={`/eventos/${event.slug}`}
-            className="text-xs font-semibold text-[#1E1E1E] border border-[#1E1E1E]/15 rounded-lg px-3 py-1.5 hover:border-[#FF6D2C] hover:text-[#FF6D2C] transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 text-xs font-bold text-black bg-[#E0E0E0] rounded-lg px-3 py-2 hover:bg-[#d1d1d1] transition-colors"
           >
-            Veja mais →
+            Veja mais <span className="text-black">→</span>
           </Link>
-          <button className="flex-1 text-xs font-semibold bg-[#FF6D2C] hover:bg-[#e65c18] text-white rounded-lg px-3 py-1.5 transition-colors">
+          <button className="flex-1 text-xs font-bold bg-[#FF6D2C] hover:bg-[#e65c18] text-white rounded-lg px-3 py-2 transition-colors">
             Inscreva-se
           </button>
         </div>
@@ -122,11 +123,21 @@ function CarouselCard({ event }) {
 }
 
 export default function Eventos() {
-  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearchState] = useState(searchParams.get("q") || "");
+
+  const setSearch = (val) => {
+    setSearchState(val);
+    if (val) {
+      setSearchParams({ q: val });
+    } else {
+      setSearchParams({});
+    }
+  };
   const [filters, setFilters] = useState({
-    tipo: "Todos",
-    regiao: "Todas",
-    data: "Qualquer data",
+    tipo: "Tipo de evento",
+    regiao: "Região",
+    data: "Data",
   });
 
   const carouselRef = useRef(null);
@@ -134,11 +145,11 @@ export default function Eventos() {
   const filtered = UPCOMING_EVENTS.filter((e) => {
     const matchSearch =
       search === "" ||
-      e.title.toLowerCase().includes(search.toLowerCase()) ||
-      e.location.toLowerCase().includes(search.toLowerCase());
-    const matchTipo = filters.tipo === "Todos" || e.tipo === filters.tipo;
+      fuzzyMatch(search, e.title) ||
+      fuzzyMatch(search, e.location);
+    const matchTipo = filters.tipo === "Tipo de evento" || e.tipo === filters.tipo;
     const matchRegiao =
-      filters.regiao === "Todas" || e.regiao === filters.regiao;
+      filters.regiao === "Região" || e.regiao === filters.regiao;
     return matchSearch && matchTipo && matchRegiao;
   });
 
@@ -148,8 +159,8 @@ export default function Eventos() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FDF3EA]">
-      {/* ── Topo: título + filtros ── */}
+    <main className="min-h-screen bg-[#FDF3EA] pt-[70px] md:pt-[82px]">
+      {/* Topo: título + filtros */}
       <section className="w-full bg-[#FDF3EA] pt-10 pb-6">
         <div className="w-full max-w-6xl mx-auto px-4">
           <h1
@@ -171,59 +182,56 @@ export default function Eventos() {
         </div>
       </section>
 
-      {/* ── Em breve (evento destaque) ── */}
+      {/* Em breve (evento destaque) */}
       <section className="w-full bg-[#FDF3EA] py-10">
         <div className="w-full max-w-6xl mx-auto px-4">
           <h2 className="font-handwriting text-[#1E1E1E] mb-6" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}>
             Em breve
           </h2>
 
-          <div className="rounded-2xl overflow-hidden shadow-md max-w-xl">
+          <div className="rounded-[32px] overflow-hidden max-w-3xl border-[6px] border-black bg-black mx-auto">
             <div className="relative">
               <img
                 src={FEATURED_EVENT.image}
                 alt={FEATURED_EVENT.title}
-                className="w-full h-64 object-cover"
+                className="w-full h-[300px] object-cover rounded-t-[26px]"
               />
-              {/* overlay escuro no rodapé da imagem */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-
-              {/* Info sobre a imagem */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 flex items-end justify-between gap-3">
-                <div>
-                  <h3 className="font-bold text-[#FF6D2C] text-lg leading-tight">
-                    {FEATURED_EVENT.title}
-                  </h3>
-                  <div className="flex flex-col gap-1 mt-1">
-                    <span className="flex items-center gap-1.5 text-white/80 text-sm">
-                      <Building2 size={13} />
-                      {FEATURED_EVENT.location}
-                    </span>
-                    <span className="flex items-center gap-1.5 text-white/80 text-sm">
-                      <Clock size={13} />
-                      {FEATURED_EVENT.time}
-                    </span>
-                  </div>
+            </div>
+            {/* Info sobre a imagem */}
+            <div className="p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3">
+              <div>
+                <h3 className="font-bold text-[#FF6D2C] text-2xl leading-tight">
+                  {FEATURED_EVENT.title}
+                </h3>
+                <div className="flex flex-col gap-1 mt-2">
+                  <span className="flex items-center gap-1.5 text-white/90 text-sm">
+                    <Building2 size={16} />
+                    {FEATURED_EVENT.location}
+                  </span>
+                  <span className="flex items-center gap-1.5 text-white/90 text-sm">
+                    <Clock size={16} />
+                    {FEATURED_EVENT.time}
+                  </span>
                 </div>
+              </div>
 
-                <div className="flex flex-col gap-2 items-end shrink-0">
-                  <Link
-                    to={`/eventos/${FEATURED_EVENT.slug}`}
-                    className="flex items-center gap-1.5 bg-white/15 border border-white/30 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-white/25 transition-colors"
-                  >
-                    Veja mais →
-                  </Link>
-                  <button className="bg-[#FF6D2C] hover:bg-[#e65c18] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
-                    Inscreva-se
-                  </button>
-                </div>
+              <div className="flex flex-col gap-2 items-end shrink-0">
+                <Link
+                  to={`/eventos/${FEATURED_EVENT.slug}`}
+                  className="flex items-center justify-between gap-2 bg-[#E0E0E0] text-black text-sm font-bold px-4 py-2 rounded-lg hover:bg-[#d1d1d1] transition-colors w-[130px]"
+                >
+                  Veja mais <span className="text-black text-lg leading-none">→</span>
+                </Link>
+                <button className="bg-[#FF6D2C] hover:bg-[#e65c18] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors w-[130px]">
+                  Inscreva-se
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Próximos eventos (carrossel) ── */}
+      {/* Próximos eventos (carrossel) */}
       <section className="w-full bg-[#FDF3EA] py-10">
         <div className="w-full max-w-6xl mx-auto px-4">
           <h2
@@ -238,10 +246,10 @@ export default function Eventos() {
             {/* Seta esquerda */}
             <button
               onClick={() => scrollCarousel(-1)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-[#FF6D2C] hover:text-white transition-colors"
+              className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 hover:scale-110 transition-transform"
               aria-label="Anterior"
             >
-              <ChevronLeft size={18} />
+              <div className="w-0 h-0 border-y-[20px] border-y-transparent border-r-[30px] border-r-black"></div>
             </button>
 
             {/* Track */}
@@ -257,10 +265,10 @@ export default function Eventos() {
             {/* Seta direita */}
             <button
               onClick={() => scrollCarousel(1)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-[#FF6D2C] hover:text-white transition-colors"
+              className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 hover:scale-110 transition-transform"
               aria-label="Próximo"
             >
-              <ChevronRight size={18} />
+              <div className="w-0 h-0 border-y-[20px] border-y-transparent border-l-[30px] border-l-black"></div>
             </button>
           </div>
 
@@ -270,16 +278,16 @@ export default function Eventos() {
               href="https://calendar.google.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm font-semibold text-[#1E1E1E]/70 hover:text-[#FF6D2C] transition-colors"
+              className="flex items-center gap-2 text-sm font-bold text-black bg-[#F5E6DA] hover:bg-[#ead3c1] px-4 py-2.5 rounded-xl transition-colors shadow-sm"
             >
-              <CalendarPlus size={18} className="text-[#FF6D2C]" />
+              <span className="text-xl">📅</span>
               Adicionar ao Google Calendar
             </a>
           </div>
         </div>
       </section>
 
-      {/* ── Todos os eventos (grid com filtro) ── */}
+      {/* Todos os eventos (grid com filtro) */}
       <section className="w-full bg-[#FDF3EA] py-10 pb-20">
         <div className="w-full max-w-6xl mx-auto px-4">
           {filtered.length > 0 ? (

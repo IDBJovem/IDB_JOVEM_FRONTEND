@@ -8,7 +8,9 @@ import { ChevronLeft } from "lucide-react";
  *   onBack?: () => void,
  *   backTitle?: string,
  *   rightContent?: React.ReactNode,
- *   className?: string
+ *   className?: string,
+ *   titleClassName?: string,
+ *   titleStyle?: object
  * }} props
  */
 export default function SectionTitle({
@@ -17,12 +19,14 @@ export default function SectionTitle({
   backTitle = "Voltar",
   rightContent,
   className = "",
+  titleClassName = "",
+  titleStyle = {},
 }) {
   return (
     <div className={`flex items-center justify-between ${className}`}>
       <h1
-        className="font-black text-[#1E1E1E]"
-        style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.2rem)" }}
+        className={`font-black text-[#1E1E1E] ${titleClassName}`}
+        style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.2rem)", ...titleStyle }}
       >
         {title}
       </h1>

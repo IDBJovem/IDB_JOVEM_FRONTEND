@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import cultoImg from "../../../assets/images/culto.png";
+import { TypewriterEffect } from "../../../components/ui/typewriter-effect";
 
 export default function SobreSection() {
+  const fullText = "A IDB Jovem & Teens é um movimento feito para quem busca viver a fé de forma real e com propósito. Com encontros, eventos e uma comunidade acolhedora, é o lugar ideal para crescer, fazer amizades e se conectar com Deus.";
+  
+  const bodyWords = fullText.split(" ").map((word) => ({
+    text: word + "\u00A0",
+    className: "text-black text-base md:text-lg font-normal",
+  }));
+
   return (
     <section className="w-full flex flex-col md:flex-row min-h-[400px]">
-      {/* Imagem - Metade Esquerda */}
+      {/* Imagem */}
       <div className="w-full md:w-1/2">
         <img
           src={cultoImg}
@@ -13,30 +21,29 @@ export default function SobreSection() {
         />
       </div>
 
-      {/* Texto - Metade Direita */}
-      <div className="w-full md:w-1/2 bg-[#D5650D] flex flex-col justify-center items-center py-12 md:py-16 px-8 md:px-12 text-center">
+      {/* Texto */}
+      <div className="w-full md:w-1/2 bg-[#D5650D] flex flex-col justify-center items-center py-12 md:py-16 px-8 md:px-12 text-center overflow-hidden">
         <h2
           className="font-handwriting text-white leading-none mb-8"
           style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)" }}
         >
           CONHEÇA O IDB
           <br />
-          JOVEM
+          JOVEM & TEENS
         </h2>
         <div className="max-w-md w-full mx-auto text-black text-base md:text-lg leading-relaxed mb-10 text-left">
-          <p className="mb-4">
-            A IDB Jovem é um movimento feito para quem busca viver a fé de forma real e com propósito.
-          </p>
-          <p>
-            Com encontros, eventos e uma comunidade acolhedora, é o lugar ideal para crescer, fazer amizades e se conectar com Deus.
-          </p>
+          <TypewriterEffect 
+            words={bodyWords} 
+            className="text-left font-normal text-base md:text-lg" 
+            cursorClassName="bg-black" 
+          />
         </div>
-        <Link
-          to="/sobre"
+        <a
+          href="#contato"
           className="inline-block bg-white text-[#D5650D] hover:bg-neutral-100 transition-colors px-10 py-2 md:py-3 rounded-[2rem] text-lg md:text-xl tracking-wide shadow-sm"
         >
           Saiba mais
-        </Link>
+        </a>
       </div>
     </section>
   );

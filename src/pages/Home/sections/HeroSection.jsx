@@ -2,24 +2,20 @@ import { Link } from "react-router-dom";
 import bgGif from "../../../assets/gifs/IDB_Jovem.gif";
 
 const CountdownBox = ({ value, label }) => (
-  <div className="flex flex-col items-center">
-    <div className="bg-white text-black font-black text-2xl md:text-3xl w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-sm shadow-lg tabular-nums">
+  <div className="flex flex-col items-center justify-center bg-[#D9D9D9]/50 w-16 h-20 md:w-20 md:h-24 rounded-sm shadow-lg">
+    <span className="text-white font-black text-2xl md:text-4xl tabular-nums leading-none">
       {String(value).padStart(2, "0")}
-    </div>
-    <span className="text-white text-[10px] font-semibold mt-1 uppercase tracking-widest">
+    </span>
+    <span className="text-white text-[10px] md:text-xs font-bold mt-1 md:mt-2 uppercase tracking-widest">
       {label}
     </span>
   </div>
 );
 
-const Separator = () => (
-  <span className="text-white font-black text-2xl mb-6 select-none">:</span>
-);
-
 export default function HeroSection({ countdown, nextEvent }) {
   return (
     <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-black">
-      {/* Background GIF / Video - substitua pelo seu gif real */}
+      {/* Background */}
       <div className="absolute inset-0 z-0">
         <img
           src={bgGif}
@@ -27,7 +23,7 @@ export default function HeroSection({ countdown, nextEvent }) {
           className="w-full h-full object-cover opacity-60"
           aria-hidden="true"
         />
-        {/* Overlay gradiente para legibilidade */}
+        {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
       </div>
 
@@ -38,25 +34,24 @@ export default function HeroSection({ countdown, nextEvent }) {
           className="text-white font-black uppercase leading-none tracking-tight"
           style={{
             fontSize: "clamp(3rem, 12vw, 9rem)",
-            textShadow: "0 4px 32px rgba(0,0,0,0.5)",
+            textShadow: "-6px 3px 0px #D5650D",
           }}
         >
-          IDB JOVEM TEEN
+          IDB JOVEM & TEENS
         </h1>
 
         {/* Countdown */}
-        <div className="mt-8 w-full max-w-lg">
-          <div className="flex items-center gap-2 md:gap-3 justify-center">
-            <span className="text-white font-bold uppercase tracking-widest text-sm md:text-base whitespace-nowrap mr-2">
-              Próximo evento:
+        <div className="mt-8 w-full max-w-2xl">
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 justify-center">
+            <span className="text-white font-bold uppercase tracking-widest text-2xl md:text-4xl whitespace-nowrap">
+              PROXIMO EVENTO:
             </span>
-            <CountdownBox value={countdown.days} label="dias" />
-            <Separator />
-            <CountdownBox value={countdown.hours} label="horas" />
-            <Separator />
-            <CountdownBox value={countdown.minutes} label="min" />
-            <Separator />
-            <CountdownBox value={countdown.seconds} label="seg" />
+            <div className="flex items-center gap-2 md:gap-3">
+              <CountdownBox value={countdown.days} label="dias" />
+              <CountdownBox value={countdown.hours} label="horas" />
+              <CountdownBox value={countdown.minutes} label="min" />
+              <CountdownBox value={countdown.seconds} label="seg" />
+            </div>
           </div>
         </div>
 

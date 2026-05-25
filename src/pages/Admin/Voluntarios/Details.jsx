@@ -12,7 +12,7 @@ import SectionTitle from "../../../components/ui/SectionTitle";
 import AdminTable from "../components/AdminTable";
 import { StatCard } from "../../../components/card/VolunteerCard";
 
-/* ── Página: Detalhes de Voluntários de um Evento ── */
+/* Página: Detalhes de Voluntários de um Evento */
 export default function AdminVoluntarioDetails() {
   const navigate = useNavigate();
   const { eventId } = useParams();

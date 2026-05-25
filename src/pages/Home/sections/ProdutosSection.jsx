@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import produto1Img from "../../../assets/images/produto1.png";
 import produto2Img from "../../../assets/images/produto2.png";
 import produto3Img from "../../../assets/images/produto3.png";
+import { FocusCards } from "../../../components/ui/focus-cards";
 
 const mockProducts = [
   { id: 1, name: "Camiseta igreja", description: "Descrição do produto", image: produto1Img },
@@ -55,16 +56,28 @@ export default function ProdutosSection({ products = [] }) {
             Conheça nossos produtos
           </h2>
           <p className="text-[#FF6D2C] font-handwriting mt-1" style={{ fontSize: "clamp(2.5rem, 4vw, 3.5rem)" }}>
-            A venda durante os eventos!
+            À venda em nossos eventos ou online!
           </p>
+          <div className="mt-8 flex justify-center">
+            <a
+              href="https://hotmart.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-[#FF6D2C] hover:bg-[#E65C18] text-white font-bold px-8 py-3 rounded-full transition-all text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 duration-300"
+            >
+              Comprar na Hotmart
+            </a>
+          </div>
         </div>
 
         {/* Grid de produtos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-          {displayProducts.map((product, index) => (
-            <ProductCard key={index} product={product} index={index} />
-          ))}
-        </div>
+        <FocusCards 
+          cards={displayProducts.map(p => ({
+            title: p.name,
+            description: p.description,
+            src: p.image
+          }))} 
+        />
 
       </div>
     </section>

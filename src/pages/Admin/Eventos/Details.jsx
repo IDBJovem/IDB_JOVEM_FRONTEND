@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { fetchEventById, formatDate } from "../../../controllers/eventController";
 
-/* ── Linha da tabela de detalhes ── */
+/* Linha da tabela de detalhes */
 function DetailRow({ label, value }) {
   return (
     <tr className="border-b border-gray-100 last:border-0">

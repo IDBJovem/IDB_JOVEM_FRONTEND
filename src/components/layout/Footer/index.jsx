@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import { FaInstagram, FaFacebookF } from "react-icons/fa6";
+import logoSvg from "../../../assets/icons/logo.svg";
 
 export default function Footer() {
   return (
     <footer id="contato" className="w-full bg-white text-neutral-800 border-t border-neutral-200">
       <div className="w-full max-w-[1400px] mx-auto px-4 py-16 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
-          
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center text-center md:text-left">
+
           {/* Esquerda - Contato */}
           <div className="flex flex-col gap-6 md:pl-10">
             <h3 className="text-[#FF7F11] font-bold tracking-wide uppercase text-2xl">
@@ -43,7 +44,7 @@ export default function Footer() {
 
           {/* Centro - Logo e Missão */}
           <div className="flex items-center gap-5 justify-center">
-            <img src="/logo.svg" alt="IDB Jovem" className="w-[70px] h-auto shrink-0" />
+            <img src={logoSvg} alt="IDB Jovem & Teens" className="w-[70px] h-auto shrink-0" />
             <p className="text-neutral-600 text-sm leading-relaxed max-w-[280px] font-bold text-left">
               Inspirar e capacitar as novas gerações a viverem o propósito cristão com autenticidade, unindo fé, protagonismo e serviço para transformar a sociedade.
             </p>
