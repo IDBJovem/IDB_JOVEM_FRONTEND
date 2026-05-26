@@ -91,7 +91,9 @@ export const mockEvents = [
     schedule: [],
     galeria: [],
   },
-  // Past events
+
+  // Eventos passados
+
   {
     id: 5,
     title: "Retiro Espiritual 2025",

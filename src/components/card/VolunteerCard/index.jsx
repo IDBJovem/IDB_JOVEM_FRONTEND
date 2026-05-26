@@ -1,12 +1,6 @@
 import { Link } from "react-router-dom";
 import { MapPin, Clock } from "lucide-react";
 
-/**
- * Card de evento para a página de voluntários.
- * Exibe imagem, título, local, data/hora e botão "Voluntários Inscritos".
- *
- * @param {{ event: object }} props
- */
 export function VolunteerEventCard({ event }) {
   const dateObj = event.date ? new Date(event.date) : null;
   const day = dateObj ? dateObj.getDate().toString().padStart(2, "0") : "--";
@@ -56,11 +50,6 @@ export function VolunteerEventCard({ event }) {
   );
 }
 
-/**
- * Card de estatística para a página de detalhes de voluntários.
- *
- * @param {{ icon: React.ComponentType, label: string, value: number, color: string }} props
- */
 export function StatCard({ icon: Icon, label, value, color }) {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col items-center gap-2 hover:shadow-md transition-shadow duration-200">

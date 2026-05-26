@@ -4,9 +4,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-/*
-  ---break---
-*/
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -47,30 +45,53 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulseSoft {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.6; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-6px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
-/*
-  IMPORTANT: All base styles MUST be inside @layer base
-  so that Tailwind utility classes can properly override them.
-  In Tailwind v4, unlayered CSS beats layered CSS in specificity.
-*/
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -116,19 +137,34 @@
   ol {
     list-style: none;
   }
+
   * {
     @apply border-border outline-ring/50;
   }
 }
 
-/* Scrollbar & selection — these pseudo-elements don't conflict with utilities */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #F5E6DA; }
-::-webkit-scrollbar-thumb { background: #FF6D2C; border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: #E65C18; }
-::selection { background: #FF6D2C; color: white; }
+::-webkit-scrollbar {
+  width: 10px;
+}
 
-/* Utility classes — in @layer utilities so they compose with Tailwind */
+::-webkit-scrollbar-track {
+  background: #F5E6DA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF6D2C;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E65C18;
+}
+
+::selection {
+  background: #FF6D2C;
+  color: white;
+}
+
 @layer utilities {
   .font-handwriting {
     font-family: 'Covered By Your Grace', cursive;
@@ -148,7 +184,7 @@
   }
 
   .hero-overlay {
-    background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.65) 100%);
   }
 
   .glass {
@@ -160,6 +196,7 @@
   .hover-default {
     transition: all 0.3s ease;
   }
+
   .hover-default:hover {
     transform: translateY(-2px);
   }
@@ -171,10 +208,12 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     scrollbar-width: none;
   }
 }
+
 /*
   ---break---
 */
@@ -220,9 +259,7 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
-/*
-  ---break---
-*/
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -257,9 +294,7 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
-/*
-  ---break---
-*/
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

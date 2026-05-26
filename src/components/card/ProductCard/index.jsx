@@ -1,15 +1,5 @@
 import { Pencil, Trash2 } from "lucide-react";
 
-/**
- * Card de produto reutilizável com variantes.
- *
- * @param {{
- *   product: { id: number, name: string, image: string },
- *   variant?: "full" | "compact",
- *   onEdit?: (id: number) => void,
- *   onDelete?: (product: object) => void
- * }} props
- */
 export default function ProductCard({ product, variant = "full", onEdit, onDelete }) {
   if (variant === "compact") {
     return (
@@ -33,7 +23,6 @@ export default function ProductCard({ product, variant = "full", onEdit, onDelet
     );
   }
 
-  // variant === "full"
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-shadow duration-200">
       {/* Imagem */}

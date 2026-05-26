@@ -1,9 +1,3 @@
-/**
- * Card de galeria — placeholder para uso futuro.
- * Os dados de galeria já existem no mock (campo `galeria` nos eventos).
- *
- * @param {{ image: { src: string, alt?: string }, onClick?: () => void }} props
- */
 export default function GalleryCard({ image, onClick }) {
   return (
     <div

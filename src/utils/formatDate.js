@@ -1,8 +1,3 @@
-/**
- * Formata uma data ISO para exibição em pt-BR
- * @param {string|Date} date
- * @param {Object} options - Intl.DateTimeFormat options
- */
 export function formatDate(date, options = {}) {
   const defaultOptions = {
     day: "2-digit",
@@ -14,11 +9,6 @@ export function formatDate(date, options = {}) {
   );
 }
 
-/**
- * Retorna a diferença em dias/horas/minutos/segundos entre agora e uma data futura
- * @param {string|Date} targetDate
- * @returns {{ days: number, hours: number, minutes: number, seconds: number, expired: boolean }}
- */
 export function getCountdown(targetDate) {
   const now = new Date().getTime();
   const target = new Date(targetDate).getTime();

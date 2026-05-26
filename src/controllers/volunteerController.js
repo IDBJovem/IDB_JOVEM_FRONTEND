@@ -3,16 +3,10 @@ import {
   updateVolunteerStatus,
 } from "../models/volunteerModel";
 
-/**
- * Busca voluntários de um evento.
- */
 export function fetchVolunteersByEvent(eventId) {
   return getVolunteersByEventId(eventId);
 }
 
-/**
- * Atualiza o status de um voluntário com validação.
- */
 export function handleUpdateStatus(id, status) {
   const validStatuses = ["pendente", "aprovado", "reprovado"];
 
@@ -28,9 +22,6 @@ export function handleUpdateStatus(id, status) {
   return { success: true, volunteer: updated };
 }
 
-/**
- * Retorna estatísticas de voluntários de um evento.
- */
 export function getVolunteerStats(eventId) {
   const volunteers = getVolunteersByEventId(eventId);
   const total = volunteers.length;

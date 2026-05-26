@@ -2,10 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin, CalendarDays, Users, Music, Link as LinkIcon, CalendarCog, ImagePlus } from "lucide-react";
 
-/**
- * Formulário reutilizável para criação e edição de eventos.
- * @param {{ initialData?: object, onSubmit: (data) => void, eventId?: number|string }} props
- */
 export default function EventForm({ initialData = {}, onSubmit, eventId }) {
   const navigate = useNavigate();
 
@@ -152,7 +148,6 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
 
         <hr className="my-5 border-gray-100" />
 
-        {/* Action links */}
         <div className="flex flex-wrap gap-3 mb-1">
           {eventId && (
             <button

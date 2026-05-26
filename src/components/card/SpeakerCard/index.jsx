@@ -1,9 +1,3 @@
-/**
- * Card de palestrante — placeholder para uso futuro.
- * Os dados de palestrantes já existem no mock de eventos (campo `speakers`).
- *
- * @param {{ speaker: { id: number, name: string, role: string, image: string } }} props
- */
 export default function SpeakerCard({ speaker }) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-shadow duration-200">

@@ -7,9 +7,6 @@ import {
   updateEventSchedule,
 } from "../models/eventModel";
 
-/**
- * Formata uma data ISO para "dd/mm/aaaa".
- */
 export function formatDate(isoDate) {
   if (!isoDate) return "";
   const d = new Date(isoDate);
@@ -20,9 +17,7 @@ export function formatDate(isoDate) {
   });
 }
 
-/**
- * Extrai dia e mês abreviado de uma data ISO.
- */
+
 export function extractDayMonth(isoDate) {
   if (!isoDate) return { day: "--", month: "---" };
   const d = new Date(isoDate);
@@ -31,18 +26,12 @@ export function extractDayMonth(isoDate) {
   return { day, month: month.charAt(0).toUpperCase() + month.slice(1) };
 }
 
-/**
- * Converte data ISO para o formato "YYYY-MM-DD" (input date).
- */
 export function toInputDate(isoDate) {
   if (!isoDate) return "";
   const d = new Date(isoDate);
   return d.toISOString().split("T")[0];
 }
 
-/**
- * Verifica se o evento é futuro (data >= hoje).
- */
 export function isFutureEvent(isoDate) {
   if (!isoDate) return false;
   const eventDate = new Date(isoDate);
@@ -51,9 +40,6 @@ export function isFutureEvent(isoDate) {
   return eventDate >= today;
 }
 
-/**
- * Separa eventos em "próximos" e "anteriores".
- */
 export function getGroupedEvents() {
   const all = getAllEvents();
   const proximos = all.filter((e) => isFutureEvent(e.date));
@@ -61,23 +47,15 @@ export function getGroupedEvents() {
   return { proximos, anteriores };
 }
 
-/**
- * Busca todos os eventos.
- */
 export function fetchAllEvents() {
   return getAllEvents();
 }
 
-/**
- * Busca um evento por ID.
- */
 export function fetchEventById(id) {
   return getEventById(id);
 }
 
-/**
- * Cria um novo evento com validação básica.
- */
+
 export function handleCreateEvent(data) {
   if (!data.title || !data.title.trim()) {
     return { success: false, error: "Nome do evento é obrigatório." };
@@ -98,9 +76,6 @@ export function handleCreateEvent(data) {
   return { success: true, event };
 }
 
-/**
- * Atualiza um evento com validação básica.
- */
 export function handleUpdateEvent(id, data) {
   if (!data.title || !data.title.trim()) {
     return { success: false, error: "Nome do evento é obrigatório." };
@@ -119,17 +94,11 @@ export function handleUpdateEvent(id, data) {
   return { success: true, event: updated };
 }
 
-/**
- * Exclui um evento.
- */
 export function handleDeleteEvent(id) {
   const deleted = deleteEvent(id);
   return { success: deleted, error: deleted ? null : "Evento não encontrado." };
 }
 
-/**
- * Atualiza a programação de um evento.
- */
 export function handleUpdateSchedule(eventId, schedule) {
   const updated = updateEventSchedule(eventId, schedule);
   if (!updated) {

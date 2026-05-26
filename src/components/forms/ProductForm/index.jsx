@@ -2,10 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImagePlus } from "lucide-react";
 
-/**
- * Formulário reutilizável para criação e edição de produtos.
- * @param {{ initialData?: object, onSubmit: (data) => void }} props
- */
 export default function ProductForm({ initialData = {}, onSubmit }) {
   const navigate = useNavigate();
 
