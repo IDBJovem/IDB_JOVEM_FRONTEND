@@ -13,7 +13,7 @@ export default function Home() {
   const { countdown, events, products, gallery, nextEvent } = useHomeData();
 
   return (
-    <main className="pt-[70px] md:pt-[82px]">
+    <main className="bg-black">
       <HeroSection countdown={countdown} nextEvent={nextEvent} />
       <SobreSection />
       <LideresSection />
