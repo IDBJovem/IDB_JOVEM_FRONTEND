@@ -34,7 +34,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
       )}
 
       <aside className={`
-        w-[240px] min-h-screen bg-gradient-to-b from-[#FF6D2C] to-[#E85A1B] flex flex-col shadow-xl fixed left-0 top-0 z-50
+        w-[85vw] max-w-[300px] md:w-[240px] md:max-w-none h-[100dvh] bg-gradient-to-b from-[#FF6D2C] to-[#E85A1B] flex flex-col shadow-xl fixed left-0 top-0 z-50 overflow-y-auto
         transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
       `}>

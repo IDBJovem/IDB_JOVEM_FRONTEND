@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 
-/* Dados mock */
 const EVENTS_DB = {
   "evento-em-destaque": {
     slug: "evento-em-destaque",
@@ -48,7 +47,7 @@ const EVENTS_DB = {
       { id: 3, day: "25", month: "Abr", activity: "Ministração", startTime: "19:00", endTime: "20:30" },
       { id: 4, day: "25", month: "Abr", activity: "Encerramento", startTime: "20:30", endTime: "21:00" },
     ],
-    gallery: [],
+    gallery: ["/images/galeria/idb-teen-camp.jpg"],
   },
   "evento-2": {
     slug: "evento-2",

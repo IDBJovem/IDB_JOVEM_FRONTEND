@@ -14,6 +14,7 @@ import Galeria from "../pages/Galeria";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
 import Unauthorized from "../pages/Unauthorized";
+import TestCoverage from "../pages/TestCoverage";
 
 import AdminDashboard from "../pages/Admin/Dashboard";
 import AdminEventos from "../pages/Admin/Eventos";
@@ -53,6 +54,7 @@ export default function AppRoutes() {
         <Route path="/eventos/:slug" element={<EventoDetalhe />} />
         <Route path="/galeria" element={<Galeria />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/test-coverage" element={<TestCoverage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 

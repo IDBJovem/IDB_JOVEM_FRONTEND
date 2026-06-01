@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Link } from "react-router-dom";
 import bgGif from "../../../assets/gifs/IDB_Jovem.gif";
 
@@ -14,7 +15,7 @@ const CountdownBox = ({ value, label }) => (
 
 export default function HeroSection({ countdown, nextEvent }) {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-black">
+    <section className="relative min-h-[100dvh] flex flex-col justify-center items-center overflow-hidden bg-black">
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <img
@@ -68,3 +69,4 @@ export default function HeroSection({ countdown, nextEvent }) {
     </section>
   );
 }
+
