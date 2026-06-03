@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { handleCreateProduct } from "../../../controllers/productController";
+import { handleCreateProduct } from "../../../services/productService";
 import ProductForm from "../../../components/forms/ProductForm";
 
 export default function AdminProdutoCreate() {

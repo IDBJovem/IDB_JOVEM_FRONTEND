@@ -6,18 +6,18 @@ export default function EventosProximos() {
 
   return (
     <main className="min-h-screen bg-[#FDF3EA] pt-[82px] flex flex-col">
-      <div className="w-full bg-[#D5650D] py-8 px-6 md:px-12 flex items-center relative">
+      <div className="w-full bg-[#D5650D] py-8 px-4 md:px-12 flex items-center relative overflow-hidden">
         <button
           onClick={() => navigate(-1)}
-          className="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0 hover:scale-105 transition-transform shadow-md z-10"
+          className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shrink-0 hover:scale-105 transition-transform shadow-md z-10 absolute left-4 md:left-12"
           aria-label="Voltar"
         >
-          <ChevronLeft size={28} className="text-[#D5650D]" />
+          <ChevronLeft className="w-6 h-6 md:w-7 md:h-7 text-[#D5650D]" />
         </button>
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-20 text-center">
+        <div className="flex-1 text-center px-12 md:px-16">
           <h1
-            className="font-handwriting text-white"
-            style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)", lineHeight: 1.2 }}
+            className="font-handwriting text-white pt-2"
+            style={{ fontSize: "clamp(2.2rem, 6vw, 4.5rem)", lineHeight: 1.1 }}
           >
             Eventos mais Próximos de Você
           </h1>

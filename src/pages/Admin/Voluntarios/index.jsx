@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchAllEvents } from "../../../controllers/eventController";
+import { fetchAllEvents } from "../../../services/eventService";
 import SectionTitle from "../../../components/ui/SectionTitle";
 import EmptyState from "../../../components/ui/EmptyState";
 import { VolunteerEventCard } from "../../../components/card/VolunteerCard";

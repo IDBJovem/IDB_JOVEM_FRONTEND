@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { MapPin, Pencil, Trash2 } from "lucide-react";
-import { extractDayMonth } from "../../../../controllers/eventController";
+import { extractDayMonth } from "../../../../services/eventService";
 
 /* Event Row para Próximos Eventos */
 export function UpcomingEventRow({ event, onEdit, onDelete }) {
