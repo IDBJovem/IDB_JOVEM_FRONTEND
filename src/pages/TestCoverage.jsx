@@ -29,28 +29,23 @@ import { useAuth } from '../context/AuthContext';
 import useModal from '../hooks/useModal';
 import { formatDate, getCountdown } from '../utils/formatDate';
 import { fuzzyMatch, levenshteinDistance, normalizeString } from '../utils/stringUtils';
-import * as eventController from '../controllers/eventController';
-import * as productController from '../controllers/productController';
-import * as volunteerController from '../controllers/volunteerController';
-import * as volunteerModel from '../models/volunteerModel';
-import * as eventModel from '../models/eventModel';
-import * as productModel from '../models/productModel';
+import * as eventService from '../services/eventService';
+import * as productService from '../services/productService';
+import * as volunteerService from '../services/volunteerService';
 
 export default function TestCoverage() {
   const modal = useModal();
 
-  // Named callback functions to ensure function coverage
   const handleFormSubmit = (data) => { void data; };
   const handleChange = (val) => { void val; };
   const handleEdit = (id) => { void id; };
   const handleDelete = (item) => { void item; };
-  const handleClose = () => {};
-  const handleBack = () => {};
+  const handleClose = () => { };
+  const handleBack = () => { };
   const handleSave = (data) => { void data; };
-  const handleCancel = () => {};
+  const handleCancel = () => { };
 
   useEffect(() => {
-    // Invoke all named callbacks to guarantee function coverage
     handleFormSubmit({});
     handleChange('test');
     handleEdit(1);
@@ -77,96 +72,87 @@ export default function TestCoverage() {
     levenshteinDistance("", "a");
     normalizeString(null);
 
-    eventController.handleUpdateEvent('invalid-id', { title: 'Valido' });
-    eventController.handleDeleteEvent('invalid-id');
-    eventController.handleCreateEvent({ title: '', date: '', location: '' });
-    eventController.handleCreateEvent({ title: 'A', date: '', location: '' });
-    eventController.handleCreateEvent({ title: 'A', date: '2025-01-01', location: '' });
-    eventController.handleUpdateSchedule('invalid-id', {});
-    eventController.toInputDate(null);
-    eventController.toInputDate("2025-01-01T00:00:00Z");
-    eventController.extractDayMonth(null);
-    eventController.extractDayMonth('2025-01-15');
-    eventController.isFutureEvent(null);
-    eventController.isFutureEvent('2020-01-01');
-    eventController.isFutureEvent('2099-01-01');
-    eventController.getGroupedEvents();
-    eventController.fetchAllEvents();
-    productController.handleUpdateProduct('invalid-id', { name: 'Valido' });
-    productController.handleDeleteProduct('invalid-id');
-    productController.handleCreateProduct({ name: '', price: 0 });
-    productController.handleCreateProduct({ name: 'P', price: 0 });
-    productController.fetchAllProducts();
-    productController.fetchProductById(1);
-    productController.fetchProductById('invalid-id');
-    volunteerController.handleUpdateStatus('invalid-id', 'aprovado');
-    volunteerController.handleUpdateStatus('invalid-id', 'invalid-status');
-    volunteerController.getVolunteerStats('invalid-id');
-    volunteerController.fetchVolunteersByEvent(1);
-    volunteerController.getVolunteerStats(1);
+    eventService.handleUpdateEvent('invalid-id', { title: 'Valido' });
+    eventService.handleDeleteEvent('invalid-id');
+    eventService.handleCreateEvent({ title: '', date: '', location: '' });
+    eventService.handleCreateEvent({ title: 'A', date: '', location: '' });
+    eventService.handleCreateEvent({ title: 'A', date: '2025-01-01', location: '' });
+    eventService.handleUpdateSchedule('invalid-id', {});
+    eventService.toInputDate(null);
+    eventService.toInputDate("2025-01-01T00:00:00Z");
+    eventService.extractDayMonth(null);
+    eventService.extractDayMonth('2025-01-15');
+    eventService.isFutureEvent(null);
+    eventService.isFutureEvent('2020-01-01');
+    eventService.isFutureEvent('2099-01-01');
+    eventService.getGroupedEvents();
+    eventService.fetchAllEvents();
+    productService.handleUpdateProduct('invalid-id', { name: 'Valido' });
+    productService.handleDeleteProduct('invalid-id');
+    productService.handleCreateProduct({ name: '', price: 0 });
+    productService.handleCreateProduct({ name: 'P', price: 0 });
+    productService.fetchAllProducts();
+    productService.fetchProductById(1);
+    productService.fetchProductById('invalid-id');
+    volunteerService.handleUpdateStatus('invalid-id', 'aprovado');
+    volunteerService.handleUpdateStatus('invalid-id', 'invalid-status');
+    volunteerService.getVolunteerStats('invalid-id');
+    volunteerService.fetchVolunteersByEvent(1);
+    volunteerService.getVolunteerStats(1);
 
-    volunteerModel.getAllVolunteers();
-    volunteerModel.getVolunteerById('invalid-id');
-    volunteerModel.getVolunteersByEventId(1);
-    volunteerModel.updateVolunteerStatus('invalid-id', 'aprovado');
-    eventModel.getAllEvents();
-    eventModel.getEventById('invalid-id');
-    eventModel.updateEvent('invalid-id', {});
-    eventModel.deleteEvent('invalid-id');
-    eventModel.deleteEvent(1);
-    eventModel.updateEventSchedule('invalid-id', []);
-    productModel.getAllProducts();
-    productModel.getProductById('invalid-id');
-    productModel.updateProduct('invalid-id', {});
-    productModel.deleteProduct('invalid-id');
-    productModel.deleteProduct(1);
+    volunteerService.getAllVolunteers();
+    volunteerService.getVolunteerById('invalid-id');
+    volunteerService.getVolunteersByEventId(1);
+    volunteerService.updateVolunteerStatus('invalid-id', 'aprovado');
+    eventService.getAllEvents();
+    eventService.getEventById('invalid-id');
+    eventService.updateEvent('invalid-id', {});
+    eventService.deleteEvent('invalid-id');
+    eventService.deleteEvent(1);
+    eventService.updateEventSchedule('invalid-id', []);
+    productService.getAllProducts();
+    productService.getProductById('invalid-id');
+    productService.updateProduct('invalid-id', {});
+    productService.deleteProduct('invalid-id');
+    productService.deleteProduct(1);
 
-    // Cover createEvent/createProduct with empty array (L29 branch: events.length > 0 ? ... : 1)
     const evKey = 'idb_admin_events';
     const prKey = 'idb_admin_products';
     const savedEv = localStorage.getItem(evKey);
     const savedPr = localStorage.getItem(prKey);
     localStorage.setItem(evKey, JSON.stringify([]));
-    eventModel.createEvent({ title: 'Empty Test' });
+    eventService.createEvent({ title: 'Empty Test' });
     localStorage.setItem(prKey, JSON.stringify([]));
-    productModel.createProduct({ name: 'Empty Test' });
-    // Restore proper values
-    /* istanbul ignore next */
+    productService.createProduct({ name: 'Empty Test' });
+
     if (savedEv) localStorage.setItem(evKey, savedEv); else localStorage.removeItem(evKey);
-    /* istanbul ignore next */
     if (savedPr) localStorage.setItem(prKey, savedPr); else localStorage.removeItem(prKey);
 
     modal.open();
     setTimeout(() => modal.close(), 100);
 
-    // Hit the AuthContext catch block
     localStorage.setItem("idb_auth", "{invalid json");
-    
-    // Create a dummy component outside AuthProvider to hit the useAuth error
+
     const div = document.createElement('div');
     const root = createRoot(div);
     const Dummy = () => {
       try {
         useAuth();
       } catch (e) {
-        // Ignored, successfully hit the error branch
       }
       return null;
     };
     root.render(<Dummy />);
 
-    // Add extra calls to hit the specific missing branches in eventController
-    eventController.handleCreateEvent({ title: 'A', date: '2025-01-01', endDate: '2025-01-02', location: 'L' });
-    eventController.handleCreateEvent({ title: 'A', date: '2025-01-01', location: 'L' });
-    eventController.handleCreateEvent({ title: '   ', date: '2025-01-01', location: 'L' });
-    eventController.handleCreateEvent({ title: 'A', date: '2025-01-01', location: '   ' });
-    eventController.handleUpdateEvent('invalid-id', { title: 'Valido', date: '2025-01-01', endDate: '2025-01-02' });
-    eventController.handleUpdateEvent('invalid-id', { title: 'Valido', date: '2025-01-01' });
-    eventController.handleUpdateEvent('invalid-id', { title: '   ' });
-    
-    // Coverage for formatDate in eventController
-    eventController.formatDate(null);
-    eventController.formatDate('2025-01-01T12:00:00Z');
+    eventService.handleCreateEvent({ title: 'A', date: '2025-01-01', endDate: '2025-01-02', location: 'L' });
+    eventService.handleCreateEvent({ title: 'A', date: '2025-01-01', location: 'L' });
+    eventService.handleCreateEvent({ title: '   ', date: '2025-01-01', location: 'L' });
+    eventService.handleCreateEvent({ title: 'A', date: '2025-01-01', location: '   ' });
+    eventService.handleUpdateEvent('invalid-id', { title: 'Valido', date: '2025-01-01', endDate: '2025-01-02' });
+    eventService.handleUpdateEvent('invalid-id', { title: 'Valido', date: '2025-01-01' });
+    eventService.handleUpdateEvent('invalid-id', { title: '   ' });
+    eventService.formatDate(null);
+    eventService.formatDate('2025-01-01T12:00:00Z');
 
   }, []);
 
@@ -178,7 +164,7 @@ export default function TestCoverage() {
 
       <ProductCard product={{ id: 1, name: 'P1', image: 'test.jpg' }} variant="compact" />
       <ProductCard product={{ id: 1, name: 'P1', image: 'test.jpg' }} variant="full" />
-      {/* Test default variant */}
+
       <ProductCard product={{ id: 2, name: 'P2', image: 'test2.jpg' }} />
 
       <VolunteerEventCard event={{ id: 1, title: 'V1', location: 'L1' }} />
@@ -189,16 +175,14 @@ export default function TestCoverage() {
       <BlurFade delay={0.1} inView={true} direction="up">BlurFadeUp</BlurFade>
       <BlurFade delay={0.1} inView={true} direction="left">BlurFadeLeft</BlurFade>
       <BlurFade delay={0.1} inView={true} direction="right">BlurFadeRight</BlurFade>
-      {/* Branches para default props do BlurFade */}
+
       <BlurFade>BlurFade Default</BlurFade>
       <BlurFade variant={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>BlurFade Custom Variant</BlurFade>
-      {/* Branch: typeof v === "function" em getFilter (L5) */}
       <BlurFade variant={{ hidden: () => ({ opacity: 0 }), visible: () => ({ opacity: 1 }) }}>BlurFade Fn Variant</BlurFade>
 
       <BorderBeam size={100} duration={10} />
       <BorderBeam reverse={true} />
 
-      {/* FocusCards com description para cobrir card.description && (L34-37) */}
       <FocusCards cards={[{ title: "C1", src: "test.jpg", description: "Desc1" }, { title: "C2", src: "test.jpg" }]} />
 
       <TypewriterEffectSmooth words={[{ text: "Hello" }, { text: "World" }]} />
@@ -209,7 +193,7 @@ export default function TestCoverage() {
         options={[{ value: "1", label: "Item" }]}
         styles={{ "1": { bg: "bg-red-500", text: "text-white", border: "border-red-500", hoverBg: "hover:bg-red-600", optionBg: "bg-red-50", optionHover: "hover:bg-gray-100", optionText: "text-red-700" } }}
       />
-      {/* Dropdown com valor inválido para testar fallback (Lines 19-20) */}
+
       <Dropdown
         value="INVALID"
         onChange={handleChange}
@@ -231,17 +215,14 @@ export default function TestCoverage() {
 
       <ActivityInlineForm onSave={handleSave} onCancel={handleCancel} />
       <ActivityRow item={{ id: 1, name: 'A1', time: '10:00' }} onEdit={handleEdit} onDelete={handleDelete} />
-      {/* ActivityRow without time to cover L19 fallback "--:--" */}
+
       <ActivityRow item={{ id: 2, name: 'A2' }} onEdit={handleEdit} onDelete={handleDelete} />
-      {/* ActivityRow without description to cover L14 fallback */}
       <ActivityRow item={{ id: 3, name: 'A3', time: '11:00', description: 'Desc' }} onEdit={handleEdit} onDelete={handleDelete} />
 
       <AdminTable columns={[{ key: 'a', label: 'A' }]} data={[]} />
 
-      {/* Render EventGallery with no props to cover default parameters */}
       <EventGallery />
       <EventGallery gallery={[]} />
-      {/* EventGallery with images to cover the non-empty branch */}
       <EventGallery gallery={['/images/galeria/idb-jovem-one.jpg']} />
 
       <EventSchedule event={{}} />

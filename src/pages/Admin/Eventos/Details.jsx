@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { fetchEventById, formatDate } from "../../../controllers/eventController";
+import { fetchEventById, formatDate } from "../../../services/eventService";
 
 
 export default function AdminEventoDetails() {

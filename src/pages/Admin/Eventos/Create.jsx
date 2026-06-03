@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { handleCreateEvent } from "../../../controllers/eventController";
+import { handleCreateEvent } from "../../../services/eventService";
 import EventForm from "../../../components/forms/EventForm";
 
 export default function AdminEventoCreate() {

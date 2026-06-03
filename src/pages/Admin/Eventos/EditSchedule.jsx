@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
-import { fetchEventById, handleUpdateSchedule } from "../../../controllers/eventController";
+import { fetchEventById, handleUpdateSchedule } from "../../../services/eventService";
 import useModal from "../../../hooks/useModal";
 import SectionTitle from "../../../components/ui/SectionTitle";
 import EmptyState from "../../../components/ui/EmptyState";

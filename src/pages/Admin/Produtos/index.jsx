@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
-import { fetchAllProducts, handleDeleteProduct } from "../../../controllers/productController";
+import { fetchAllProducts, handleDeleteProduct } from "../../../services/productService";
 import useModal from "../../../hooks/useModal";
 import SectionTitle from "../../../components/ui/SectionTitle";
 import EmptyState from "../../../components/ui/EmptyState";

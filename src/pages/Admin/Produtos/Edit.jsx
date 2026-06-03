@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { fetchProductById, handleUpdateProduct } from "../../../controllers/productController";
+import { fetchProductById, handleUpdateProduct } from "../../../services/productService";
 import ProductForm from "../../../components/forms/ProductForm";
 
 export default function AdminProdutoEdit() {

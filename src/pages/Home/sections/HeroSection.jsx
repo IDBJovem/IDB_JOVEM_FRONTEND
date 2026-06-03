@@ -15,36 +15,35 @@ const CountdownBox = ({ value, label }) => (
 
 export default function HeroSection({ countdown, nextEvent }) {
   return (
-    <section className="relative min-h-[100dvh] flex flex-col justify-center items-center overflow-hidden bg-black">
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={bgGif}
-          alt=""
-          className="w-full h-full object-cover opacity-60"
-          aria-hidden="true"
-        />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
-      </div>
+    <section className="relative w-full min-h-[calc(100dvh-70px)] md:min-h-[calc(100dvh-82px)] mt-[70px] md:mt-[82px] overflow-hidden flex flex-col justify-center items-center bg-black">
+      {/* Background Image - Absolute inset-0 para cobrir todo o HeroSection */}
+      <img
+        src={bgGif}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-80"
+        aria-hidden="true"
+      />
+      
+      {/* Overlay mais suave apenas para não atrapalhar o texto branco */}
+      <div className="absolute inset-0 bg-black/20" />
 
       {/* Conteúdo */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4 w-full max-w-5xl mx-auto">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full max-w-5xl mx-auto py-8">
         {/* Título principal */}
         <h1
           className="text-white font-black uppercase leading-none tracking-tight"
           style={{
-            fontSize: "clamp(3rem, 12vw, 9rem)",
-            textShadow: "-6px 3px 0px #D5650D",
+            fontSize: "clamp(2.8rem, 10vw, 8rem)",
+            textShadow: "-4px 2px 0px #D5650D, 2px 2px 4px rgba(0,0,0,0.5)",
           }}
         >
           IDB JOVEM & TEENS
         </h1>
 
         {/* Countdown */}
-        <div className="mt-8 w-full max-w-2xl">
+        <div className="mt-6 md:mt-10 w-full max-w-2xl">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 justify-center">
-            <span className="text-white font-bold uppercase tracking-widest text-2xl md:text-4xl whitespace-nowrap">
+            <span className="text-white font-bold uppercase tracking-widest text-2xl md:text-3xl whitespace-nowrap drop-shadow-md">
               PROXIMO EVENTO:
             </span>
             <div className="flex items-center gap-2 md:gap-3">
@@ -60,7 +59,7 @@ export default function HeroSection({ countdown, nextEvent }) {
         {nextEvent && (
           <Link
             to={`/eventos/${nextEvent.slug}`}
-            className="mt-8 inline-block bg-orange-500 hover:bg-orange-600 transition-colors text-white font-bold px-8 py-3 rounded-sm uppercase tracking-wider text-sm shadow-xl"
+            className="mt-8 md:mt-10 inline-block bg-orange-500 hover:bg-orange-600 transition-colors text-white font-bold px-8 py-3 md:px-10 md:py-4 rounded-sm uppercase tracking-wider text-base shadow-xl"
           >
             Ver evento
           </Link>
@@ -69,4 +68,3 @@ export default function HeroSection({ countdown, nextEvent }) {
     </section>
   );
 }
-

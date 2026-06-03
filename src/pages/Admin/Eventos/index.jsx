@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
-import { getGroupedEvents, handleDeleteEvent } from "../../../controllers/eventController";
+import { getGroupedEvents, handleDeleteEvent } from "../../../services/eventService";
 import useModal from "../../../hooks/useModal";
 import SectionTitle from "../../../components/ui/SectionTitle";
 import EmptyState from "../../../components/ui/EmptyState";

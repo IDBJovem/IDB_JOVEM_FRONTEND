@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Users, CheckCircle, Clock, ExternalLink } from "lucide-react";
-import { fetchEventById } from "../../../controllers/eventController";
+import { fetchEventById } from "../../../services/eventService";
 import {
   fetchVolunteersByEvent,
   handleUpdateStatus,
   getVolunteerStats,
-} from "../../../controllers/volunteerController";
+} from "../../../services/volunteerService";
 import StatusBadge from "../components/StatusBadge";
 import SectionTitle from "../../../components/ui/SectionTitle";
 import AdminTable from "../components/AdminTable";
