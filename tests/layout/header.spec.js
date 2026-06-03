@@ -6,7 +6,7 @@ test.describe('Header e Navegação Desktop', () => {
   });
 
   test('deve renderizar o logotipo corretamente e direcionar para home', async ({ page }) => {
-    // Desktop View
+
     await page.setViewportSize({ width: 1280, height: 720 });
     const logoLink = page.getByRole('link', { name: /IDB JOVEM/i });
     await expect(logoLink).toBeVisible();
@@ -45,11 +45,10 @@ test.describe('Header e Navegação Desktop', () => {
 
     await searchInput.fill('retiro');
 
-    const clearBtn = page.locator('svg.lucide-x-circle'); // lucide-x-circle class
-    if (await clearBtn.isVisible()) {
-      await clearBtn.click();
-      await expect(searchInput).toHaveValue('');
-    }
+    const clearBtn = page.locator('svg.lucide-x-circle').first();
+    await clearBtn.waitFor({ state: 'visible' });
+    await clearBtn.click();
+    await expect(searchInput).toHaveValue('');
   });
 
   test('deve redirecionar para /eventos ao pesquisar e pressionar Enter', async ({ page }) => {
@@ -144,13 +143,15 @@ test.describe('Menu Mobile', () => {
 
     const btnMobileProx = mobilePanel.getByRole('button', { name: /Eventos próximos/i });
     await expect(btnMobileProx).toBeVisible();
+    await btnMobileProx.click();
+    await expect(page).toHaveURL(/\/eventos-proximos/);
   });
 
   test('deve fechar o menu mobile ao clicar no overlay', async ({ page }) => {
     const btnMenu = page.getByLabel('Menu');
     await btnMenu.click();
 
-    // Overlay
+
     const overlay = page.locator('.fixed.inset-0.z-40');
     await expect(overlay).toBeVisible();
 

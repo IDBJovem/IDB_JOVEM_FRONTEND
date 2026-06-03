@@ -77,7 +77,7 @@ export default function Header() {
               className="flex-1 bg-transparent outline-none text-sm font-medium placeholder:text-[#A0A0A0] min-w-0"
             />
             {searchTerm && (
-              <XCircle size={22} onClick={handleClear} className="text-[#FF6D2C] cursor-pointer hover:scale-110 transition-all shrink-0" />
+              <XCircle size={22} onClick={handleClear} className="lucide-x-circle text-[#FF6D2C] cursor-pointer hover:scale-110 transition-all shrink-0" />
             )}
           </div>
 
@@ -106,14 +106,12 @@ export default function Header() {
               >
                 {({ isActive }) => (
                   <div
-                    className={`h-[45px] rounded-[10px] px-3 xl:px-4 flex items-center justify-center group transition-all duration-300 ${
-                      !isHashLink && isActive ? "bg-[#FF6D2C]/10" : "hover:bg-[#FF6D2C]"
-                    }`}
+                    className={`h-[45px] rounded-[10px] px-3 xl:px-4 flex items-center justify-center group transition-all duration-300 ${!isHashLink && isActive ? "bg-[#FF6D2C]/10" : "hover:bg-[#FF6D2C]"
+                      }`}
                   >
                     <span
-                      className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-all duration-300 ${
-                        !isHashLink && isActive ? "text-[#FF6D2C]" : "text-black group-hover:text-white"
-                      }`}
+                      className={`text-[14px] xl:text-[15px] font-medium whitespace-nowrap transition-all duration-300 ${!isHashLink && isActive ? "text-[#FF6D2C]" : "text-black group-hover:text-white"
+                        }`}
                     >
                       {item.label}
                     </span>
@@ -156,9 +154,8 @@ export default function Header() {
 
       {/* Mobile Menu Panel */}
       <div
-        className={`fixed top-[70px] right-0 w-[80%] max-w-[320px] h-[calc(100dvh-70px)] bg-white shadow-2xl z-50 lg:hidden transition-transform duration-300 ease-in-out flex flex-col ${
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-[70px] right-0 w-[80%] max-w-[320px] h-[calc(100dvh-70px)] bg-white shadow-2xl z-50 lg:hidden transition-transform duration-300 ease-in-out flex flex-col ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {/* Mobile Search */}
         <div className="p-4 border-b border-gray-100">
@@ -173,7 +170,7 @@ export default function Header() {
               className="flex-1 bg-transparent outline-none text-sm font-medium placeholder:text-[#A0A0A0] min-w-0"
             />
             {searchTerm && (
-              <XCircle size={20} onClick={handleClear} className="text-[#FF6D2C] cursor-pointer shrink-0" />
+              <XCircle size={20} onClick={handleClear} className="lucide-x-circle text-[#FF6D2C] cursor-pointer shrink-0" />
             )}
           </div>
         </div>
@@ -191,11 +188,10 @@ export default function Header() {
               >
                 {({ isActive }) => (
                   <div
-                    className={`h-[50px] rounded-xl px-4 flex items-center transition-all duration-200 ${
-                      !isHashLink && isActive
+                    className={`h-[50px] rounded-xl px-4 flex items-center transition-all duration-200 ${!isHashLink && isActive
                         ? "bg-[#FF6D2C]/10 text-[#FF6D2C]"
                         : "text-[#1E1E1E] hover:bg-[#FDF3EA]"
-                    }`}
+                      }`}
                   >
                     <span className="text-[16px] font-semibold">{item.label}</span>
                   </div>

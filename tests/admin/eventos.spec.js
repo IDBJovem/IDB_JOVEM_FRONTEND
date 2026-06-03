@@ -511,5 +511,46 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
     const formLink = page.getByRole('link', { name: 'Abrir Formulário' }).first();
     await expect(formLink).toHaveAttribute('href', '#');
   });
+
+  test('deve cobrir Details.jsx ?? branches com valores null (totalParticipantes/totalVoluntarios)', async ({ page }) => {
+    // Inject an event with explicit null for totalParticipantes and totalVoluntarios
+    // to cover the ?? 0 null coalescing branches at lines 70 and 78
+    await page.goto('/admin/eventos');
+
+    await page.evaluate(() => {
+      const events = JSON.parse(localStorage.getItem('idb_admin_events') || '[]');
+      events.push({
+        id: 77777,
+        title: 'Evento Null Fields',
+        date: '2019-01-01T00:00:00.000Z',
+        endDate: '2019-01-01T00:00:00.000Z',
+        location: null,
+        description: null,
+        totalParticipantes: null,
+        totalVoluntarios: null,
+        palestrantes: null,
+        bandas: null,
+        slug: 'evento-null-fields',
+        speakers: [],
+        schedule: [],
+        galeria: [],
+        featured: false,
+        category: 'Encontro',
+        image: '/images/galeria/idb-jovem-one.jpg',
+      });
+      localStorage.setItem('idb_admin_events', JSON.stringify(events));
+    });
+
+    // Navigate to the details page of this event
+    await page.goto('/admin/eventos/77777');
+
+    await expect(page.getByRole('heading', { name: 'Detalhes do Evento' })).toBeVisible();
+    await expect(page.getByText('Evento Null Fields')).toBeVisible();
+
+    // totalParticipantes and totalVoluntarios should show "0" (from ?? 0 fallback)
+    // description, location, palestrantes, bandas should show "—" (from || "—" fallback)
+    const dashes = page.getByText('—');
+    expect(await dashes.count()).toBeGreaterThanOrEqual(4);
+  });
 });
 
