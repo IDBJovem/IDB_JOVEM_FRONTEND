@@ -6,8 +6,8 @@ import EventForm from "../../../components/forms/EventForm";
 export default function AdminEventoCreate() {
   const navigate = useNavigate();
 
-  const handleSubmit = (formData) => {
-    const result = handleCreateEvent(formData);
+  const handleSubmit = async (formData) => {
+    const result = await handleCreateEvent(formData);
 
     if (result.success) {
       navigate("/admin/eventos");

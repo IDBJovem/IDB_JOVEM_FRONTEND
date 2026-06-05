@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Calendar as CalendarIcon } from "lucide-react";
-import { mockEvents } from "../../../data/mockEvents";
 import { Link } from "react-router-dom";
 
-export default function CalendarioSection() {
+export default function CalendarioSection({ events = [] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const nextMonth = () => {
@@ -23,7 +22,7 @@ export default function CalendarioSection() {
   const currentYear = currentDate.getFullYear();
 
   // Filter events for the current month and year
-  const monthEvents = mockEvents.filter(event => {
+  const monthEvents = events.filter(event => {
     const eventDate = new Date(event.date);
     return eventDate.getMonth() === currentDate.getMonth() && eventDate.getFullYear() === currentYear;
   }).sort((a, b) => new Date(a.date) - new Date(b.date));

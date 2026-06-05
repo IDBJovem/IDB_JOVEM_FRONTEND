@@ -13,10 +13,20 @@ export default function AdminEventos() {
   const navigate = useNavigate();
   const deleteModal = useModal();
   const [events, setEvents] = useState({ proximos: [], anteriores: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const loadEvents = () => {
-    const grouped = getGroupedEvents();
-    setEvents(grouped);
+  const loadEvents = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const grouped = await getGroupedEvents();
+      setEvents(grouped);
+    } catch {
+      setError("Não foi possível carregar os eventos.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -27,10 +37,14 @@ export default function AdminEventos() {
     navigate(`/admin/eventos/${id}/editar`);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteModal.data) {
-      handleDeleteEvent(deleteModal.data.id);
+      const result = await handleDeleteEvent(deleteModal.data.id);
       deleteModal.close();
+      if (!result.success) {
+        setError(result.error);
+        return;
+      }
       loadEvents();
     }
   };
@@ -49,6 +63,18 @@ export default function AdminEventos() {
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
       <SectionTitle title="Eventos" rightContent={rightContent} />
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 text-sm font-semibold rounded-xl px-4 py-3">
+          {error}
+        </div>
+      )}
+
+      {loading && (
+        <div className="text-center text-[#1E1E1E]/50 text-sm font-semibold py-8">
+          Carregando eventos...
+        </div>
+      )}
 
       {/* Próximos Eventos */}
       <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-100">

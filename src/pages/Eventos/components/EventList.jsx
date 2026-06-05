@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Building2, Clock } from "lucide-react";
+import { formatDate } from "../../../services/eventService";
 
 export default function EventList({ events }) {
   return (
@@ -21,7 +22,7 @@ export default function EventList({ events }) {
           {/* Info */}
           <div className="p-4">
             <h3 className="font-semibold text-[#FF6D2C] text-base mb-3">
-              Nome do evento
+              {event.title}
             </h3>
             <div className="flex flex-col gap-1.5 mb-4">
               <div className="flex items-center gap-2 text-sm text-[#1E1E1E]/60">
@@ -31,7 +32,8 @@ export default function EventList({ events }) {
               <div className="flex items-center gap-2 text-sm text-[#1E1E1E]/60">
                 <Clock size={14} className="shrink-0" />
                 <span>
-                  {event.date} - {event.time}
+                  {formatDate(event.date)}
+                  {event.time ? ` - ${event.time}` : ""}
                 </span>
               </div>
             </div>

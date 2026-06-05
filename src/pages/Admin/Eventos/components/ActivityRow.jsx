@@ -16,7 +16,11 @@ export default function ActivityRow({ item, onEdit, onDelete }) {
 
       {/* Horário */}
       <div className="shrink-0">
-        <span className="text-sm font-semibold text-[#1E1E1E]">{item.time || "--:--"}</span>
+        <span className="text-sm font-semibold text-[#1E1E1E]">
+          {item.startTime && item.endTime
+            ? `${item.startTime} - ${item.endTime}`
+            : item.time || "--:--"}
+        </span>
       </div>
 
       {/* Ações */}

@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin, CalendarDays, Users, Music, Link as LinkIcon, CalendarCog, ImagePlus } from "lucide-react";
+import { toInputDateTime } from "../../../services/eventService";
 
 export default function EventForm({ initialData = {}, onSubmit, eventId }) {
   const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     title: initialData.title || "",
     description: initialData.description || "",
-    location: initialData.location || "",
-    date: initialData.date ? initialData.date.split("T")[0] : "",
+    latitude: initialData.latitude ?? "",
+    longitude: initialData.longitude ?? "",
+    date: toInputDateTime(initialData.date),
+    endDate: toInputDateTime(initialData.endDate),
     palestrantes: initialData.palestrantes || "",
     bandas: initialData.bandas || "",
+    linkGaleria: initialData.linkGaleria || "",
     linkFormularioVoluntarios: initialData.linkFormularioVoluntarios || "",
   });
 
@@ -20,9 +25,14 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(form);
+    setSubmitting(true);
+    try {
+      await onSubmit(form);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCancel = () => {
@@ -63,17 +73,18 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
 
         <hr className="my-5 border-gray-100" />
 
-        {/* Local + Data */}
+        {/* Local (coordenadas) — o nome do local é derivado pela API */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-1">
           <div>
-            <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Local</label>
+            <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Latitude</label>
             <div className="relative">
               <input
-                type="text"
-                name="location"
-                value={form.location}
+                type="number"
+                step="any"
+                name="latitude"
+                value={form.latitude}
                 onChange={handleChange}
-                placeholder="Local do evento"
+                placeholder="-15.7934"
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
                 required
               />
@@ -81,17 +92,48 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Data</label>
+            <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Longitude</label>
             <div className="relative">
               <input
-                type="date"
-                name="date"
-                value={form.date}
+                type="number"
+                step="any"
+                name="longitude"
+                value={form.longitude}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-[#FFF8F3] text-sm text-[#1E1E1E] focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
+                placeholder="-47.8822"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
                 required
               />
+              <MapPin size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1E1E1E]/30" />
             </div>
+          </div>
+        </div>
+
+        <hr className="my-5 border-gray-100" />
+
+        {/* Início + Término */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-1">
+          <div>
+            <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Início</label>
+            <input
+              type="datetime-local"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-[#FFF8F3] text-sm text-[#1E1E1E] focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Término</label>
+            <input
+              type="datetime-local"
+              name="endDate"
+              value={form.endDate}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-[#FFF8F3] text-sm text-[#1E1E1E] focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
+              required
+            />
           </div>
         </div>
 
@@ -181,9 +223,10 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
           </button>
           <button
             type="submit"
-            className="px-6 py-2.5 rounded-lg text-sm font-bold text-white bg-green-600 hover:bg-green-700 transition-colors shadow-sm"
+            disabled={submitting}
+            className="px-6 py-2.5 rounded-lg text-sm font-bold text-white bg-green-600 hover:bg-green-700 transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Salvar
+            {submitting ? "Salvando..." : "Salvar"}
           </button>
         </div>
       </div>
