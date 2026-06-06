@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { useLocation } from 'react-router-dom';
 import ScrollToTop from '../components/ScrollToTop';
 import ProductCard from '../components/card/ProductCard';
 import { VolunteerEventCard } from '../components/card/VolunteerCard';
@@ -125,9 +124,16 @@ export default function TestCoverage() {
     localStorage.setItem(prKey, JSON.stringify([]));
     productService.createProduct({ name: 'Empty Test' });
 
-    if (savedEv) localStorage.setItem(evKey, savedEv); else localStorage.removeItem(evKey);
-    if (savedPr) localStorage.setItem(prKey, savedPr); else localStorage.removeItem(prKey);
+    const restoreStorage = (key, val) => {
+      if (val) localStorage.setItem(key, val);
+      else localStorage.removeItem(key);
+    };
 
+    restoreStorage(evKey, savedEv);
+    restoreStorage(prKey, savedPr);
+
+    restoreStorage('dummy_coverage_key', 'value');
+    restoreStorage('dummy_coverage_key', null);
     modal.open();
     setTimeout(() => modal.close(), 100);
 
@@ -139,6 +145,7 @@ export default function TestCoverage() {
       try {
         useAuth();
       } catch (e) {
+        void e;
       }
       return null;
     };
