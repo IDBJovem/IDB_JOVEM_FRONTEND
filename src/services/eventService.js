@@ -241,6 +241,47 @@ export async function fetchActivities(eventId) {
   return data.map(adaptActivity);
 }
 
+/* ------------------------------------------------------------------ */
+/* Galeria (Google Drive via backend)                                 */
+/* ------------------------------------------------------------------ */
+
+/* Galeria de um evento (rota pública). Usa o link_galeria do evento como
+   nome da pasta no Drive. Resposta: [{ id, nome, url_visualizacao }]. */
+export async function fetchEventGallery(eventId) {
+  const id = parseEventId(eventId);
+  if (!id) return [];
+  try {
+    const { data } = await api.get(`/evento/${id}/galeria`);
+    return data.map((foto) => ({
+      id: foto.id,
+      nome: foto.nome,
+      url: foto.url_visualizacao,
+    }));
+  } catch {
+    /* evento sem link_galeria, pasta inexistente (404) ou falha no Drive (502) */
+    return [];
+  }
+}
+
+/* Galeria geral: agrega as fotos de todos os eventos que têm galeria.
+   (não há endpoint público de galeria geral; montamos a partir dos eventos) */
+export async function fetchAggregatedGallery() {
+  const events = await fetchAllEvents();
+  const comGaleria = events.filter((e) => e.linkGaleria);
+  const grupos = await Promise.all(
+    comGaleria.map(async (ev) => {
+      const fotos = await fetchEventGallery(ev.id);
+      return fotos.map((foto) => ({
+        id: foto.id,
+        image: foto.url,
+        event: ev.title,
+        location: ev.location || "",
+      }));
+    })
+  );
+  return grupos.flat();
+}
+
 export async function handleCreateActivity(eventId, data, eventDate) {
   const id = parseEventId(eventId);
   if (!data.name || !data.name.trim()) {

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchEventById, fetchActivities } from "../../../services/eventService";
+import {
+  fetchEventById,
+  fetchActivities,
+  fetchEventGallery,
+} from "../../../services/eventService";
+import { fetchSpeakersByEvent } from "../../../services/speakerService";
 
 export function useEventDetails() {
   const { slug } = useParams();
@@ -19,8 +24,13 @@ export function useEventDetails() {
           if (active) setError("Evento não encontrado");
           return;
         }
-        const schedule = await fetchActivities(ev.id).catch(() => []);
-        if (active) setEvent({ ...ev, schedule });
+        const [schedule, fotos, speakers] = await Promise.all([
+          fetchActivities(ev.id).catch(() => []),
+          fetchEventGallery(ev.id).catch(() => []),
+          fetchSpeakersByEvent(ev.id).catch(() => []),
+        ]);
+        const gallery = fotos.map((f) => f.url);
+        if (active) setEvent({ ...ev, schedule, gallery, speakers });
       })
       .catch(() => active && setError("Evento não encontrado"))
       .finally(() => active && setLoading(false));

@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
-import { fetchAllEvents, isFutureEvent } from "../../../services/eventService";
+import {
+  fetchAllEvents,
+  fetchAggregatedGallery,
+  isFutureEvent,
+} from "../../../services/eventService";
 import { mockProducts } from "../../../data/mockProducts";
-import { mockGallery } from "../../../data/mockGallery";
 import { getCountdown } from "../../../utils/formatDate";
 
 export function useHomeData() {
   const [events, setEvents] = useState([]);
   const [nextEvent, setNextEvent] = useState(null);
   const [countdown, setCountdown] = useState(getCountdown(null));
-  // Produtos e galeria seguem como mock (Partes 2 e 3 da integração)
+  // Produtos seguem como mock (Parte 2 da integração)
   const [products] = useState(mockProducts);
-  const [gallery] = useState(mockGallery);
+  const [gallery, setGallery] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -24,6 +27,16 @@ export function useHomeData() {
         setNextEvent(proximos[0] || all[0] || null);
       })
       .catch(() => active && setEvents([]));
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    fetchAggregatedGallery()
+      .then((fotos) => active && setGallery(fotos))
+      .catch(() => active && setGallery([]));
     return () => {
       active = false;
     };

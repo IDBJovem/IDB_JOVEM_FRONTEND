@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin, CalendarDays, Users, Music, Link as LinkIcon, CalendarCog, ImagePlus } from "lucide-react";
 import { toInputDateTime } from "../../../services/eventService";
+import MapPickerModal from "./MapPickerModal";
 
 export default function EventForm({ initialData = {}, onSubmit, eventId }) {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false);
 
   const [form, setForm] = useState({
     title: initialData.title || "",
@@ -37,6 +39,15 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
 
   const handleCancel = () => {
     navigate("/admin/eventos");
+  };
+
+  const handlePickLocation = (lat, lng) => {
+    setForm((prev) => ({
+      ...prev,
+      latitude: lat.toFixed(6),
+      longitude: lng.toFixed(6),
+    }));
+    setMapOpen(false);
   };
 
   return (
@@ -88,7 +99,15 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
                 required
               />
-              <MapPin size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1E1E1E]/30" />
+              <button
+                type="button"
+                onClick={() => setMapOpen(true)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-[#1E1E1E]/40 hover:text-[#FF6D2C] hover:bg-[#FF6D2C]/10 transition-colors"
+                aria-label="Selecionar local no mapa"
+                title="Selecionar no mapa"
+              >
+                <MapPin size={16} />
+              </button>
             </div>
           </div>
           <div>
@@ -104,7 +123,15 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
                 required
               />
-              <MapPin size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1E1E1E]/30" />
+              <button
+                type="button"
+                onClick={() => setMapOpen(true)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-[#1E1E1E]/40 hover:text-[#FF6D2C] hover:bg-[#FF6D2C]/10 transition-colors"
+                aria-label="Selecionar local no mapa"
+                title="Selecionar no mapa"
+              >
+                <MapPin size={16} />
+              </button>
             </div>
           </div>
         </div>
@@ -230,6 +257,14 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
           </button>
         </div>
       </div>
+
+      <MapPickerModal
+        open={mapOpen}
+        initialLat={form.latitude}
+        initialLng={form.longitude}
+        onConfirm={handlePickLocation}
+        onClose={() => setMapOpen(false)}
+      />
     </form>
   );
 }
