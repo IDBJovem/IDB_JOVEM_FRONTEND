@@ -16,18 +16,15 @@ const CountdownBox = ({ value, label }) => (
 export default function HeroSection({ countdown, nextEvent }) {
   return (
     <section className="relative w-full min-h-[calc(100dvh-70px)] md:min-h-[calc(100dvh-82px)] mt-[70px] md:mt-[82px] overflow-hidden flex flex-col justify-center items-center bg-black">
-      {/* Background Image - Absolute inset-0 para cobrir todo o HeroSection */}
       <img
         src={bgGif}
         alt=""
         className="absolute inset-0 w-full h-full object-cover opacity-80"
         aria-hidden="true"
       />
-      
-      {/* Overlay mais suave apenas para não atrapalhar o texto branco */}
+
       <div className="absolute inset-0 bg-black/20" />
 
-      {/* Conteúdo */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full max-w-5xl mx-auto py-8">
         {/* Título principal */}
         <h1
@@ -55,7 +52,6 @@ export default function HeroSection({ countdown, nextEvent }) {
           </div>
         </div>
 
-        {/* CTA */}
         {nextEvent && (
           <Link
             to={`/eventos/${nextEvent.slug}`}

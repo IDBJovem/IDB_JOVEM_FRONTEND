@@ -8,7 +8,6 @@ import EmptyState from "../../../components/ui/EmptyState";
 import { UpcomingEventRow, PastEventRow } from "./components/EventRow";
 import DeleteEventModal from "./components/DeleteEventModal";
 
-/* Página principal: Listagem de Eventos */
 export default function AdminEventos() {
   const navigate = useNavigate();
   const deleteModal = useModal();

@@ -12,7 +12,6 @@ import SectionTitle from "../../../components/ui/SectionTitle";
 import AdminTable from "../components/AdminTable";
 import { StatCard } from "../../../components/card/VolunteerCard";
 
-/* Página: Detalhes de Voluntários de um Evento */
 export default function AdminVoluntarioDetails() {
   const navigate = useNavigate();
   const { eventId } = useParams();
@@ -64,9 +63,8 @@ export default function AdminVoluntarioDetails() {
   const renderVolunteerRow = (vol, index) => (
     <div
       key={vol.id}
-      className={`grid px-6 py-4 items-center transition-colors hover:bg-gray-50/70 ${
-        index < volunteers.length - 1 ? "border-b border-gray-100" : ""
-      }`}
+      className={`grid px-6 py-4 items-center transition-colors hover:bg-gray-50/70 ${index < volunteers.length - 1 ? "border-b border-gray-100" : ""
+        }`}
       style={{ gridTemplateColumns: "1fr 1fr 140px 130px" }}
     >
       <span className="text-sm text-[#1E1E1E] font-medium truncate pr-3">

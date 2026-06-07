@@ -9,7 +9,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
 
   test('deve exibir título e seções da lista de eventos', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Eventos', exact: true })).toBeVisible();
-    
+
     await expect(page.getByRole('heading', { name: 'Próximos Eventos' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Eventos Anteriores' })).toBeVisible();
   });
@@ -17,7 +17,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
   test('deve navegar para a página de criar evento', async ({ page }) => {
     const btnNovo = page.getByRole('link', { name: /Adicionar Evento/i });
     await btnNovo.click();
-    
+
     await expect(page).toHaveURL(/\/admin\/eventos\/criar/);
     await expect(page.getByRole('heading', { name: 'Criação de Evento' })).toBeVisible();
   });
@@ -33,7 +33,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
     await page.getByPlaceholder('Palestrantes').fill('Pr. Dev');
     await page.getByPlaceholder('Bandas').fill('Banda QA');
     await page.locator('input[name="linkFormularioVoluntarios"]').fill('https://forms.gle/teste');
-    
+
     await page.getByRole('button', { name: 'Salvar' }).click();
 
     // Volta pra lista, deve aparecer o novo
@@ -52,7 +52,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
     // Edita
     const titleInput = page.getByPlaceholder('Nome do Evento');
     await titleInput.fill('Evento Playwright Atualizado');
-    
+
     await page.getByRole('button', { name: 'Salvar' }).click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
   });
@@ -89,9 +89,8 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
 
       // O modal deve fechar
       await expect(modalHeading).not.toBeVisible();
-      
-      // O mock do front não persiste a exclusão permanente entre loads se ele reseta, 
-      // mas pelo menos validamos que o clique ocorre sem erros
+
+      // O mock do front não persiste a exclusão permanente entre loads se ele reseta, mas pelo menos validamos que o clique ocorre sem erros
     }
   });
 
@@ -100,7 +99,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
 
     // Deixa título vazio e preenche o resto
     await page.locator('input[name="date"]').fill('2029-12-31');
-    
+
     // Intercepta alerts do navegador, pois o app usa alert() 
     let alertMessage = '';
     page.on('dialog', async dialog => {
@@ -110,19 +109,17 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
 
     await page.getByRole('button', { name: 'Salvar' }).click();
 
-    // Como o front usa required no HTML ou valida no JS, devemos verificar
-    // O mock handleCreateEvent verifica `!formData.title` e retorna {success: false, error: 'O nome do evento é obrigatório.'}
-    // ou o HTML5 valida antes. Vamos verificar se alert foi chamado ou campo required
+    // O mock handleCreateEvent verifica `!formData.title` e retorna {success: false, error: 'O nome do evento é obrigatório.'} ou o HTML5 valida antes. Vamos verificar se alert foi chamado ou campo required
     const titleInput = page.getByPlaceholder('Nome do Evento');
     const isRequired = await titleInput.getAttribute('required');
-    
+
     // Se for required no html, o formulário não é submetido
     // Se for validado via JS e dar alert
     expect(isRequired !== null || alertMessage === 'O nome do evento é obrigatório.').toBeTruthy();
   });
 
   test('deve testar os botões de Voltar e Cancelar na criação e edição, além de Editar Programação', async ({ page }) => {
-    // Create
+    // Cria
     await page.goto('/admin/eventos/criar');
     await page.getByTitle('Voltar').click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
@@ -131,7 +128,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
     await page.getByRole('button', { name: 'Cancelar' }).click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
 
-    // Edit
+    // Edita
     await page.goto('/admin/eventos/1/editar');
     await page.getByTitle('Voltar').click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
@@ -152,7 +149,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
 
     await expect(page).toHaveURL(/\/admin\/eventos\/\d+/);
     await expect(page.getByRole('heading', { name: 'Detalhes do Evento' })).toBeVisible();
-    
+
     // Verifica tabelas detalhadas
     await expect(page.getByText('Nome do Evento', { exact: true })).toBeVisible();
     await expect(page.getByText('Descrição do Evento', { exact: true })).toBeVisible();
@@ -170,13 +167,13 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
   });
 
   test('deve exibir mensagem de Evento não encontrado para Edit e Details inválidos', async ({ page }) => {
-    // Edit
+    // Edita
     await page.goto('/admin/eventos/999999/editar');
     await expect(page.getByText('Evento não encontrado.')).toBeVisible();
     await page.getByRole('button', { name: 'Voltar para Eventos' }).click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
 
-    // Details
+    // Detalhes
     await page.goto('/admin/eventos/999999');
     await expect(page.getByText('Evento não encontrado.')).toBeVisible();
     await page.getByRole('button', { name: 'Voltar para Eventos' }).click();
@@ -247,7 +244,7 @@ test.describe('Admin - Gerenciamento de Programação do Evento', () => {
   test('deve excluir uma atividade existente', async ({ page }) => {
     const activityRows = page.locator('.flex.items-center.gap-4.py-4');
     const countBefore = await activityRows.count();
-    
+
     if (countBefore > 0) {
       const btnExcluir = page.getByTitle('Excluir atividade').first();
       await btnExcluir.click();
@@ -271,9 +268,9 @@ test.describe('Admin - Gerenciamento de Programação do Evento', () => {
   });
 
   test('deve exibir empty state na programação quando não houver atividades', async ({ page }) => {
-    // Evento 2 tem schedule vazio (mockEvents.js)
+    // Evento 2 tem programação vazia
     await page.goto('/admin/eventos/2/programacao');
-    
+
     // O EmptyState deve estar visível ("Nenhuma atividade cadastrada.")
     await expect(page.getByText('Nenhuma atividade cadastrada.')).toBeVisible();
 
@@ -431,35 +428,35 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
   test('deve confirmar exclusão de evento clicando Sim no modal (Eventos/index.jsx L32-34)', async ({ page }) => {
     await page.goto('/admin/eventos');
 
-    // Directly click the first Excluir button (from UpcomingEventRow)
+    // Clica no botão Excluir
     const btnExcluir = page.getByTitle('Excluir').first();
     await expect(btnExcluir).toBeVisible();
     await btnExcluir.click();
 
-    // Modal should appear
+    // O modal deve aparecer
     const modalHeading = page.getByText('Tem certeza que deseja excluir este evento?');
     await expect(modalHeading).toBeVisible();
 
-    // Confirm deletion by clicking "Sim"
+    // Confirma exclusão clicando "Sim"
     const btnSim = page.getByRole('button', { name: 'Sim' });
     await btnSim.click();
 
-    // Modal should close
+    // Modal deve fechar
     await expect(modalHeading).not.toBeVisible();
   });
 
   test('deve cobrir EditSchedule.jsx handleBack (L39) e alert de erro no salvar (L76)', async ({ page }) => {
-    // Visit a valid schedule page
+    // Visita uma página de programação válida
     await page.goto('/admin/eventos/1/programacao');
     await expect(page.getByRole('heading', { name: 'Programação do Evento' })).toBeVisible();
 
-    // Test handleBack by clicking the back button in SectionTitle
+    // Teste handleBack clicando no botão Voltar no SectionTitle
     await page.locator('button[title="Voltar"]').click();
     await expect(page).toHaveURL(/\/admin\/eventos\/1\/editar/);
   });
 
   test('deve cobrir Details.jsx com todos os branches de fallback (L13, L83-99)', async ({ page }) => {
-    // Create a minimal event with NO optional fields to hit all fallback branches
+    // Cria um evento mínimo sem campos opcionais para atingir todos os branches de fallback
     await page.goto('/admin/eventos/criar');
     await page.getByPlaceholder('Nome do Evento').fill('Evento Sem Opcionais');
     await page.locator('input[name="date"]').fill('2020-06-01');
@@ -467,7 +464,7 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
     await page.getByRole('button', { name: 'Salvar' }).click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
 
-    // Inject a mock volunteer for this new event so that a volunteer row is rendered
+    // Injeta um voluntário mockado para este novo evento para que uma linha de voluntário seja renderizada
     await page.evaluate(() => {
       const events = JSON.parse(localStorage.getItem('idb_admin_events') || '[]');
       const newEvent = events.find(e => e.title === 'Evento Sem Opcionais');
@@ -484,37 +481,36 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
       }
     });
 
-    // Find and click on the newly created event's "Detalhes" link
+    // Encontra e clica no link "Detalhes" do evento recém-criado
     const eventCard = page.locator('.flex.items-center.gap-4').filter({ hasText: 'Evento Sem Opcionais' }).first();
     await eventCard.getByRole('link', { name: 'Detalhes' }).click();
 
     await expect(page.getByRole('heading', { name: 'Detalhes do Evento' })).toBeVisible();
 
-    // The "—" fallback should appear for description, palestrantes, bandas
+    // O fallback "—" deve aparecer para descrição, palestrantes, bandas
     const dashes = page.getByText('—');
     expect(await dashes.count()).toBeGreaterThanOrEqual(1);
 
-    // Navigate back and click Voluntários
+    // Navega de volta e clica em Voluntários
     await page.getByRole('button', { name: 'Voltar' }).click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
-    
+
     // O evento recém-criado foi no passado (2020-06-01), então está em Eventos Anteriores
     const pastEventCard = page.locator('.flex.items-center.gap-4').filter({ hasText: 'Evento Sem Opcionais' }).first();
     await pastEventCard.getByRole('link', { name: 'Voluntários' }).click();
     await expect(page.getByRole('heading', { name: 'Voluntários' })).toBeVisible();
-    
+
     // Agora estamos na lista de eventos para voluntários. Clicar no botão do evento:
     const volEventCard = page.locator('.bg-white.rounded-2xl').filter({ hasText: 'Evento Sem Opcionais' }).first();
     await volEventCard.getByRole('link', { name: 'Voluntários Inscritos' }).click();
-    
-    // The link should fallback to "#" because we didn't provide linkFormularioVoluntarios
+
+    // O link deve ser "#" porque não fornecemos linkFormularioVoluntarios
     const formLink = page.getByRole('link', { name: 'Abrir Formulário' }).first();
     await expect(formLink).toHaveAttribute('href', '#');
   });
 
   test('deve cobrir Details.jsx ?? branches com valores null (totalParticipantes/totalVoluntarios)', async ({ page }) => {
-    // Inject an event with explicit null for totalParticipantes and totalVoluntarios
-    // to cover the ?? 0 null coalescing branches at lines 70 and 78
+    // Injeta um evento com null explícito para totalParticipantes e totalVoluntarios para cobrir os branches null coalescing ?? 0 nas linhas 70 e 78
     await page.goto('/admin/eventos');
 
     await page.evaluate(() => {
@@ -541,14 +537,13 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
       localStorage.setItem('idb_admin_events', JSON.stringify(events));
     });
 
-    // Navigate to the details page of this event
+    // Navega para a página de detalhes deste evento
     await page.goto('/admin/eventos/77777');
 
     await expect(page.getByRole('heading', { name: 'Detalhes do Evento' })).toBeVisible();
     await expect(page.getByText('Evento Null Fields')).toBeVisible();
 
-    // totalParticipantes and totalVoluntarios should show "0" (from ?? 0 fallback)
-    // description, location, palestrantes, bandas should show "—" (from || "—" fallback)
+    // totalParticipantes e totalVoluntarios devem mostrar "0"
     const dashes = page.getByText('—');
     expect(await dashes.count()).toBeGreaterThanOrEqual(4);
   });

@@ -2,7 +2,7 @@ import { test, expect } from '../helpers/testWithCoverage.js';
 
 test.describe('Página de Detalhes do Evento', () => {
   test('deve carregar informações de um evento válido', async ({ page }) => {
-    await page.goto('/eventos/evento-1'); // mock data slug
+    await page.goto('/eventos/evento-1');
 
     // Hero Section
     const titulo = page.getByRole('heading', { name: 'IDB TEEN CAMP' });
@@ -18,10 +18,10 @@ test.describe('Página de Detalhes do Evento', () => {
     const btnVoltar = page.getByLabel('Voltar');
     await expect(btnVoltar).toBeVisible();
 
-    // Seção de Speakers (Line-up)
+    // Seção de Speakers
     await expect(page.getByRole('heading', { name: 'Palestrantes' })).toBeVisible();
 
-    // Seção de Schedule (Programação)
+    // Seção de Programação
     await expect(page.getByRole('heading', { name: 'Programação do evento' })).toBeVisible();
 
     // Seção de Galeria de Fotos
@@ -40,13 +40,13 @@ test.describe('Página de Detalhes do Evento', () => {
     const btnVerTodos = page.getByRole('link', { name: 'Ver todos os eventos' });
     await expect(btnVerTodos).toBeVisible();
 
-    // Testar se o link redireciona
+    // Testa se o link redireciona
     await btnVerTodos.click();
     await expect(page).toHaveURL(/\/eventos$/);
   });
 
   test('deve navegar para trás ao clicar no botão Voltar do Hero', async ({ page }) => {
-    // Navega primeiro para /eventos, depois para detalhes para ter histórico
+    // Navega primeiro para eventos, depois para detalhes para ter histórico
     await page.goto('/eventos');
     await page.goto('/eventos/evento-1');
 
@@ -64,17 +64,16 @@ test.describe('Página de Detalhes do Evento', () => {
     const speakerSection = page.locator('section').filter({ hasText: 'Palestrantes' });
     await expect(speakerSection).toBeVisible();
 
-    // Deve renderizar 4 speakers (dados do mock evento-1)
+    // Deve renderizar 4 speakers
     const speakerNames = speakerSection.locator('h3');
     const count = await speakerNames.count();
     expect(count).toBe(4);
 
-    // Cada speaker deve ter role (profissão)
+    // Cada speaker deve ter profissão
     const speakerRoles = speakerSection.locator('p');
     const rolesCount = await speakerRoles.count();
     expect(rolesCount).toBe(4);
 
-    // Speaker images devem ter alt text
     const speakerImages = speakerSection.locator('img');
     const imgCount = await speakerImages.count();
     expect(imgCount).toBe(4);
@@ -90,7 +89,7 @@ test.describe('Página de Detalhes do Evento', () => {
     const scheduleSection = page.locator('section').filter({ hasText: 'Programação do evento' });
     await expect(scheduleSection).toBeVisible();
 
-    // evento-1 tem 4 atividades: Abertura, Louvor, Ministração, Encerramento
+    // evento-1 tem 4 atividades
     await expect(scheduleSection.getByText('Abertura')).toBeVisible();
     await expect(scheduleSection.getByText('Louvor')).toBeVisible();
     await expect(scheduleSection.getByText('Ministração')).toBeVisible();
@@ -114,18 +113,16 @@ test.describe('Página de Detalhes do Evento', () => {
     const count = await imgs.count();
     expect(count).toBeGreaterThan(0);
 
-    // Alt text deve ser do padrão "Foto X do evento"
     await expect(imgs.first()).toHaveAttribute('alt', /Foto \d+ do evento/);
   });
 
   test('não deve renderizar galeria quando não existem fotos', async ({ page }) => {
-    // evento-2 tem galeria vazia
     await page.goto('/eventos/evento-2');
 
     // Speakers e Schedule devem estar visíveis 
     await expect(page.getByRole('heading', { name: 'Palestrantes' })).toBeVisible();
 
-    // Galeria do evento NÃO deve aparecer (gallery vazia retorna null)
+    // Galeria do evento NÃO deve aparecer
     const galeriaHeading = page.getByRole('heading', { name: 'Galeria do evento' });
     await expect(galeriaHeading).not.toBeVisible();
   });

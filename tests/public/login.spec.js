@@ -47,7 +47,6 @@ test.describe('Página de Login', () => {
   test('deve alternar a visibilidade da senha ao clicar no ícone do olho', async ({ page }) => {
     const inputSenha = page.locator('input[name="senha"]');
 
-    // Inicia como password
     await expect(inputSenha).toHaveAttribute('type', 'password');
 
     // Clica para mostrar

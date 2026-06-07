@@ -2,13 +2,11 @@ import { Link } from "react-router-dom";
 import { MapPin, Pencil, Trash2 } from "lucide-react";
 import { extractDayMonth } from "../../../../services/eventService";
 
-/* Event Row para Próximos Eventos */
 export function UpcomingEventRow({ event, onEdit, onDelete }) {
   const { day, month } = extractDayMonth(event.date);
 
   return (
     <div className="flex items-center gap-4 py-3.5 border-b border-gray-100 last:border-0 group hover:bg-gray-50/50 px-2 rounded-lg transition-colors">
-      {/* Date badge */}
       <div className="flex flex-col items-center justify-center w-14 h-16 rounded-xl bg-[#FFD9B3] text-[#1E1E1E] font-bold shrink-0 shadow-sm">
         <span className="text-lg leading-tight">{day}</span>
         <span className="text-[10px] uppercase tracking-wider font-semibold">{month}</span>
@@ -23,7 +21,7 @@ export function UpcomingEventRow({ event, onEdit, onDelete }) {
         </span>
       </div>
 
-      {/* Actions */}
+      {/* Acoes */}
       <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={() => onEdit(event.id)}
@@ -44,13 +42,13 @@ export function UpcomingEventRow({ event, onEdit, onDelete }) {
   );
 }
 
-/* Event Row para Eventos Anteriores */
+/* Eventos Anteriores */
 export function PastEventRow({ event }) {
   const { day, month } = extractDayMonth(event.date);
 
   return (
     <div className="flex items-center gap-4 py-3.5 border-b border-gray-100 last:border-0 group hover:bg-gray-50/50 px-2 rounded-lg transition-colors">
-      {/* Date badge */}
+      {/* Data */}
       <div className="flex flex-col items-center justify-center w-14 h-16 rounded-xl bg-[#FFD9B3]/70 text-[#1E1E1E] font-bold shrink-0 shadow-sm">
         <span className="text-lg leading-tight">{day}</span>
         <span className="text-[10px] uppercase tracking-wider font-semibold">{month}</span>
@@ -65,7 +63,7 @@ export function PastEventRow({ event }) {
         </span>
       </div>
 
-      {/* Actions */}
+      {/* Acoes */}
       <div className="flex flex-col gap-1.5 shrink-0">
         <Link
           to={`/admin/eventos/${event.id}`}

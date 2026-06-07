@@ -1,10 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import Modal from "../../../../components/ui/Modal";
 
-/**
- * Modal de confirmação de exclusão de atividade da programação.
- * @param {{ isOpen: boolean, onClose: () => void, onConfirm: () => void }} props
- */
 export default function DeleteActivityModal({ isOpen, onClose, onConfirm }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

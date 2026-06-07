@@ -4,7 +4,6 @@ import SectionTitle from "../../../components/ui/SectionTitle";
 import EmptyState from "../../../components/ui/EmptyState";
 import { VolunteerEventCard } from "../../../components/card/VolunteerCard";
 
-/* Página: Listagem de Eventos com Voluntários */
 export default function AdminVoluntarios() {
   const [events, setEvents] = useState([]);
 

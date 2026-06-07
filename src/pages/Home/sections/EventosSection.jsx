@@ -10,7 +10,7 @@ export default function EventosSection({ events = [] }) {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % carouselEvents.length);
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, [carouselEvents.length]);
 
@@ -30,8 +30,8 @@ export default function EventosSection({ events = [] }) {
       {/* Evento em destaque (Carrossel) */}
       {featured && (
         <div className="w-full max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-          
-          {/* Imagem com botão Saiba mais - z-20 para ficar por cima do oval se sobrepor */}
+
+          {/* Imagem com botão Saiba mais*/}
           <div className="relative z-20 group w-full h-[400px] md:h-[550px] border-[2px] border-neutral-900 bg-neutral-900 overflow-hidden shrink-0 shadow-lg">
             <img
               key={featured.image}
@@ -39,7 +39,7 @@ export default function EventosSection({ events = [] }) {
               alt={featured.title}
               className="w-full h-full object-cover animate-fade-in transition-transform duration-[7000ms] ease-out group-hover:scale-105"
             />
-            
+
             {/* Saiba mais */}
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
               <Link
@@ -51,17 +51,17 @@ export default function EventosSection({ events = [] }) {
             </div>
           </div>
 
-          {/* Info do evento - z-10 */}
+          {/* Info do evento */}
           <div key={featured.id} className="relative z-10 flex flex-col items-center justify-center animate-fade-in-up px-4 min-w-0">
-            
-            {/* Oval Title Container */}
+
+            {/* Container oval de fundo*/}
             <div className="relative z-10 mb-10 flex justify-center items-center py-6 px-4 md:px-8 w-full">
-              {/* Oval shape - passa por trás da imagem graças aos z-index dos pais */}
-              <div 
-                className="absolute inset-0 bg-[#DE6B16] rounded-[50%] -z-10" 
-                style={{ transform: "scale(1.15, 1.3)" }} 
+
+              <div
+                className="absolute inset-0 bg-[#DE6B16] rounded-[50%] -z-10"
+                style={{ transform: "scale(1.15, 1.3)" }}
               />
-              
+
               <h3
                 className="font-black uppercase leading-[0.85] text-white text-center tracking-tighter flex flex-col"
                 style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)", transform: "scaleY(1.1)" }}

@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-/* Formulário inline de atividade */
 export default function ActivityInlineForm({ initialData, onSave, onCancel }) {
   const [form, setForm] = useState({
     name: initialData?.name || "",

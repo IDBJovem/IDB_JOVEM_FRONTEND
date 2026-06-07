@@ -1,4 +1,3 @@
-/* Dados locais */
 const GALLERY_DATA = [
   {
     id: 1,

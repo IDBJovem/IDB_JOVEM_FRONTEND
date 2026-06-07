@@ -74,37 +74,66 @@ export default function VolunteerSection() {
           {reasons.map((reason, index) => (
             <BlurFade key={reason.id} delay={0.2 + index * 0.15} inView>
               <div
-                className={`grid grid-cols-1 md:grid-cols-2 gap-12 items-center ${
-                  reason.imageRight ? "" : "md:[direction:rtl]"
-                }`}
+                className={`grid grid-cols-1 md:grid-cols-2 gap-12 items-center ${reason.imageRight ? "" : "md:[direction:rtl]"
+                  }`}
               >
                 {/* Texto */}
-              <div
-                className={`flex flex-col ${
-                  reason.imageRight ? "" : "md:[direction:ltr]"
-                }`}
-              >
-                <h3
-                  className="font-handwriting leading-none text-orange-500"
-                  style={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)" }}
-                >
-                  {reason.title}
-                </h3>
-                <h4
-                  className="font-black leading-none text-neutral-800 mb-6 tracking-tight"
-                  style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)" }}
-                >
-                  {reason.subtitle}
-                </h4>
-                <p className="text-neutral-700 text-base leading-relaxed mb-6 md:mb-0">
-                  {reason.description}
-                </p>
-
-                {/* Imagem mobile (antes do quote) */}
                 <div
-                  className={`flex md:hidden flex-col items-center my-6 ${
-                    reason.imageRight ? "" : "md:[direction:ltr]"
-                  }`}
+                  className={`flex flex-col ${reason.imageRight ? "" : "md:[direction:ltr]"
+                    }`}
+                >
+                  <h3
+                    className="font-handwriting leading-none text-orange-500"
+                    style={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)" }}
+                  >
+                    {reason.title}
+                  </h3>
+                  <h4
+                    className="font-black leading-none text-neutral-800 mb-6 tracking-tight"
+                    style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)" }}
+                  >
+                    {reason.subtitle}
+                  </h4>
+                  <p className="text-neutral-700 text-base leading-relaxed mb-6 md:mb-0">
+                    {reason.description}
+                  </p>
+
+                  {/* Imagem mobile*/}
+                  <div
+                    className={`flex md:hidden flex-col items-center my-6 ${reason.imageRight ? "" : "md:[direction:ltr]"
+                      }`}
+                  >
+                    <img
+                      src={reason.image}
+                      alt={reason.title}
+                      className="w-full h-auto object-cover rounded-3xl"
+                    />
+                    <span className="mt-4 text-black text-sm md:text-base font-black italic text-center">
+                      {reason.imageCaption}
+                    </span>
+                  </div>
+
+                  {reason.quoteText && (
+                    <div className="mt-4 border border-neutral-300 rounded-xl p-6 relative">
+                      <span className="absolute -top-5 left-6 bg-[#FCF8F3] px-2 text-orange-500 font-serif leading-none" style={{ fontSize: "3rem" }}>
+                        “
+                      </span>
+                      <p className="text-neutral-600 italic text-sm mb-4 mt-2">
+                        {reason.quoteText}
+                      </p>
+                      <p className="text-neutral-400 text-xs italic">
+                        {reason.quoteAuthor}
+                      </p>
+                    </div>
+                  )}
+
+
+                </div>
+
+                {/* Imagem Desktop */}
+                <div
+                  className={`hidden md:flex flex-col items-center ${reason.imageRight ? "" : "md:[direction:ltr]"
+                    }`}
                 >
                   <img
                     src={reason.image}
@@ -115,39 +144,6 @@ export default function VolunteerSection() {
                     {reason.imageCaption}
                   </span>
                 </div>
-
-                {reason.quoteText && (
-                  <div className="mt-4 border border-neutral-300 rounded-xl p-6 relative">
-                    <span className="absolute -top-5 left-6 bg-[#FCF8F3] px-2 text-orange-500 font-serif leading-none" style={{ fontSize: "3rem" }}>
-                      “
-                    </span>
-                    <p className="text-neutral-600 italic text-sm mb-4 mt-2">
-                      {reason.quoteText}
-                    </p>
-                    <p className="text-neutral-400 text-xs italic">
-                      {reason.quoteAuthor}
-                    </p>
-                  </div>
-                )}
-
-
-              </div>
-
-              {/* Imagem Desktop */}
-              <div
-                className={`hidden md:flex flex-col items-center ${
-                  reason.imageRight ? "" : "md:[direction:ltr]"
-                }`}
-              >
-                <img
-                  src={reason.image}
-                  alt={reason.title}
-                  className="w-full h-auto object-cover rounded-3xl"
-                />
-                <span className="mt-4 text-black text-sm md:text-base font-black italic text-center">
-                  {reason.imageCaption}
-                </span>
-              </div>
               </div>
             </BlurFade>
           ))}

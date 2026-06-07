@@ -36,10 +36,9 @@ export default function Login() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Overlay escuro sutil */}
+
       <div className="absolute inset-0 bg-black/20" />
 
-      {/* Card glassmorphism */}
       <form
         onSubmit={handleSubmit}
         className="

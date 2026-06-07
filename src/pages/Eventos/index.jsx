@@ -13,7 +13,6 @@ import EventList from "./components/EventList";
 import EmptyEvents from "./components/EmptyEvents";
 import { fuzzyMatch } from "../../utils/stringUtils";
 
-/* Dados mock */
 const FEATURED_EVENT = {
   id: 0,
   title: "Nome do evento",
@@ -81,7 +80,6 @@ const UPCOMING_EVENTS = [
   },
 ];
 
-/* Card do carrossel */
 function CarouselCard({ event }) {
   return (
     <div className="min-w-[260px] sm:min-w-[280px] flex-shrink-0 bg-white rounded-2xl overflow-hidden shadow-sm group">
@@ -181,7 +179,6 @@ export default function Eventos() {
         </div>
       </section>
 
-      {/* Em breve (evento destaque) */}
       <section className="w-full bg-[#FDF3EA] py-10">
         <div className="w-full max-w-6xl mx-auto px-4">
           <h2 className="font-handwriting text-[#1E1E1E] mb-6" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}>

@@ -33,7 +33,7 @@ export default function GaleriaSection({ gallery = [] }) {
           </h2>
         </div>
 
-        {/* Lista de fotos (Swiper) */}
+        {/* Lista de fotos */}
         <div className="w-full px-4 md:px-8 pb-8">
           <Swiper
             modules={[Autoplay]}

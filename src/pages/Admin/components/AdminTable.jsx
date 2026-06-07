@@ -1,14 +1,3 @@
-/**
- * Componente genérico de tabela admin com header colorido.
- *
- * @param {{
- *   columns: Array<{ key: string, label: string, width?: string }>,
- *   data: Array<object>,
- *   renderRow: (item: object, index: number) => React.ReactNode,
- *   emptyMessage?: string,
- *   headerBg?: string
- * }} props
- */
 export default function AdminTable({
   columns,
   data,
