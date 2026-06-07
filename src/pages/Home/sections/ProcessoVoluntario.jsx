@@ -68,37 +68,33 @@ export default function ProcessoVoluntario() {
                   {/* Indicador numérico */}
                   <div className="flex flex-col items-center min-w-[2rem] pt-1">
                     <span
-                      className={`font-handwriting text-xl transition-colors duration-300 ${
-                        isActive ? "text-[#FFD2A6]" : "text-[#FFD2A6]/50"
-                      }`}
+                      className={`font-handwriting text-xl transition-colors duration-300 ${isActive ? "text-[#FFD2A6]" : "text-[#FFD2A6]/50"
+                        }`}
                     >
                       {step.number}
                     </span>
                     {/* Linha vertical */}
                     <div
-                      className={`w-[1.5px] transition-all duration-500 bg-[#E4E4E4] mt-3 rounded-full ${
-                        isActive ? "h-16 opacity-100" : "h-0 opacity-0"
-                      }`}
+                      className={`w-[1.5px] transition-all duration-500 bg-[#E4E4E4] mt-3 rounded-full ${isActive ? "h-16 opacity-100" : "h-0 opacity-0"
+                        }`}
                     />
                   </div>
 
                   {/* Conteúdo */}
                   <div className="flex flex-col flex-1 pt-1 pb-2">
                     <span
-                      className={`font-bold text-xl md:text-2xl transition-colors duration-300 ${
-                        isActive ? "text-[#FFFFFF]" : "text-[#2E2F35]/40 group-hover:text-[#2E2F35]/60"
-                      }`}
+                      className={`font-bold text-xl md:text-2xl transition-colors duration-300 ${isActive ? "text-[#FFFFFF]" : "text-[#2E2F35]/40 group-hover:text-[#2E2F35]/60"
+                        }`}
                     >
                       {step.title}
                     </span>
 
                     {/* Descrição */}
                     <div
-                      className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                        isActive
+                      className={`overflow-hidden transition-all duration-500 ease-in-out ${isActive
                           ? "max-h-40 opacity-100 mt-3"
                           : "max-h-0 opacity-0"
-                      }`}
+                        }`}
                     >
                       <p className="text-[15px] md:text-base text-[#E4E4E4] font-medium leading-relaxed pr-4 md:pr-12">
                         {step.description}
@@ -109,7 +105,6 @@ export default function ProcessoVoluntario() {
               );
             })}
 
-            {/* CTA */}
             <div className="mt-8 ml-12">
               <Link
                 to="/voluntarios"

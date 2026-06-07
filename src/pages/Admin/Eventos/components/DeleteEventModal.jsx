@@ -1,10 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import Modal from "../../../../components/ui/Modal";
 
-/**
- * Modal de confirmação de exclusão de evento.
- * @param {{ isOpen: boolean, onClose: () => void, onConfirm: () => void, eventTitle?: string }} props
- */
 export default function DeleteEventModal({ isOpen, onClose, onConfirm, eventTitle }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

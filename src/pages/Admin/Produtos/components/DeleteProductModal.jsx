@@ -1,10 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import Modal from "../../../../components/ui/Modal";
 
-/**
- * Modal de confirmação de exclusão de produto.
- * @param {{ isOpen: boolean, onClose: () => void, onConfirm: () => void }} props
- */
 export default function DeleteProductModal({ isOpen, onClose, onConfirm }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

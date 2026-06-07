@@ -1,4 +1,3 @@
-/* Card de Produto compacto para o Dashboard */
 export default function DashboardProductCard({ product }) {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5">

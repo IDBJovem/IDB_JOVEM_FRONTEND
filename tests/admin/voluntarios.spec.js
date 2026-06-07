@@ -54,10 +54,10 @@ test.describe('Admin - Voluntários Detalhes da Tabela', () => {
     // Acha o botão do dropdown
     const dropdownBtn = page.getByRole('button', { name: 'Pendente' }).first();
     await dropdownBtn.click();
-    
+
     // Clica no novo status
     await page.locator('.absolute').getByRole('button', { name: 'Aprovado' }).click();
-    
+
     await expect(page.getByRole('button', { name: 'Aprovado' }).first()).toBeVisible();
   });
 
@@ -65,10 +65,10 @@ test.describe('Admin - Voluntários Detalhes da Tabela', () => {
     // Acha o botão do dropdown
     const dropdownBtn = page.getByRole('button', { name: 'Pendente' }).first();
     await dropdownBtn.click();
-    
+
     // Clica no novo status
     await page.locator('.absolute').getByRole('button', { name: 'Reprovado' }).click();
-    
+
     await expect(page.getByRole('button', { name: 'Reprovado' }).first()).toBeVisible();
   });
 
@@ -96,10 +96,10 @@ test.describe('Admin - Voluntários Detalhes - Evento Não Encontrado', () => {
 
   test('deve exibir mensagem de Evento não encontrado para ID inválido', async ({ page }) => {
     await page.goto('/admin/voluntarios/999999');
-    
+
     await expect(page.getByText('Evento não encontrado.')).toBeVisible();
     await page.getByRole('button', { name: 'Voltar para Voluntários' }).click();
-    
+
     await expect(page).toHaveURL(/\/admin\/voluntarios/);
   });
 });
@@ -112,10 +112,10 @@ test.describe('Admin - Voluntários - Branch de linkFormularioVoluntarios', () =
   test('deve verificar atributo href do link Abrir Formulário (Details.jsx L86)', async ({ page }) => {
     // Visita voluntários de um evento existente
     await page.goto('/admin/voluntarios/1');
-    
+
     const linkForms = page.getByRole('link', { name: /Abrir Formulário/i }).first();
     await expect(linkForms).toBeVisible();
-    
+
     // Verifica se tem href (pode ser o link real ou '#' dependendo do mock)
     const href = await linkForms.getAttribute('href');
     expect(href).toBeTruthy();

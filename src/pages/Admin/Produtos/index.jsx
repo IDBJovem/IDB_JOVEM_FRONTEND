@@ -8,7 +8,6 @@ import EmptyState from "../../../components/ui/EmptyState";
 import ProductCard from "../../../components/card/ProductCard";
 import DeleteProductModal from "./components/DeleteProductModal";
 
-/* Página principal: Listagem de Produtos */
 export default function AdminProdutos() {
   const navigate = useNavigate();
   const deleteModal = useModal();

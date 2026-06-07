@@ -25,7 +25,6 @@ test.describe('Página de Eventos', () => {
     const inputBusca = page.getByPlaceholder('Pesquisar evento...');
     await inputBusca.fill('Pesquisa de teste');
 
-    // Ao digitar, aparece o botão limpar (XCircle)
     const btnLimpar = page.getByLabel('Limpar pesquisa');
     await expect(btnLimpar).toBeVisible();
 

@@ -1,6 +1,5 @@
 import { Pencil, Trash2 } from "lucide-react";
 
-/* Linha de atividade */
 export default function ActivityRow({ item, onEdit, onDelete }) {
   return (
     <div className="flex items-center gap-4 py-4 border-b border-gray-100 last:border-0 group hover:bg-gray-50/50 px-2 rounded-lg transition-colors">

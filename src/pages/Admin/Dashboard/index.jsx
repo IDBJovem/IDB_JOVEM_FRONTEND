@@ -5,11 +5,9 @@ import { MapPin } from "lucide-react";
 import DashboardProductCard from "./components/DashboardProductCard";
 import CalendarMini from "./components/CalendarMini";
 
-/* Event Row para o Dashboard */
 function DashboardEventRow({ event, isPast = false }) {
   return (
     <div className="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0 group hover:bg-gray-50/50 px-2 rounded-lg transition-colors">
-      {/* Date badge */}
       <div className={`flex flex-col items-center justify-center w-12 h-14 rounded-xl text-white font-bold shrink-0 ${isPast ? "bg-[#FF6D2C]/70" : "bg-[#FF6D2C]"}`}>
         <span className="text-lg leading-tight">{event.day}</span>
         <span className="text-[10px] uppercase tracking-wider">{event.month}</span>
@@ -24,7 +22,7 @@ function DashboardEventRow({ event, isPast = false }) {
         </span>
       </div>
 
-      {/* Actions */}
+      {/* Açoes */}
       <div className="flex flex-col gap-1.5 shrink-0">
         <Link
           to={`/admin/eventos`}
@@ -73,9 +71,9 @@ const PRODUTOS = [
 export default function AdminDashboard() {
   return (
     <div className="space-y-8 animate-fade-in">
-      <SectionTitle 
-        title="Dashboard" 
-        titleStyle={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(2.5rem, 5vw, 3.5rem)", fontWeight: 600 }} 
+      <SectionTitle
+        title="Dashboard"
+        titleStyle={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(2.5rem, 5vw, 3.5rem)", fontWeight: 600 }}
       />
 
       {/* linha de eventos */}

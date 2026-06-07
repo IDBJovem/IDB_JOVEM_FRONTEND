@@ -16,18 +16,18 @@ test.describe('Header e Navegação Desktop', () => {
 
   test('deve navegar pelos links mobile e fechar o menu', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
-    
+
     // Abre o menu
     const btnMenu = page.getByLabel('Menu');
     await btnMenu.click();
     await expect(page.locator('nav').last()).toBeVisible();
 
-    // Clica em um link mobile (ex: Produtos que é hash link)
+    // Clica em um link mobile
     const produtosMobileLink = page.locator('nav').last().locator('a', { hasText: 'Produtos' });
     await expect(produtosMobileLink).toBeVisible();
     await produtosMobileLink.click();
 
-    // Menu deve fechar (aguarda animação)
+    // Menu fecha (aguarda animação)
     await page.waitForTimeout(500);
 
     // Abre novamente e clica em Eventos Próximos
@@ -78,7 +78,7 @@ test.describe('Header e Navegação Desktop', () => {
     // Eventos
     await nav.getByText('Eventos', { exact: true }).click();
     await expect(page).toHaveURL(/\/eventos/);
-    
+
     // Galeria
     await nav.getByText('Galeria de fotos', { exact: true }).click();
     await expect(page).toHaveURL(/\/galeria/);
@@ -86,7 +86,7 @@ test.describe('Header e Navegação Desktop', () => {
     // Contato
     await nav.getByText('Contato', { exact: true }).click();
     // O menu de contato usa scrollIntoView com preventDefault, a url não muda
-    
+
     // Produtos (se a página existisse para usuário final seria testado, mas o click não deve quebrar)
     await page.goto('/');
     await nav.getByText('Produtos', { exact: true }).click();
@@ -96,14 +96,14 @@ test.describe('Header e Navegação Desktop', () => {
     // Começa em outra página
     await page.goto('/eventos');
     await page.setViewportSize({ width: 1280, height: 720 });
-    
+
     // Clica no link Contato (que é um hash link /#contato)
     const nav = page.locator('nav').first();
     await nav.getByText('Contato', { exact: true }).click();
-    
+
     // Deve redirecionar para a home
     await expect(page).toHaveURL(/.*\/$/);
-    
+
     // Aguarda o setTimeout de 100ms do header
     await page.waitForTimeout(200);
   });
@@ -168,7 +168,7 @@ test.describe('Menu Mobile', () => {
 
     const mobilePanel = page.locator('div.fixed.right-0').filter({ hasText: 'Eventos próximos' });
     const searchInput = mobilePanel.getByPlaceholder('Pesquisar eventos...');
-    
+
     await searchInput.fill('Camp');
     await searchInput.press('Enter');
 
@@ -176,10 +176,10 @@ test.describe('Menu Mobile', () => {
   });
 
   test('deve redirecionar para login pelo ícone no cabeçalho mobile', async ({ page }) => {
-    // O botão de login no mobile fica no header, fora do mobilePanel
+    // Botão de login no mobile fica no header
     const btnLoginMobile = page.locator('.flex.lg\\:hidden a[href="/login"]');
     await expect(btnLoginMobile).toBeVisible();
-    
+
     await btnLoginMobile.click();
     await expect(page).toHaveURL(/\/login/);
   });

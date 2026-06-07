@@ -83,7 +83,7 @@ test.describe('Página Inicial (Home)', () => {
     const titulo = page.getByRole('heading', { name: /Processo para virar/i });
     await expect(titulo).toBeVisible();
 
-    // Verifica os steps
+    // Verifica as etapas
     await expect(page.getByText('01', { exact: true }).first()).toBeVisible();
     await expect(page.getByText('02', { exact: true }).first()).toBeVisible();
     await expect(page.getByText('03', { exact: true }).first()).toBeVisible();
@@ -147,13 +147,11 @@ test.describe('Página Inicial (Home)', () => {
   });
 
   test('deve navegar para a página Sobre ao clicar em "Saiba mais"', async ({ page }) => {
-    // A rota do IDB JOVEM costuma não ter /sobre (usar âncora ou o href presente)
     const btnSaibaMais = page.getByRole('link', { name: /Saiba mais/i }).first();
     await expect(btnSaibaMais).toBeVisible();
 
     const href = await btnSaibaMais.getAttribute('href');
 
-    // Se o href existir e não for #, testa a navegação
     if (href && !href.startsWith('#')) {
       await btnSaibaMais.click();
       await expect(page).toHaveURL(new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
@@ -175,31 +173,25 @@ test.describe('Página Inicial (Home)', () => {
   });
 
   test('EventosSection - deve aguardar o auto-advance do carrossel (setInterval)', async ({ page }) => {
-    // O carrossel avança a cada 5s. Aguardamos >5s para disparar o setInterval callback (L11)
     const eventosSection = page.locator('section.bg-\\[\\#8A3816\\]');
     await eventosSection.scrollIntoViewIfNeeded();
 
-    // Pega o título do evento em destaque antes do auto-advance
     const featuredTitle = eventosSection.locator('h3').first();
     const titleBefore = await featuredTitle.innerText().catch(() => '');
 
-    // Espera 5.5s para o setInterval disparar
     await page.waitForTimeout(5500);
 
-    // Verifica que o componente ainda está visível (o carousel rodou)
+    // Verifica que o componente ainda está visível
     await expect(eventosSection).toBeVisible();
   });
 
-  test('ProcessoVoluntario - deve cobrir onMouseEnter e onFocus nos steps (L63-64)', async ({ page }) => {
+  test('ProcessoVoluntario - deve cobrir onMouseEnter e onFocus nos steps', async ({ page }) => {
     const processoSection = page.locator('section.bg-\\[\\#FF6D2C\\]');
     await processoSection.scrollIntoViewIfNeeded();
 
-    // Hover no step 2 (index 1) para disparar onMouseEnter -> setActiveStep(1)
     const step2 = processoSection.locator('[tabindex="0"]').nth(1);
     await step2.hover({ force: true });
     await page.waitForTimeout(200);
-
-    // Focus no step 3 (index 2) para disparar onFocus -> setActiveStep(2)
     await step2.focus();
     await page.waitForTimeout(100);
 
@@ -207,7 +199,6 @@ test.describe('Página Inicial (Home)', () => {
     await step3.focus();
     await page.waitForTimeout(100);
 
-    // Hover no step 4 (index 3) 
     const step4 = processoSection.locator('[tabindex="0"]').nth(3);
     await step4.hover({ force: true });
     await page.waitForTimeout(100);

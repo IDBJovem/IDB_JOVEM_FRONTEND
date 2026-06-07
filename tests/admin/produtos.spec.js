@@ -9,7 +9,7 @@ test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
 
   test('deve exibir a listagem de produtos', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Produtos', exact: true })).toBeVisible();
-    
+
     const btnNovo = page.getByRole('link', { name: /Cadastrar Produto/i });
     await expect(btnNovo).toBeVisible();
 
@@ -48,13 +48,13 @@ test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
 
     const nomeInput = page.getByPlaceholder('Nome do produto');
     const isRequired = await nomeInput.getAttribute('required');
-    
-    // Pode ser HTML5 validation ou o mock retornando {success: false, error: '...'} via alert
+
+    // Pode ser HTML5 validation ou o mock retornando {success: false, error: '...'} via alerta
     expect(isRequired !== null || alertMessage === 'O nome do produto é obrigatório.').toBeTruthy();
   });
 
   test('deve testar os botões de Voltar e Cancelar na criação e edição', async ({ page }) => {
-    // Create
+    // Cria
     await page.goto('/admin/produtos/criar');
     await page.getByTitle('Voltar').click();
     await expect(page).toHaveURL(/\/admin\/produtos/);
@@ -63,7 +63,7 @@ test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
     await page.getByRole('button', { name: 'Cancelar' }).click();
     await expect(page).toHaveURL(/\/admin\/produtos/);
 
-    // Edit (produto 1 existe no mock mockProducts)
+    // Edita 
     await page.goto('/admin/produtos/1/editar');
     await page.getByTitle('Voltar').click();
     await expect(page).toHaveURL(/\/admin\/produtos/);
@@ -83,17 +83,17 @@ test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
 
     const inputNome = page.getByPlaceholder('Nome do produto');
     await inputNome.fill('Caneca Editada');
-    
+
     await page.getByRole('button', { name: 'Salvar' }).click();
     await expect(page).toHaveURL(/\/admin\/produtos/);
   });
 
   test('deve exibir mensagem de Produto não encontrado para Edit inválido', async ({ page }) => {
     await page.goto('/admin/produtos/999999/editar');
-    
+
     await expect(page.getByText('Produto não encontrado.')).toBeVisible();
     await page.getByRole('button', { name: 'Voltar para Produtos' }).click();
-    
+
     await expect(page).toHaveURL(/\/admin\/produtos/);
   });
 
@@ -128,9 +128,7 @@ test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
   });
 
   test('deve verificar link do produto com a hotmart na listagem', async ({ page }) => {
-    // O mockProducts não necessariamente possui href preenchido no design da grid ou botões?
-    // Verifica se os cartões têm links pra edição, e se houver link de loja
-    // O card de produto em admin não tem link externo na listagem, mas podemos verificar o input no modo edição
+    // Cartões tem links pra edição
     const firstCardEditBtn = page.getByRole('button', { name: 'Editar' }).first();
     await firstCardEditBtn.click();
 
@@ -178,5 +176,18 @@ test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
     await page.getByRole('button', { name: 'Salvar' }).click();
     await page.waitForTimeout(500);
     expect(alertMessage.length).toBeGreaterThan(0);
+  });
+
+  test('deve testar upload de imagem no form (ProductForm L23-L30)', async ({ page }) => {
+    await page.goto('/admin/produtos/criar');
+    const inputLink = page.locator('input[type="file"]');
+    await inputLink.setInputFiles({
+      name: 'test.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
+    });
+    
+    // Deve exibir o preview da imagem
+    await expect(page.locator('img[alt="Preview do produto"]')).toBeVisible();
   });
 });

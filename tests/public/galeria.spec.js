@@ -12,7 +12,7 @@ test.describe('Página de Galeria', () => {
   });
 
   test('deve exibir botão de voltar e funcionar corretamente', async ({ page }) => {
-    // Vamos de outra página para testar o history.back()
+    // Vamos de outra página para testar o historico
     await page.goto('/');
     await page.goto('/galeria');
 
@@ -32,11 +32,10 @@ test.describe('Página de Galeria', () => {
     const imagens = gridContainer.locator('img');
     const count = await imagens.count();
 
-    // Se mockGallery for populado, vai ter > 0
     if (count > 0) {
       await expect(imagens.first()).toBeVisible();
 
-      // Verifica textos nos cards de galeria (evento e location mocados)
+      // Verifica textos nos cards de galeria
       const nomesEventos = gridContainer.locator('h3');
       await expect(nomesEventos.first()).toBeVisible();
     }
@@ -46,7 +45,7 @@ test.describe('Página de Galeria', () => {
     const gridContainer = page.locator('section > div.grid');
     await expect(gridContainer).toBeVisible();
 
-    // Verifica os parágrafos de localização (photo.location)
+    // Verifica os parágrafos de localização
     const locations = gridContainer.locator('p');
     const count = await locations.count();
 
@@ -68,11 +67,10 @@ test.describe('Página de Galeria', () => {
 
     expect(count).toBeGreaterThan(0);
 
-    // Alt text segue o padrão: "${photo.event} - ${photo.location}"
+    // Alt text segue o padrão
     for (let i = 0; i < count; i++) {
       const alt = await imagens.nth(i).getAttribute('alt');
       expect(alt).toBeTruthy();
-      // Deve conter " - " separando evento e localização
       expect(alt).toContain(' - ');
     }
 

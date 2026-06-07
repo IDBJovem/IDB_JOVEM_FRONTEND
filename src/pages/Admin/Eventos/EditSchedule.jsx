@@ -9,7 +9,6 @@ import DeleteActivityModal from "./components/DeleteActivityModal";
 import ActivityRow from "./components/ActivityRow";
 import ActivityInlineForm from "./components/ActivityInlineForm";
 
-/* Página: Programação do Evento */
 export default function AdminEventoEditSchedule() {
   const navigate = useNavigate();
   const { id } = useParams();
