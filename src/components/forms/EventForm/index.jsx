@@ -217,8 +217,26 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
 
         <hr className="my-5 border-gray-100" />
 
-        <div className="flex flex-wrap gap-3 mb-1">
-          {eventId && (
+        <div className="mb-1">
+          <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Galeria de Fotos</label>
+          <div className="relative">
+            <input
+              type="text"
+              name="linkGaleria"
+              value={form.linkGaleria}
+              onChange={handleChange}
+              placeholder="Nome ou link da pasta de fotos"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
+            />
+            <ImagePlus size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1E1E1E]/30" />
+          </div>
+          <p className="mt-1.5 text-xs text-[#1E1E1E]/50">
+            Informe o nome (ou link) da pasta onde estão as fotos do evento.
+          </p>
+        </div>
+
+        {eventId && (
+          <div className="flex flex-wrap gap-3 mt-4 mb-1">
             <button
               type="button"
               onClick={() => navigate(`/admin/eventos/${eventId}/programacao`)}
@@ -227,15 +245,8 @@ export default function EventForm({ initialData = {}, onSubmit, eventId }) {
               Editar Programação do Evento
               <CalendarCog size={16} />
             </button>
-          )}
-          <button
-            type="button"
-            className="flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-semibold text-[#1E1E1E] hover:border-[#FF6D2C] hover:text-[#FF6D2C] transition-colors bg-white"
-          >
-            Adicionar Galeria de Fotos
-            <ImagePlus size={16} />
-          </button>
-        </div>
+          </div>
+        )}
 
         <hr className="my-5 border-gray-100" />
 
