@@ -1,10 +1,5 @@
 import { api } from "./api";
 
-/* ------------------------------------------------------------------ */
-/* Adapters API <-> front                                             */
-/* ------------------------------------------------------------------ */
-
-/* API → front */
 function adaptAdmin(apiAdmin) {
   if (!apiAdmin) return null;
   return {
@@ -27,10 +22,6 @@ function toApiAdmin(form) {
 function getErrorMessage(error, fallback) {
   return error?.response?.data?.detail || error?.message || fallback;
 }
-
-/* ------------------------------------------------------------------ */
-/* Admin (rotas protegidas — exigem JWT Keycloak)                     */
-/* ------------------------------------------------------------------ */
 
 export async function fetchAdmins() {
   const { data } = await api.get("/admin/");
