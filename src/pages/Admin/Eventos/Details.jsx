@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { fetchEventById, formatDate } from "../../../services/eventService";
@@ -7,7 +8,27 @@ export default function AdminEventoDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const event = fetchEventById(id);
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    fetchEventById(id)
+      .then((data) => active && setEvent(data))
+      .catch(() => active && setEvent(null))
+      .finally(() => active && setLoading(false));
+    return () => {
+      active = false;
+    };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20 animate-fade-in">
+        <p className="text-lg font-semibold text-[#1E1E1E]/60">Carregando evento...</p>
+      </div>
+    );
+  }
 
   if (!event) {
     return (

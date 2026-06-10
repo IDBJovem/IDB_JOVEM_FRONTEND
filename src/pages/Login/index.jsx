@@ -11,14 +11,17 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ usuario: "", senha: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    const result = login(form.usuario, form.senha);
+    setLoading(true);
+    const result = await login(form.usuario, form.senha);
+    setLoading(false);
     if (result.success) {
       navigate("/admin");
     } else {
@@ -110,6 +113,7 @@ export default function Login() {
         {/* Botão Login */}
         <button
           type="submit"
+          disabled={loading}
           className="
             bg-white hover:bg-white/90
             text-[#FF6D2C] font-bold
@@ -119,9 +123,10 @@ export default function Login() {
             shadow-lg
             transition-all duration-300
             hover:shadow-xl hover:scale-[1.02]
+            disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100
           "
         >
-          Login
+          {loading ? "Entrando..." : "Login"}
         </button>
         <BorderBeam duration={8} size={100} />
       </form>

@@ -76,9 +76,8 @@ export default function TestCoverage() {
     eventService.handleCreateEvent({ title: '', date: '', location: '' });
     eventService.handleCreateEvent({ title: 'A', date: '', location: '' });
     eventService.handleCreateEvent({ title: 'A', date: '2025-01-01', location: '' });
-    eventService.handleUpdateSchedule('invalid-id', {});
-    eventService.toInputDate(null);
-    eventService.toInputDate("2025-01-01T00:00:00Z");
+    eventService.toInputDateTime(null);
+    eventService.toInputDateTime("2025-01-01T00:00:00Z");
     eventService.extractDayMonth(null);
     eventService.extractDayMonth('2025-01-15');
     eventService.isFutureEvent(null);
@@ -103,12 +102,9 @@ export default function TestCoverage() {
     volunteerService.getVolunteerById('invalid-id');
     volunteerService.getVolunteersByEventId(1);
     volunteerService.updateVolunteerStatus('invalid-id', 'aprovado');
-    eventService.getAllEvents();
-    eventService.getEventById('invalid-id');
-    eventService.updateEvent('invalid-id', {});
-    eventService.deleteEvent('invalid-id');
-    eventService.deleteEvent(1);
-    eventService.updateEventSchedule('invalid-id', []);
+    eventService.parseEventId('12-evento');
+    eventService.searchEvents('ab');
+    eventService.fetchActivities('invalid-id');
     productService.getAllProducts();
     productService.getProductById('invalid-id');
     productService.updateProduct('invalid-id', {});
@@ -120,7 +116,6 @@ export default function TestCoverage() {
     const savedEv = localStorage.getItem(evKey);
     const savedPr = localStorage.getItem(prKey);
     localStorage.setItem(evKey, JSON.stringify([]));
-    eventService.createEvent({ title: 'Empty Test' });
     localStorage.setItem(prKey, JSON.stringify([]));
     productService.createProduct({ name: 'Empty Test' });
 

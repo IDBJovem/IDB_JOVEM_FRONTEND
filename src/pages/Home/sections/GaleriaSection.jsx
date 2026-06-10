@@ -15,7 +15,8 @@ const tempGallery = [
 ];
 
 export default function GaleriaSection({ gallery = [] }) {
-  const displayGallery = tempGallery;
+  /* Fotos reais do Drive (agregadas dos eventos); fallback p/ imagens locais */
+  const displayGallery = gallery.length ? gallery : tempGallery;
 
   return (
     <section className="w-full bg-[#DC6803] py-16 md:py-24">

@@ -1,21 +1,54 @@
 import { useState, useEffect } from "react";
-import { mockEvents, nextEvent } from "../../../data/mockEvents";
+import {
+  fetchAllEvents,
+  fetchAggregatedGallery,
+  isFutureEvent,
+} from "../../../services/eventService";
 import { mockProducts } from "../../../data/mockProducts";
-import { mockGallery } from "../../../data/mockGallery";
 import { getCountdown } from "../../../utils/formatDate";
 
 export function useHomeData() {
-  const [countdown, setCountdown] = useState(getCountdown(nextEvent?.date));
-  const [events] = useState(mockEvents);
+  const [events, setEvents] = useState([]);
+  const [nextEvent, setNextEvent] = useState(null);
+  const [countdown, setCountdown] = useState(getCountdown(null));
+  // Produtos seguem como mock (Parte 2 da integração)
   const [products] = useState(mockProducts);
-  const [gallery] = useState(mockGallery);
+  const [gallery, setGallery] = useState([]);
 
   useEffect(() => {
+    let active = true;
+    fetchAllEvents()
+      .then((all) => {
+        if (!active) return;
+        setEvents(all);
+        const proximos = all
+          .filter((e) => isFutureEvent(e.date))
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+        setNextEvent(proximos[0] || all[0] || null);
+      })
+      .catch(() => active && setEvents([]));
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    fetchAggregatedGallery()
+      .then((fotos) => active && setGallery(fotos))
+      .catch(() => active && setGallery([]));
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!nextEvent?.date) return;
     const interval = setInterval(() => {
       setCountdown(getCountdown(nextEvent.date));
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextEvent]);
 
   return { countdown, events, products, gallery, nextEvent };
 }

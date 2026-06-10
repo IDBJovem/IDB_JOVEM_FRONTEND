@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Calendar as CalendarIcon } from "lucide-react";
-import { mockEvents } from "../../../data/mockEvents";
 import { Link } from "react-router-dom";
 
-export default function CalendarioSection() {
+export default function CalendarioSection({ events = [] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const nextMonth = () => {
@@ -22,7 +21,8 @@ export default function CalendarioSection() {
   const currentMonthName = monthNames[currentDate.getMonth()];
   const currentYear = currentDate.getFullYear();
 
-  const monthEvents = mockEvents.filter(event => {
+  // Filter events for the current month and year
+  const monthEvents = events.filter(event => {
     const eventDate = new Date(event.date);
     return eventDate.getMonth() === currentDate.getMonth() && eventDate.getFullYear() === currentYear;
   }).sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -37,15 +37,15 @@ export default function CalendarioSection() {
           <p className="text-white/80 mt-2 font-medium">Acompanhe nossa agenda para o ano todo</p>
         </div>
 
-        {/* Calendario */}
+        {/* Calendar Header */}
         <div className="flex items-center justify-between bg-[#F9FAFB] border border-neutral-200 rounded-2xl p-4 md:p-6 mb-8 shadow-sm">
-          <button
+          <button 
             onClick={prevMonth}
             className="p-2 hover:bg-neutral-200 rounded-full transition-colors"
           >
             <ChevronLeft size={24} className="text-[#D5650D]" />
           </button>
-
+          
           <div className="text-center">
             <h3 className="text-2xl md:text-3xl font-black text-neutral-800 capitalize">
               {currentMonthName}
@@ -53,7 +53,7 @@ export default function CalendarioSection() {
             <span className="text-neutral-500 font-bold">{currentYear}</span>
           </div>
 
-          <button
+          <button 
             onClick={nextMonth}
             className="p-2 hover:bg-neutral-200 rounded-full transition-colors"
           >
@@ -61,7 +61,7 @@ export default function CalendarioSection() {
           </button>
         </div>
 
-        {/* Lista de eventos */}
+        {/* Events List */}
         <div className="space-y-4">
           {monthEvents.length === 0 ? (
             <div className="text-center py-12 bg-neutral-50 rounded-2xl border border-neutral-100">
@@ -73,8 +73,8 @@ export default function CalendarioSection() {
               const eventDate = new Date(event.date);
               return (
                 <div key={event.id} className="flex flex-col md:flex-row gap-6 bg-white border border-neutral-200 rounded-2xl p-4 md:p-6 hover:shadow-md transition-shadow group">
-
-                  {/* Data */}
+                  
+                  {/* Date Box */}
                   <div className="flex flex-col items-center justify-center bg-[#FFF5EB] border border-[#FFD0B0] text-[#D5650D] rounded-xl p-4 min-w-[100px] shrink-0">
                     <span className="text-xs font-bold uppercase">{monthNames[eventDate.getMonth()].slice(0, 3)}</span>
                     <span className="text-4xl font-black leading-none my-1">{eventDate.getDate().toString().padStart(2, '0')}</span>
@@ -92,7 +92,7 @@ export default function CalendarioSection() {
                     <p className="text-neutral-600 text-sm line-clamp-2 mt-2">{event.description}</p>
                   </div>
 
-                  {/* Acoes */}
+                  {/* Action */}
                   <div className="flex items-center md:justify-end shrink-0">
                     <Link
                       to={`/eventos/${event.slug}`}

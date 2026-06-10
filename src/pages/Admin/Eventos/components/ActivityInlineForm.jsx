@@ -3,7 +3,8 @@ import { useState } from "react";
 export default function ActivityInlineForm({ initialData, onSave, onCancel }) {
   const [form, setForm] = useState({
     name: initialData?.name || "",
-    time: initialData?.time || "",
+    start: initialData?.startTime || initialData?.start || "",
+    end: initialData?.endTime || initialData?.end || "",
     description: initialData?.description || "",
   });
 
@@ -18,12 +19,20 @@ export default function ActivityInlineForm({ initialData, onSave, onCancel }) {
       alert("Nome da atividade é obrigatório.");
       return;
     }
+    if (!form.start || !form.end) {
+      alert("Informe os horários de início e término.");
+      return;
+    }
+    if (form.start >= form.end) {
+      alert("O horário de término deve ser maior que o de início.");
+      return;
+    }
     onSave(form);
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-50 rounded-xl p-4 mt-3 border border-gray-200 animate-fade-in">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-3">
         <input
           type="text"
           name="name"
@@ -43,10 +52,19 @@ export default function ActivityInlineForm({ initialData, onSave, onCancel }) {
         />
         <input
           type="time"
-          name="time"
-          value={form.time}
+          name="start"
+          value={form.start}
           onChange={handleChange}
           className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-sm text-[#1E1E1E] focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
+          required
+        />
+        <input
+          type="time"
+          name="end"
+          value={form.end}
+          onChange={handleChange}
+          className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-sm text-[#1E1E1E] focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
+          required
         />
       </div>
       <div className="flex justify-end gap-2">

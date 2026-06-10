@@ -18,7 +18,7 @@ export default function Home() {
       <SobreSection />
       <LideresSection />
       <EventosSection events={events} />
-      <CalendarioSection />
+      <CalendarioSection events={events} />
       <VolunteerSection />
       <ProcessoVoluntario />
       <ProdutosSection products={products} />
