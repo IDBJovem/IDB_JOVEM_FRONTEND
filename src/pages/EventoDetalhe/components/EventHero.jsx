@@ -57,6 +57,19 @@ export default function EventHero({ event }) {
                 Adicionar ao Google Calendar
               </a>
             )}
+            {/* Botão de voluntário */}
+            <div className="mt-2">
+              <button
+                onClick={() => {
+                  if (event.linkFormularioVoluntarios) {
+                    window.open(event.linkFormularioVoluntarios, "_blank", "noopener,noreferrer");
+                  }
+                }}
+                className="flex-1 text-sm font-semibold bg-[#FF6D2C] hover:bg-[#e65c18] text-white rounded-lg px-4 py-2 transition-colors"
+              >
+                Seja Voluntário
+              </button>
+            </div>
           </div>
 
           {/* Lado direito — imagem */}
