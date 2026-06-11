@@ -4,6 +4,9 @@ import SectionTitle from "../../../components/ui/SectionTitle";
 import { MapPin } from "lucide-react";
 import DashboardProductCard from "./components/DashboardProductCard";
 import CalendarMini from "./components/CalendarMini";
+import produto1 from "../../../assets/images/produto1.png";
+import produto2 from "../../../assets/images/produto2.png";
+import produto3 from "../../../assets/images/produto3.png";
 
 function DashboardEventRow({ event, isPast = false }) {
   return (
@@ -57,14 +60,14 @@ const EVENTOS_ANTERIORES = [
 ];
 
 const PRODUTOS = [
-  { id: 1, name: "Nome do Item", image: "/images/galeria/idb-jovem-one.jpg" },
-  { id: 2, name: "Nome do Item", image: "/images/galeria/idb-teen-camp.jpg" },
-  { id: 3, name: "Nome do Item", image: "/images/galeria/es-ne-ajo.jpg" },
-  { id: 4, name: "Nome do Item", image: "/images/galeria/idb-jovem-one.jpg" },
-  { id: 5, name: "Nome do Item", image: "/images/galeria/idb-teen-camp.jpg" },
-  { id: 6, name: "Nome do Item", image: "/images/galeria/es-ne-ajo.jpg" },
-  { id: 7, name: "Nome do Item", image: "/images/galeria/idb-jovem-one.jpg" },
-  { id: 8, name: "Nome do Item", image: "/images/galeria/idb-teen-camp.jpg" },
+  { id: 1, name: "Nome do Item", image: produto1 },
+  { id: 2, name: "Nome do Item", image: produto2 },
+  { id: 3, name: "Nome do Item", image: produto3 },
+  { id: 4, name: "Nome do Item", image: produto1 },
+  { id: 5, name: "Nome do Item", image: produto2 },
+  { id: 6, name: "Nome do Item", image: produto3 },
+  { id: 7, name: "Nome do Item", image: produto1 },
+  { id: 8, name: "Nome do Item", image: produto2 },
 ];
 
 // tela principal do admin

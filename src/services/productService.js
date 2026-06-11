@@ -5,6 +5,7 @@ import {
   atualizarProduto,
   deletarProduto,
 } from "./api/produtoApi";
+import { toDriveImageUrl } from "../utils/driveImage";
 
 function toProduct(api) {
   if (!api) return null;
@@ -13,9 +14,9 @@ function toProduct(api) {
     name: api.nome,
     description: api.descricao ?? "",
     link: api.link_produto ?? "",
-    // imageName = nome do arquivo (p/ o form); image = URL resolvida (p/ exibir)
-    imageName: api.imagem_nome ?? "",
-    image: api.imagem_url ?? "",
+    // image = URL renderável (p/ exibir); imageRaw = link cru do Drive (p/ o form)
+    image: toDriveImageUrl(api.link_imagem),
+    imageRaw: api.link_imagem ?? "",
   };
 }
 
@@ -24,7 +25,7 @@ function toProdutoPayload(form) {
     nome: form.name,
     descricao: form.description ?? "",
     link_produto: form.link || "",
-    imagem_nome: form.imageName || "",
+    link_imagem: form.image || "",
   };
 }
 

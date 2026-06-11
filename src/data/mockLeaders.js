@@ -1,5 +1,7 @@
+import idbJovemOne from "../assets/images/idbJovemOne.png";
+
 export const mockCurrentLeaders = [
-  { id: 1, name: "Bp. Samuel Tavares", role: "Diretor Nacional de Jovens", image: "/images/galeria/idb-jovem-one.jpg" },
+  { id: 1, name: "Bp. Samuel Tavares", role: "Diretor Nacional de Jovens", image: idbJovemOne },
   { id: 2, name: "Pra. Raquel Gomes", role: "Diretora Nacional de Adolescentes", image: "" },
   { id: 3, name: "líder 3", role: "Coordenador Regional", image: "" },
   { id: 4, name: "líder 4", role: "Líder de Louvor", image: "" },

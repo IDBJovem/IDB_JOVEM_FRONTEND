@@ -1,6 +1,7 @@
 import { api } from "./api";
+import idbJovemOne from "../assets/images/idbJovemOne.png";
 
-const DEFAULT_SPEAKER_IMAGE = "/images/galeria/idb-jovem-one.jpg";
+const DEFAULT_SPEAKER_IMAGE = idbJovemOne;
 
 function adaptSpeaker(apiSpeaker) {
   if (!apiSpeaker) return null;
