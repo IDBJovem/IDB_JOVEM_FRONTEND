@@ -1,5 +1,6 @@
 import { api } from "./api";
 import defaultEventImage from "../assets/images/idbJovemOne.png";
+import { toDriveImageUrl } from "../utils/driveImage";
 
 const DEFAULT_EVENT_IMAGE = defaultEventImage;
 
@@ -111,8 +112,11 @@ function adaptEvent(apiEvent) {
     linkGaleria: apiEvent.link_galeria || "",
     linkFormularioVoluntarios: apiEvent.formulario_link || "",
     calendarioEventoId: apiEvent.calendario_evento_id || null,
+    /* URL da imagem de capa (Drive). image = valor exibido (com fallback);
+       linkImagem = valor cru para o formulário (vazio quando não há). */
+    linkImagem: apiEvent.link_imagem || "",
+    image: toDriveImageUrl(apiEvent.link_imagem) || DEFAULT_EVENT_IMAGE,
     /* Campos ainda não fornecidos pela API de evento → defaults seguros */
-    image: DEFAULT_EVENT_IMAGE,
     category: "Evento",
     featured: false,
     totalParticipantes: 0,
@@ -136,6 +140,7 @@ function toApiEvent(form) {
     data_fim: toIso(form.endDate),
     link_galeria: form.linkGaleria || null,
     formulario_link: form.linkFormularioVoluntarios || null,
+    link_imagem: (form.image && form.image.trim()) || null,
   };
 }
 

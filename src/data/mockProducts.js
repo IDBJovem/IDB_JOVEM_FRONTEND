@@ -1,9 +1,13 @@
+import produto1 from "../assets/images/produto1.png";
+import produto2 from "../assets/images/produto2.png";
+import produto3 from "../assets/images/produto3.png";
+
 export const mockProducts = [
   {
     id: 1,
     name: "Camiseta Igreja",
     price: 79.9,
-    image: "/images/produtos/camiseta-igreja.jpg",
+    image: produto1,
     category: "Vestuário",
     description: "Descrição do produto",
   },
@@ -11,7 +15,7 @@ export const mockProducts = [
     id: 2,
     name: "Caneca",
     price: 49.9,
-    image: "/images/produtos/caneca.jpg",
+    image: produto2,
     category: "Acessórios",
     description: "Descrição do produto",
     featured: true,
@@ -20,7 +24,7 @@ export const mockProducts = [
     id: 3,
     name: "Brinco Cruz",
     price: 29.9,
-    image: "/images/produtos/brinco-cruz.jpg",
+    image: produto3,
     category: "Acessórios",
     description: "Descrição do produto",
   },
@@ -28,7 +32,7 @@ export const mockProducts = [
     id: 4,
     name: "Caneca",
     price: 49.9,
-    image: "/images/produtos/caneca-2.jpg",
+    image: produto1,
     category: "Acessórios",
     description: "Descrição do produto",
   },
@@ -36,7 +40,7 @@ export const mockProducts = [
     id: 5,
     name: "Brinco Cruz",
     price: 29.9,
-    image: "/images/produtos/brinco-cruz-2.jpg",
+    image: produto2,
     category: "Acessórios",
     description: "Descrição do produto",
   },
@@ -44,7 +48,7 @@ export const mockProducts = [
     id: 6,
     name: "Camiseta Igreja",
     price: 79.9,
-    image: "/images/produtos/camiseta-2.jpg",
+    image: produto3,
     category: "Vestuário",
     description: "Descrição do produto",
   },

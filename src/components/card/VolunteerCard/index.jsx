@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { MapPin, Clock } from "lucide-react";
+import idbJovemOne from "../../../assets/images/idbJovemOne.png";
 
 export function VolunteerEventCard({ event }) {
   const dateObj = event.date ? new Date(event.date) : null;
@@ -16,7 +17,7 @@ export function VolunteerEventCard({ event }) {
       {/* Imagem */}
       <div className="aspect-[16/10] overflow-hidden bg-gray-100">
         <img
-          src={event.image || "/images/galeria/idb-jovem-one.jpg"}
+          src={event.image || idbJovemOne}
           alt={event.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />

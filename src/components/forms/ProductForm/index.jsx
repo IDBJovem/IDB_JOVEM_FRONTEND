@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImagePlus } from "lucide-react";
+import { toDriveImageUrl } from "../../../utils/driveImage";
 
 export default function ProductForm({ initialData = {}, onSubmit }) {
   const navigate = useNavigate();
@@ -9,26 +10,12 @@ export default function ProductForm({ initialData = {}, onSubmit }) {
     name: initialData.name || "",
     description: initialData.description || "",
     link: initialData.link || "",
-    image: initialData.image || "",
+    image: initialData.imageRaw || "",
   });
-
-  const [imagePreview, setImagePreview] = useState(initialData.image || "");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setForm((prev) => ({ ...prev, image: reader.result }));
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleSubmit = (e) => {
@@ -74,42 +61,52 @@ export default function ProductForm({ initialData = {}, onSubmit }) {
 
         <hr className="my-5 border-gray-100" />
 
-        {/* Link + Upload de Imagem */}
+        {/* Link do produto */}
         <div className="mb-1">
           <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Link do Produto</label>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="url"
+            name="link"
+            value={form.link}
+            onChange={handleChange}
+            placeholder="http://produto.com"
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
+          />
+        </div>
+
+        <hr className="my-5 border-gray-100" />
+
+        {/* Foto do produto (link de compartilhar do Drive) */}
+        <div className="mb-1">
+          <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Foto do Produto</label>
+          <div className="relative">
             <input
               type="url"
-              name="link"
-              value={form.link}
+              name="image"
+              value={form.image}
               onChange={handleChange}
-              placeholder="http://produto.com"
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-3 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
+              placeholder="Cole o link da imagem (Google Drive)"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-10 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all"
             />
-            <label className="flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-semibold text-[#1E1E1E] hover:border-[#FF6D2C] hover:text-[#FF6D2C] transition-colors bg-white cursor-pointer whitespace-nowrap">
-              Adicionar Foto do Produto
-              <ImagePlus size={16} />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </label>
+            <ImagePlus size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1E1E1E]/30" />
           </div>
+          <p className="mt-1.5 text-xs text-[#1E1E1E]/50">
+            Cole o link de compartilhar do Drive (arquivo como &quot;qualquer pessoa com o link&quot;).
+          </p>
         </div>
 
         {/* Preview da imagem */}
-        {imagePreview && (
+        {form.image?.trim() && (
           <>
             <hr className="my-5 border-gray-100" />
             <div className="mb-1">
               <label className="block text-sm font-bold text-[#1E1E1E] mb-2">Preview</label>
               <div className="w-32 h-32 rounded-lg border border-gray-200 overflow-hidden bg-gray-50">
                 <img
-                  src={imagePreview}
+                  src={toDriveImageUrl(form.image)}
                   alt="Preview do produto"
                   className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                 />
               </div>
             </div>
