@@ -1,8 +1,14 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { TOKEN_KEY } from "../services/api";
 
 const AuthContext = createContext(null);
+
+/* Tempo máximo de inatividade antes de encerrar a sessão do admin (10 minutos) */
+const IDLE_TIMEOUT_MS = 10 * 60 * 1000;
+
+/* Eventos que contam como "atividade" do usuário e reiniciam a contagem */
+const ACTIVITY_EVENTS = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"];
 
 const KEYCLOAK_URL = import.meta.env.VITE_KEYCLOAK_URL;
 const REALM = import.meta.env.VITE_KEYCLOAK_REALM;
@@ -88,10 +94,42 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
     setUser(null);
-  };
+  }, []);
+
+  /* Sessão por inatividade: enquanto houver usuário logado, qualquer atividade
+     reinicia uma contagem de 10 min. Esgotado o tempo sem interação, desloga. */
+  useEffect(() => {
+    if (!user) return;
+
+    let timerId;
+    let lastActivity = 0;
+
+    const resetTimer = () => {
+      clearTimeout(timerId);
+      timerId = setTimeout(logout, IDLE_TIMEOUT_MS);
+    };
+
+    /* Throttle: evita reiniciar o timer a cada pixel de mousemove */
+    const handleActivity = () => {
+      const now = Date.now();
+      if (now - lastActivity < 1000) return;
+      lastActivity = now;
+      resetTimer();
+    };
+
+    resetTimer(); // começa a contar a partir do login
+    ACTIVITY_EVENTS.forEach((e) =>
+      window.addEventListener(e, handleActivity, { passive: true })
+    );
+
+    return () => {
+      clearTimeout(timerId);
+      ACTIVITY_EVENTS.forEach((e) => window.removeEventListener(e, handleActivity));
+    };
+  }, [user, logout]);
 
   const isAuthenticated = !!user;
   const isAdmin = !!user?.isAdmin;

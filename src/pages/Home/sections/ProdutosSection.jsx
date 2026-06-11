@@ -63,7 +63,8 @@ export default function ProdutosSection() {
             id: p.id,
             title: p.name,
             description: p.description,
-            src: p.image
+            src: p.image,
+            link: p.link
           }))}
         />
 

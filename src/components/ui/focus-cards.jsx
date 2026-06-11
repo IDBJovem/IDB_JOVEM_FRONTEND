@@ -10,12 +10,21 @@ export const Card = React.memo(({
 }) => {
   const isOrange = index % 2 !== 0;
 
+  const handleClick = () => {
+    if (card.link) {
+      window.open(card.link, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <div
       onMouseEnter={() => setHovered(index)}
       onMouseLeave={() => setHovered(null)}
+      onClick={handleClick}
+      role={card.link ? "link" : undefined}
       className={cn(
-        "flex flex-col rounded-2xl overflow-hidden p-4 md:p-5 transition-all duration-300 ease-out cursor-pointer",
+        "flex flex-col rounded-2xl overflow-hidden p-4 md:p-5 transition-all duration-300 ease-out",
+        card.link ? "cursor-pointer" : "cursor-default",
         isOrange ? "bg-[#FF6D2C]" : "bg-[#FDF3EA]",
         hovered !== null && hovered !== index && "blur-[3px] scale-[0.96] opacity-70"
       )}>
