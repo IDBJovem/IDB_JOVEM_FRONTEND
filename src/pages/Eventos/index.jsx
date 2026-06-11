@@ -8,7 +8,8 @@ import EmptyEvents from "./components/EmptyEvents";
 import {
   fetchAllEvents,
   searchEvents,
-  isFutureEvent,
+  isOngoingOrFuture,
+  splitDateTime,
 } from "../../services/eventService";
 
 /* Card do carrossel */
@@ -109,10 +110,21 @@ export default function Eventos() {
     };
   }, [search, allEvents]);
 
+  /* Apenas eventos que ainda não terminaram (vão acontecer ou estão acontecendo) */
   const upcoming = allEvents
-    .filter((e) => isFutureEvent(e.date))
+    .filter(isOngoingOrFuture)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
-  const featured = upcoming[0] || allEvents[0] || null;
+  const featured = upcoming[0] || null;
+
+  /* "Próximos eventos": somente os eventos do mês atual */
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const upcomingThisMonth = upcoming.filter((e) =>
+    splitDateTime(e.date).day.startsWith(currentMonth)
+  );
+
+  /* Grid "Todos os eventos" também esconde os já encerrados */
+  const visibleResults = results.filter(isOngoingOrFuture);
 
   const scrollCarousel = (dir) => {
     carouselRef.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
@@ -193,8 +205,8 @@ export default function Eventos() {
         </section>
       )}
 
-      {/* Próximos eventos (carrossel) */}
-      {upcoming.length > 0 && (
+      {/* Próximos eventos (carrossel) — somente do mês atual */}
+      {upcomingThisMonth.length > 0 && (
         <section className="w-full bg-[#FDF3EA] py-10">
           <div className="w-full max-w-6xl mx-auto px-4">
             <h2
@@ -220,7 +232,7 @@ export default function Eventos() {
                 ref={carouselRef}
                 className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth px-1 pb-2"
               >
-                {upcoming.map((event) => (
+                {upcomingThisMonth.map((event) => (
                   <CarouselCard key={event.id} event={event} />
                 ))}
               </div>
@@ -260,8 +272,8 @@ export default function Eventos() {
             </p>
           ) : error ? (
             <p className="text-center text-red-500 font-semibold py-10">{error}</p>
-          ) : results.length > 0 ? (
-            <EventList events={results} />
+          ) : visibleResults.length > 0 ? (
+            <EventList events={visibleResults} />
           ) : (
             <EmptyEvents />
           )}

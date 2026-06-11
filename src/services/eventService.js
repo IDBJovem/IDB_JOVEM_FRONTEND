@@ -96,6 +96,19 @@ export function isFutureEvent(isoDate) {
   return eventDate >= today;
 }
 
+/* Evento que ainda vai acontecer ou está acontecendo: continua visível enquanto
+   a data de término (ou a de início, se não houver término) for hoje ou no futuro.
+   Difere de isFutureEvent por considerar o término — eventos de vários dias que já
+   começaram permanecem visíveis até acabarem. */
+export function isOngoingOrFuture(event) {
+  const p = parseWallClock(event?.endDate || event?.date);
+  if (!p) return false;
+  const endDate = new Date(p.year, p.month - 1, p.day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return endDate >= today;
+}
+
 function adaptEvent(apiEvent) {
   if (!apiEvent) return null;
   return {
