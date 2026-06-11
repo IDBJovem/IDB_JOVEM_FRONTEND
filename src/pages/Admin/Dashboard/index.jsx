@@ -1,19 +1,22 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import SectionTitle from "../../../components/ui/SectionTitle";
 import { MapPin } from "lucide-react";
 import DashboardProductCard from "./components/DashboardProductCard";
 import CalendarMini from "./components/CalendarMini";
-import produto1 from "../../../assets/images/produto1.png";
-import produto2 from "../../../assets/images/produto2.png";
-import produto3 from "../../../assets/images/produto3.png";
+import EmptyState from "../../../components/ui/EmptyState";
+import { fetchAllEvents, isFutureEvent, extractDayMonth } from "../../../services/eventService";
+import { fetchAllProducts } from "../../../services/productService";
 
 function DashboardEventRow({ event, isPast = false }) {
+  const { day, month } = event.day && event.month ? event : extractDayMonth(event.date);
+
   return (
     <div className="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0 group hover:bg-gray-50/50 px-2 rounded-lg transition-colors">
       <div className={`flex flex-col items-center justify-center w-12 h-14 rounded-xl text-white font-bold shrink-0 ${isPast ? "bg-[#FF6D2C]/70" : "bg-[#FF6D2C]"}`}>
-        <span className="text-lg leading-tight">{event.day}</span>
-        <span className="text-[10px] uppercase tracking-wider">{event.month}</span>
+        <span className="text-lg leading-tight">{day}</span>
+        <span className="text-[10px] uppercase tracking-wider">{month}</span>
       </div>
 
       {/* Info */}
@@ -44,40 +47,73 @@ function DashboardEventRow({ event, isPast = false }) {
   );
 }
 
-// mocks pra testar o layout
-const PROXIMOS_EVENTOS = [
-  { id: 1, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
-  { id: 2, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
-  { id: 3, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
-  { id: 4, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
-];
+function byDateAsc(a, b) {
+  return new Date(a.date).getTime() - new Date(b.date).getTime();
+}
 
-const EVENTOS_ANTERIORES = [
-  { id: 5, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
-  { id: 6, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
-  { id: 7, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
-  { id: 8, title: "Nome do evento", location: "Local", day: "10", month: "Jul" },
-];
-
-const PRODUTOS = [
-  { id: 1, name: "Nome do Item", image: produto1 },
-  { id: 2, name: "Nome do Item", image: produto2 },
-  { id: 3, name: "Nome do Item", image: produto3 },
-  { id: 4, name: "Nome do Item", image: produto1 },
-  { id: 5, name: "Nome do Item", image: produto2 },
-  { id: 6, name: "Nome do Item", image: produto3 },
-  { id: 7, name: "Nome do Item", image: produto1 },
-  { id: 8, name: "Nome do Item", image: produto2 },
-];
+function byDateDesc(a, b) {
+  return new Date(b.date).getTime() - new Date(a.date).getTime();
+}
 
 // tela principal do admin
 export default function AdminDashboard() {
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const [allEvents, allProducts] = await Promise.all([fetchAllEvents(), fetchAllProducts()]);
+
+        if (!active) return;
+
+        const nextEvents = allEvents
+          .filter((event) => isFutureEvent(event.date))
+          .sort(byDateAsc)
+          .slice(0, 4)
+          .map((event) => ({ ...event, ...extractDayMonth(event.date) }));
+
+        const previousEvents = allEvents
+          .filter((event) => !isFutureEvent(event.date))
+          .sort(byDateDesc)
+          .slice(0, 4)
+          .map((event) => ({ ...event, ...extractDayMonth(event.date) }));
+
+        setUpcomingEvents(nextEvents);
+        setPastEvents(previousEvents);
+        setProducts(allProducts.slice(0, 8));
+      } catch {
+        if (active) {
+          setError("Não foi possível carregar os dados do dashboard.");
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <div className="space-y-8 animate-fade-in">
       <SectionTitle
         title="Dashboard"
         titleStyle={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(2.5rem, 5vw, 3.5rem)", fontWeight: 600 }}
       />
+
+      {error && <EmptyState message={error} className="border-red-100 bg-red-50/60 text-red-700" />}
 
       {/* linha de eventos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -93,9 +129,15 @@ export default function AdminDashboard() {
             </Link>
           </div>
           <div className="divide-y divide-gray-50">
-            {PROXIMOS_EVENTOS.map((event) => (
-              <DashboardEventRow key={event.id} event={event} />
-            ))}
+            {loading ? (
+              <p className="py-3 text-sm text-[#1E1E1E]/40">Carregando eventos...</p>
+            ) : upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => <DashboardEventRow key={event.id} event={event} />)
+            ) : (
+              <div className="py-4">
+                <EmptyState message="Nenhum evento próximo encontrado." className="border-none shadow-none p-0 bg-transparent" />
+              </div>
+            )}
           </div>
         </div>
 
@@ -111,9 +153,15 @@ export default function AdminDashboard() {
             </Link>
           </div>
           <div className="divide-y divide-gray-50">
-            {EVENTOS_ANTERIORES.map((event) => (
-              <DashboardEventRow key={event.id} event={event} isPast />
-            ))}
+            {loading ? (
+              <p className="py-3 text-sm text-[#1E1E1E]/40">Carregando eventos...</p>
+            ) : pastEvents.length > 0 ? (
+              pastEvents.map((event) => <DashboardEventRow key={event.id} event={event} isPast />)
+            ) : (
+              <div className="py-4">
+                <EmptyState message="Nenhum evento anterior encontrado." className="border-none shadow-none p-0 bg-transparent" />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -134,11 +182,17 @@ export default function AdminDashboard() {
               Ver todos <ChevronRight size={14} />
             </Link>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
-            {PRODUTOS.map((product) => (
-              <DashboardProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loading ? (
+            <p className="text-sm text-[#1E1E1E]/40">Carregando produtos...</p>
+          ) : products.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+              {products.map((product) => (
+                <DashboardProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState message="Nenhum produto cadastrado." className="border-none shadow-none p-0 bg-transparent" />
+          )}
         </div>
       </div>
     </div>
