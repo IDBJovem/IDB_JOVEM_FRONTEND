@@ -1,11 +1,16 @@
+const FALLBACK_IMAGE = "https://via.placeholder.com/300x300?text=Sem+Imagem";
+
 export default function DashboardProductCard({ product }) {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5">
       <div className="aspect-square bg-gray-50 flex items-center justify-center p-3 overflow-hidden">
         <img
-          src={product.image}
+          src={product.image || FALLBACK_IMAGE}
           alt={product.name}
           className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+          onError={(event) => {
+            event.currentTarget.src = FALLBACK_IMAGE;
+          }}
         />
       </div>
       <div className="p-2.5">
