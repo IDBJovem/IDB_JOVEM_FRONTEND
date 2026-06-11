@@ -1,6 +1,7 @@
 import { api } from "./api";
+import defaultEventImage from "../assets/images/idbJovemOne.png";
 
-const DEFAULT_EVENT_IMAGE = "/images/galeria/idb-jovem-one.jpg";
+const DEFAULT_EVENT_IMAGE = defaultEventImage;
 
 function slugify(text) {
   return String(text || "")
