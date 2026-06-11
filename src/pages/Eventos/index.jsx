@@ -7,10 +7,80 @@ import EventList from "./components/EventList";
 import EmptyEvents from "./components/EmptyEvents";
 import {
   fetchAllEvents,
-  searchEvents,
   isOngoingOrFuture,
   splitDateTime,
 } from "../../services/eventService";
+
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function inferRegionFromLocation(location) {
+  const text = normalizeText(location);
+  const regionMap = [
+    ["norte", [/\b(amazonas|acre|amapa|para|rondonia|roraima|tocantins|manaus|belem|maca|macapa)\b/, /\b(am|ac|ap|pa|ro|rr|to)\b/]],
+    ["nordeste", [/\b(alagoas|bahia|ceara|maranhao|paraiba|pernambuco|piaui|rio grande do norte|sergipe|fortaleza|recife)\b/, /\b(al|ba|ce|ma|pb|pe|pi|rn|se)\b/]],
+    ["centro-oeste", [/\b(distrito federal|brasilia|goiania|campo grande|cuiaba)\b/, /\b(df|go|mt|ms)\b/, /\bcentro\s*-\s*oeste\b/]],
+    ["sudeste", [/\b(sao paulo|rio de janeiro|minas gerais|espirito santo|sao paulo|rio)\b/, /\b(sp|rj|mg|es)\b/]],
+    ["sul", [/\b(parana|santa catarina|rio grande do sul|curitiba|florianopolis|porto alegre)\b/, /\b(pr|sc|rs)\b/]],
+  ];
+
+  for (const [region, matchers] of regionMap) {
+    if (matchers.some((matcher) => matcher.test(text))) {
+      return region;
+    }
+  }
+
+  return "";
+}
+
+function matchesDateFilter(eventDate, selectedFilter) {
+  if (selectedFilter === "Data") return true;
+
+  const parsed = splitDateTime(eventDate).day;
+  if (!parsed) return false;
+
+  const eventDay = new Date(`${parsed}T00:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (selectedFilter === "Esta semana") {
+    const weekEnd = new Date(today);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+    return eventDay >= today && eventDay < weekEnd;
+  }
+
+  if (selectedFilter === "Este mês") {
+    return (
+      eventDay.getFullYear() === today.getFullYear() &&
+      eventDay.getMonth() === today.getMonth() &&
+      eventDay >= today
+    );
+  }
+
+  if (selectedFilter === "Próximos 3 meses") {
+    const limit = new Date(today);
+    limit.setMonth(limit.getMonth() + 3);
+    return eventDay >= today && eventDay < limit;
+  }
+
+  return true;
+}
+
+function matchesEventFilters(event, filters) {
+  if (!isOngoingOrFuture(event)) return false;
+
+  const tipoAtivo = filters.tipo === "Tipo de evento" || event.category === filters.tipo;
+  const regiaoAtiva =
+    filters.regiao === "Região" || inferRegionFromLocation(event.location) === normalizeText(filters.regiao);
+  const dataAtiva = matchesDateFilter(event.date, filters.data);
+
+  return tipoAtivo && regiaoAtiva && dataAtiva;
+}
 
 /* Card do carrossel */
 function CarouselCard({ event }) {
@@ -94,20 +164,24 @@ export default function Eventos() {
     };
   }, []);
 
-  /* Busca server-side quando há termo (>= 2 caracteres) */
+  /* Busca local quando há termo (>= 2 caracteres) */
   useEffect(() => {
     const termo = search.trim();
     if (termo.length < 2) {
       setResults(allEvents);
       return;
     }
-    let active = true;
-    searchEvents(termo)
-      .then((found) => active && setResults(found))
-      .catch(() => active && setResults([]));
-    return () => {
-      active = false;
-    };
+    const query = normalizeText(termo);
+    const filtered = allEvents.filter((event) => {
+      const haystack = normalizeText([
+        event.title,
+        event.location,
+        event.description,
+        event.category,
+      ].join(" "));
+      return haystack.includes(query);
+    });
+    setResults(filtered);
   }, [search, allEvents]);
 
   /* Apenas eventos que ainda não terminaram (vão acontecer ou estão acontecendo) */
@@ -123,8 +197,8 @@ export default function Eventos() {
     splitDateTime(e.date).day.startsWith(currentMonth)
   );
 
-  /* Grid "Todos os eventos" também esconde os já encerrados */
-  const visibleResults = results.filter(isOngoingOrFuture);
+  /* Grid "Todos os eventos" também esconde os já encerrados e aplica os filtros selecionados */
+  const visibleResults = results.filter((event) => matchesEventFilters(event, filters));
 
   const scrollCarousel = (dir) => {
     carouselRef.current?.scrollBy({ left: dir * 300, behavior: "smooth" });

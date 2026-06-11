@@ -107,7 +107,7 @@ export default function ProcessoVoluntario() {
 
             <div className="mt-8 ml-12">
               <Link
-                to="/voluntarios"
+                to="/eventos"
                 className="inline-block bg-[#2B2B2B] hover:bg-black transition-all text-white font-bold px-8 py-3 rounded-2xl uppercase tracking-wider text-xs border-[2.5px] border-[#2B2B2B] shadow-[4px_4px_0_rgba(0,0,0,0.5)] active:translate-y-1 active:shadow-none"
               >
                 QUERO SER UM VOLUNTÁRIO

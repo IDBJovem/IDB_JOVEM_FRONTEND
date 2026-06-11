@@ -41,7 +41,7 @@ export default function HeroSection({ countdown, nextEvent }) {
         <div className="mt-6 md:mt-10 w-full max-w-2xl">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 justify-center">
             <span className="text-white font-bold uppercase tracking-widest text-2xl md:text-3xl whitespace-nowrap drop-shadow-md">
-              PROXIMO EVENTO:
+              PRÓXIMO EVENTO:
             </span>
             <div className="flex items-center gap-2 md:gap-3">
               <CountdownBox value={countdown.days} label="dias" />

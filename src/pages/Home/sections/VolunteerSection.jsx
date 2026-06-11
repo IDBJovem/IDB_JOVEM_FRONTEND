@@ -152,7 +152,7 @@ export default function VolunteerSection() {
         {/* Botão no final da seção */}
         <div className="mt-16 flex justify-center">
           <Link
-            to="/voluntarios"
+            to="/eventos"
             className="inline-block bg-orange-500 hover:bg-orange-600 transition-colors text-white font-bold px-10 py-4 rounded-lg uppercase tracking-wider text-sm shadow-xl hover:shadow-2xl hover:scale-105 transform duration-300"
           >
             Seja voluntário
