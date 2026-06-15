@@ -1,7 +1,9 @@
 import { test, expect } from '../helpers/testWithCoverage.js';
+import { setupApiMock } from '../helpers/apiMock';
 
 test.describe('Página de Galeria', () => {
   test.beforeEach(async ({ page }) => {
+    await setupApiMock(page);
     await page.goto('/galeria');
   });
 
@@ -28,32 +30,27 @@ test.describe('Página de Galeria', () => {
     const gridContainer = page.locator('section > div.grid');
     await expect(gridContainer).toBeVisible();
 
-    // Verifica as imagens do mock local
+    // Verifica as imagens agregadas dos eventos com galeria
     const imagens = gridContainer.locator('img');
-    const count = await imagens.count();
+    await expect(imagens.first()).toBeVisible();
 
-    if (count > 0) {
-      await expect(imagens.first()).toBeVisible();
-
-      // Verifica textos nos cards de galeria
-      const nomesEventos = gridContainer.locator('h3');
-      await expect(nomesEventos.first()).toBeVisible();
-    }
+    // Verifica textos nos cards de galeria
+    const nomesEventos = gridContainer.locator('h3');
+    await expect(nomesEventos.first()).toBeVisible();
   });
 
   test('deve exibir localização nos cards de galeria', async ({ page }) => {
     const gridContainer = page.locator('section > div.grid');
     await expect(gridContainer).toBeVisible();
 
-    // Verifica os parágrafos de localização
+    // Os cards devem ter localização
     const locations = gridContainer.locator('p');
     const count = await locations.count();
-
     expect(count).toBeGreaterThan(0);
 
-    // Verifica localizações específicas do mock
-    await expect(gridContainer.getByText('Acampamento Central').first()).toBeVisible();
-    await expect(gridContainer.getByText('Centro de Convenções').first()).toBeVisible();
+    // Localizações específicas das fixtures
+    await expect(gridContainer.getByText('Sítio Boa Vista').first()).toBeVisible();
+    await expect(gridContainer.getByText('Centro de Convenções')).toBeVisible();
   });
 
   test('deve ter alt text correto nas imagens da galeria', async ({ page }) => {
@@ -62,34 +59,31 @@ test.describe('Página de Galeria', () => {
 
     const imagens = gridContainer.locator('img');
     const count = await imagens.count();
-
     expect(count).toBeGreaterThan(0);
 
-    // Alt text segue o padrão
+    // Alt text segue o padrão "Evento - Local"
     for (let i = 0; i < count; i++) {
       const alt = await imagens.nth(i).getAttribute('alt');
       expect(alt).toBeTruthy();
       expect(alt).toContain(' - ');
     }
 
-    // Verifica alt text específico
-    await expect(imagens.first()).toHaveAttribute('alt', 'IDB TEEN CAMP - Acampamento Central');
+    // Verifica alt text específico (primeira foto do evento 1)
+    await expect(imagens.first()).toHaveAttribute('alt', 'Retiro de Verão - Sítio Boa Vista');
   });
 
-  test('deve renderizar todos os cards de galeria do mock', async ({ page }) => {
+  test('deve agregar as fotos dos eventos que possuem galeria', async ({ page }) => {
     const gridContainer = page.locator('section > div.grid');
     await expect(gridContainer).toBeVisible();
 
-    // O mock fornece 2 fotos (uma do evento 1, outra do evento 3)
+    // As fixtures têm 2 fotos do evento 1 e 1 foto do evento 3 → 3 cards
     const imagens = gridContainer.locator('img');
-    expect(await imagens.count()).toBe(2);
+    expect(await imagens.count()).toBe(3);
 
-    // Verifica nomes de eventos no grid
     const eventNames = gridContainer.locator('h3');
-    expect(await eventNames.count()).toBe(2);
+    expect(await eventNames.count()).toBe(3);
 
-    // Verifica nomes de eventos específicos
-    await expect(gridContainer.getByText('IDB TEEN CAMP').first()).toBeVisible();
-    await expect(gridContainer.getByText('IMERSÃO 2027')).toBeVisible();
+    await expect(gridContainer.getByText('Retiro de Verão').first()).toBeVisible();
+    await expect(gridContainer.getByText('Congresso 2020').first()).toBeVisible();
   });
 });

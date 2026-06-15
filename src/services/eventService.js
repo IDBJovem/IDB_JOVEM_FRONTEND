@@ -96,6 +96,52 @@ export function isFutureEvent(isoDate) {
   return eventDate >= today;
 }
 
+/* Evento que ainda vai acontecer ou está acontecendo: continua visível enquanto
+   a data de término (ou a de início, se não houver término) for hoje ou no futuro.
+   Difere de isFutureEvent por considerar o término — eventos de vários dias que já
+   começaram permanecem visíveis até acabarem. */
+export function isOngoingOrFuture(event) {
+  const p = parseWallClock(event?.endDate || event?.date);
+  if (!p) return false;
+  const endDate = new Date(p.year, p.month - 1, p.day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return endDate >= today;
+}
+
+/* Monta a URL do Google Calendar para criar o evento na conta do usuário.
+   Usa o formato "TEMPLATE" (pré-preenchido): o usuário revisa e salva no próprio
+   calendário. As datas vão como relógio de parede (sem Z), no fuso do usuário. */
+export function buildGoogleCalendarUrl(event) {
+  if (!event?.date) return null;
+  const toGCal = (iso) => {
+    const { day, time } = splitDateTime(iso);
+    if (!day) return null;
+    return `${day.replace(/-/g, "")}T${(time || "00:00").replace(":", "")}00`;
+  };
+  const start = toGCal(event.date);
+  const end = toGCal(event.endDate || event.date) || start;
+  if (!start) return null;
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: event.title || "Evento",
+    dates: `${start}/${end}`,
+    details: event.description || "",
+    location: event.location || "",
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+export function toFormResponseUrl(url) {
+  if (!url || typeof url !== "string") return url || "";
+  let result = url.trim();
+  if (!/docs\.google\.com\/forms\//i.test(result)) return result;
+  result = result.replace(/#.*$/, "");
+  result = result.replace(/\/edit(?=$|\?)/i, "/viewform");
+  return result;
+}
+
 function adaptEvent(apiEvent) {
   if (!apiEvent) return null;
   return {
@@ -112,12 +158,13 @@ function adaptEvent(apiEvent) {
     linkGaleria: apiEvent.link_galeria || "",
     linkFormularioVoluntarios: apiEvent.formulario_link || "",
     calendarioEventoId: apiEvent.calendario_evento_id || null,
+    tipoEvento: apiEvent.tipo_evento || "",
     /* URL da imagem de capa (Drive). image = valor exibido (com fallback);
        linkImagem = valor cru para o formulário (vazio quando não há). */
     linkImagem: apiEvent.link_imagem || "",
     image: toDriveImageUrl(apiEvent.link_imagem) || DEFAULT_EVENT_IMAGE,
-    /* Campos ainda não fornecidos pela API de evento → defaults seguros */
-    category: "Evento",
+    /* category espelha tipo_evento para alimentar o filtro da página de eventos */
+    category: apiEvent.tipo_evento || "Outros",
     featured: false,
     totalParticipantes: 0,
     totalVoluntarios: 0,
@@ -133,6 +180,7 @@ function toApiEvent(form) {
   const toIso = (v) => (v ? `${v}:00`.slice(0, 19) : null);
   return {
     nome: form.title,
+    tipo_evento: form.tipoEvento || null,
     descricao: form.description || null,
     local_latitude: Number(form.latitude),
     local_longitude: Number(form.longitude),
@@ -201,9 +249,14 @@ export async function getGroupedEvents() {
   return { proximos, anteriores };
 }
 
+export const TIPOS_EVENTO = ["Conferência", "Acampamento", "Outros"];
+
 export async function handleCreateEvent(data) {
   if (!data.title || !data.title.trim()) {
     return { success: false, error: "Nome do evento é obrigatório." };
+  }
+  if (!TIPOS_EVENTO.includes(data.tipoEvento)) {
+    return { success: false, error: "Selecione o tipo de evento." };
   }
   if (!data.date || !data.endDate) {
     return { success: false, error: "Datas de início e término são obrigatórias." };
@@ -222,6 +275,9 @@ export async function handleCreateEvent(data) {
 export async function handleUpdateEvent(slugOrId, data) {
   if (!data.title || !data.title.trim()) {
     return { success: false, error: "Nome do evento é obrigatório." };
+  }
+  if (!TIPOS_EVENTO.includes(data.tipoEvento)) {
+    return { success: false, error: "Selecione o tipo de evento." };
   }
   const id = parseEventId(slugOrId);
   try {

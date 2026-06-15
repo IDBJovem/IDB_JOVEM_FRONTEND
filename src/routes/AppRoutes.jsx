@@ -5,6 +5,7 @@ import MainLayoutNoFooter from "../layouts/MainLayoutNoFooter";
 import AdminLayout from "../layouts/AdminLayout";
 
 import AdminRoute from "./AdminRoute";
+import SuperAdminRoute from "./SuperAdminRoute";
 
 import Home from "../pages/Home";
 import Eventos from "../pages/Eventos";
@@ -28,10 +29,6 @@ import AdminProdutoEdit from "../pages/Admin/Produtos/Edit";
 import AdminVoluntarios from "../pages/Admin/Voluntarios";
 import AdminVoluntarioDetails from "../pages/Admin/Voluntarios/Details";
 
-import AdminLideres from "../pages/Admin/Lideres";
-import AdminLiderCreate from "../pages/Admin/Lideres/Create";
-import AdminLiderEdit from "../pages/Admin/Lideres/Edit";
-
 export default function AppRoutes() {
   return (
     <Routes>
@@ -44,13 +41,12 @@ export default function AppRoutes() {
           <Route path="/admin/eventos/:id/editar" element={<AdminEventoEdit />} />
           <Route path="/admin/eventos/:id/programacao" element={<AdminEventoEditSchedule />} />
           <Route path="/admin/produtos" element={<AdminProdutos />} />
-          <Route path="/admin/produtos/criar" element={<AdminProdutoCreate />} />
-          <Route path="/admin/produtos/:id/editar" element={<AdminProdutoEdit />} />
+          <Route element={<SuperAdminRoute />}>
+            <Route path="/admin/produtos/criar" element={<AdminProdutoCreate />} />
+            <Route path="/admin/produtos/:id/editar" element={<AdminProdutoEdit />} />
+          </Route>
           <Route path="/admin/voluntarios" element={<AdminVoluntarios />} />
           <Route path="/admin/voluntarios/:eventId" element={<AdminVoluntarioDetails />} />
-          <Route path="/admin/lideres" element={<AdminLideres />} />
-          <Route path="/admin/lideres/criar" element={<AdminLiderCreate />} />
-          <Route path="/admin/lideres/:id/editar" element={<AdminLiderEdit />} />
         </Route>
       </Route>
 

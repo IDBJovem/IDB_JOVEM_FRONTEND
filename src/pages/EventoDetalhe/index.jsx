@@ -1,6 +1,5 @@
 import { useEventDetails } from "./hooks/useEventDetails";
 import EventHero from "./components/EventHero";
-import EventInfo from "./components/EventInfo";
 import SpeakerList from "./components/SpeakerList";
 import EventSchedule from "./components/EventSchedule";
 import EventGallery from "./components/EventGallery";
@@ -37,7 +36,6 @@ export default function EventoDetalhe() {
   return (
     <main className="min-h-screen bg-[#FDF3EA] pt-[70px] md:pt-[82px]">
       <EventHero event={event} />
-      <EventInfo event={event} />
       <SpeakerList speakers={event.speakers} />
       <EventSchedule schedule={event.schedule} />
       <EventGallery gallery={event.gallery} />

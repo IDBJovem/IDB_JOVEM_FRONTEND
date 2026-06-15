@@ -9,7 +9,7 @@ import {
   LocateFixed,
 } from "lucide-react";
 import useGeolocation from "../../hooks/useGeolocation";
-import { fetchAllEvents, formatDate } from "../../services/eventService";
+import { fetchAllEvents, formatDate, isOngoingOrFuture } from "../../services/eventService";
 import { distanceKm, formatDistance, hasCoords } from "../../lib/geo";
 import NearbyMap from "./components/NearbyMap";
 import Loading from "../../components/ui/Loading";
@@ -27,7 +27,7 @@ export default function EventosProximos() {
   useEffect(() => {
     let active = true;
     fetchAllEvents()
-      .then((all) => active && setEvents(all.filter(hasCoords)))
+      .then((all) => active && setEvents(all.filter((e) => hasCoords(e) && isOngoingOrFuture(e))))
       .catch(() => active && setEventsError("Não foi possível carregar os eventos."))
       .finally(() => active && setLoadingEvents(false));
     return () => {

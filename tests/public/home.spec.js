@@ -1,7 +1,9 @@
 import { test, expect } from '../helpers/testWithCoverage.js';
+import { setupApiMock } from '../helpers/apiMock';
 
 test.describe('Página Inicial (Home)', () => {
   test.beforeEach(async ({ page }) => {
+    await setupApiMock(page);
     await page.goto('/');
   });
 
@@ -32,12 +34,12 @@ test.describe('Página Inicial (Home)', () => {
     const titulo = page.getByRole('heading', { name: /Nosso Organograma/i });
     await expect(titulo).toBeVisible();
 
-    // Deve ter botão de alternância
-    const btnAntigosLideres = page.getByRole('button', { name: /Galeria de Diretores/i });
-    await expect(btnAntigosLideres).toBeVisible();
+    // Deve ter botão de alternância para a galeria de diretores
+    const btnGaleriaDiretores = page.getByRole('button', { name: /Galeria de Diretores/i });
+    await expect(btnGaleriaDiretores).toBeVisible();
   });
 
-  test('LideresSection - deve permitir alternar para antigos líderes', async ({ page }) => {
+  test('LideresSection - deve permitir alternar para a galeria de diretores', async ({ page }) => {
     const btnAlternar = page.getByRole('button', { name: /Galeria de Diretores/i });
     await btnAlternar.click();
 
@@ -93,13 +95,9 @@ test.describe('Página Inicial (Home)', () => {
     await expect(btnQueroSerVoluntario).toBeVisible();
   });
 
-  test('ProdutosSection - deve exibir produtos e link para Hotmart', async ({ page }) => {
+  test('ProdutosSection - deve exibir a seção de produtos', async ({ page }) => {
     const titulo = page.getByRole('heading', { name: /Conheça nossos produtos/i });
     await expect(titulo).toBeVisible();
-
-    const btnHotmart = page.getByRole('link', { name: /Comprar na Hotmart/i });
-    await expect(btnHotmart).toBeVisible();
-    await expect(btnHotmart).toHaveAttribute('href', 'https://hotmart.com');
   });
 
   test('GaleriaSection - deve exibir o carrossel da galeria e link "Ver mais +"', async ({ page }) => {

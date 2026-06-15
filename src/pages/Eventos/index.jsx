@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Building2, Clock } from "lucide-react";
 import EventFilters from "./components/EventFilters";
 import EventSearch from "./components/EventSearch";
@@ -7,52 +7,92 @@ import EventList from "./components/EventList";
 import EmptyEvents from "./components/EmptyEvents";
 import {
   fetchAllEvents,
-  searchEvents,
-  isFutureEvent,
+  isOngoingOrFuture,
+  splitDateTime,
+  toFormResponseUrl,
 } from "../../services/eventService";
 
-/* Card do carrossel */
-function CarouselCard({ event }) {
-  return (
-    <div className="min-w-[260px] sm:min-w-[280px] flex-shrink-0 bg-white rounded-2xl overflow-hidden shadow-sm group">
-      <div className="relative overflow-hidden h-44">
-        <img
-          src={event.image}
-          alt={event.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-      </div>
-      <div className="p-4 flex flex-col items-center">
-        <h3 className="font-bold text-[#FFCB9A] text-xl mb-3 text-center">
-          {event.title}
-        </h3>
-        <div className="flex items-center gap-4 mb-4">
-          <span className="flex items-center gap-1.5 text-sm font-medium text-[#1E1E1E]">
-            <Building2 size={16} />
-            {event.location}
-          </span>
-          <span className="flex items-center gap-1.5 text-sm font-medium text-[#1E1E1E]">
-            <Clock size={16} />
-            {event.time}
-          </span>
-        </div>
-        <div className="flex gap-3 w-full">
-          <Link
-            to={`/eventos/${event.slug}`}
-            className="flex-1 flex items-center justify-center gap-2 text-xs font-bold text-black bg-[#E0E0E0] rounded-lg px-3 py-2 hover:bg-[#d1d1d1] transition-colors"
-          >
-            Veja mais <span className="text-black">→</span>
-          </Link>
-          <button className="flex-1 text-xs font-bold bg-[#FF6D2C] hover:bg-[#e65c18] text-white rounded-lg px-3 py-2 transition-colors">
-            Inscreva-se
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function inferRegionFromLocation(location) {
+  const text = normalizeText(location);
+  const regionMap = [
+    ["norte", [/\b(amazonas|acre|amapa|para|rondonia|roraima|tocantins|manaus|belem|maca|macapa)\b/, /\b(am|ac|ap|pa|ro|rr|to)\b/]],
+    ["nordeste", [/\b(alagoas|bahia|ceara|maranhao|paraiba|pernambuco|piaui|rio grande do norte|sergipe|fortaleza|recife)\b/, /\b(al|ba|ce|ma|pb|pe|pi|rn|se)\b/]],
+    ["centro-oeste", [/\b(distrito federal|brasilia|goiania|campo grande|cuiaba)\b/, /\b(df|go|mt|ms)\b/, /\bcentro\s*-\s*oeste\b/]],
+    ["sudeste", [/\b(sao paulo|rio de janeiro|minas gerais|espirito santo|sao paulo|rio)\b/, /\b(sp|rj|mg|es)\b/]],
+    ["sul", [/\b(parana|santa catarina|rio grande do sul|curitiba|florianopolis|porto alegre)\b/, /\b(pr|sc|rs)\b/]],
+  ];
+
+  for (const [region, matchers] of regionMap) {
+    if (matchers.some((matcher) => matcher.test(text))) {
+      return region;
+    }
+  }
+
+  return "";
+}
+
+function matchesDateFilter(eventDate, selectedFilter) {
+  if (selectedFilter === "Data") return true;
+
+  const parsed = splitDateTime(eventDate).day;
+  if (!parsed) return false;
+
+  const eventDay = new Date(`${parsed}T00:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (selectedFilter === "Esta semana") {
+    const weekEnd = new Date(today);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+    return eventDay >= today && eventDay < weekEnd;
+  }
+
+  if (selectedFilter === "Este mês") {
+    return (
+      eventDay.getFullYear() === today.getFullYear() &&
+      eventDay.getMonth() === today.getMonth() &&
+      eventDay >= today
+    );
+  }
+
+  if (selectedFilter === "Próximos 3 meses") {
+    const limit = new Date(today);
+    limit.setMonth(limit.getMonth() + 3);
+    return eventDay >= today && eventDay < limit;
+  }
+
+  return true;
+}
+
+function matchesEventFilters(event, filters) {
+  if (!isOngoingOrFuture(event)) return false;
+
+  const tipoAtivo = filters.tipo === "Tipo de evento" || event.category === filters.tipo;
+  const regiaoAtiva =
+    filters.regiao === "Região" || inferRegionFromLocation(event.location) === normalizeText(filters.regiao);
+  const dataAtiva = matchesDateFilter(event.date, filters.data);
+
+  return tipoAtivo && regiaoAtiva && dataAtiva;
+}
+
+function inscreverEvento(event, navigate) {
+  if (event.linkFormularioVoluntarios) {
+    window.open(toFormResponseUrl(event.linkFormularioVoluntarios), "_blank", "noopener,noreferrer");
+  } else {
+    navigate(`/eventos/${event.slug}`);
+  }
 }
 
 export default function Eventos() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearchState] = useState(searchParams.get("q") || "");
 
@@ -75,8 +115,6 @@ export default function Eventos() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const carouselRef = useRef(null);
-
   /* Carrega todos os eventos uma vez */
   useEffect(() => {
     let active = true;
@@ -93,30 +131,34 @@ export default function Eventos() {
     };
   }, []);
 
-  /* Busca server-side quando há termo (>= 2 caracteres) */
+  /* Busca local quando há termo (>= 2 caracteres) */
   useEffect(() => {
     const termo = search.trim();
     if (termo.length < 2) {
       setResults(allEvents);
       return;
     }
-    let active = true;
-    searchEvents(termo)
-      .then((found) => active && setResults(found))
-      .catch(() => active && setResults([]));
-    return () => {
-      active = false;
-    };
+    const query = normalizeText(termo);
+    const filtered = allEvents.filter((event) => {
+      const haystack = normalizeText([
+        event.title,
+        event.location,
+        event.description,
+        event.category,
+      ].join(" "));
+      return haystack.includes(query);
+    });
+    setResults(filtered);
   }, [search, allEvents]);
 
+  /* Apenas eventos que ainda não terminaram (vão acontecer ou estão acontecendo) */
   const upcoming = allEvents
-    .filter((e) => isFutureEvent(e.date))
+    .filter(isOngoingOrFuture)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
-  const featured = upcoming[0] || allEvents[0] || null;
+  const featured = upcoming[0] || null;
 
-  const scrollCarousel = (dir) => {
-    carouselRef.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
-  };
+  /* Grid "Todos os eventos" também esconde os já encerrados e aplica os filtros selecionados */
+  const visibleResults = results.filter((event) => matchesEventFilters(event, filters));
 
   return (
     <main className="min-h-screen bg-[#FDF3EA] pt-[70px] md:pt-[82px]">
@@ -183,7 +225,10 @@ export default function Eventos() {
                   >
                     Veja mais <span className="text-black text-lg leading-none">→</span>
                   </Link>
-                  <button className="bg-[#FF6D2C] hover:bg-[#e65c18] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors w-[130px]">
+                  <button
+                    onClick={() => inscreverEvento(featured, navigate)}
+                    className="bg-[#FF6D2C] hover:bg-[#e65c18] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors w-[130px]"
+                  >
                     Inscreva-se
                   </button>
                 </div>
@@ -193,63 +238,6 @@ export default function Eventos() {
         </section>
       )}
 
-      {/* Próximos eventos (carrossel) */}
-      {upcoming.length > 0 && (
-        <section className="w-full bg-[#FDF3EA] py-10">
-          <div className="w-full max-w-6xl mx-auto px-4">
-            <h2
-              className="font-bold text-[#1E1E1E] text-center mb-8"
-              style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)" }}
-            >
-              Próximos eventos
-            </h2>
-
-            {/* Carrossel com setas */}
-            <div className="relative">
-              {/* Seta esquerda */}
-              <button
-                onClick={() => scrollCarousel(-1)}
-                className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 hover:scale-110 transition-transform"
-                aria-label="Anterior"
-              >
-                <div className="w-0 h-0 border-y-[20px] border-y-transparent border-r-[30px] border-r-black"></div>
-              </button>
-
-              {/* Track */}
-              <div
-                ref={carouselRef}
-                className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth px-1 pb-2"
-              >
-                {upcoming.map((event) => (
-                  <CarouselCard key={event.id} event={event} />
-                ))}
-              </div>
-
-              {/* Seta direita */}
-              <button
-                onClick={() => scrollCarousel(1)}
-                className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 hover:scale-110 transition-transform"
-                aria-label="Próximo"
-              >
-                <div className="w-0 h-0 border-y-[20px] border-y-transparent border-l-[30px] border-l-black"></div>
-              </button>
-            </div>
-
-            {/* Google Calendar CTA */}
-            <div className="flex justify-center mt-8">
-              <a
-                href="https://calendar.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm font-bold text-black bg-[#F5E6DA] hover:bg-[#ead3c1] px-4 py-2.5 rounded-xl transition-colors shadow-sm"
-              >
-                <span className="text-xl">📅</span>
-                Adicionar ao Google Calendar
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Todos os eventos (grid com filtro) */}
       <section className="w-full bg-[#FDF3EA] py-10 pb-20">
@@ -260,8 +248,8 @@ export default function Eventos() {
             </p>
           ) : error ? (
             <p className="text-center text-red-500 font-semibold py-10">{error}</p>
-          ) : results.length > 0 ? (
-            <EventList events={results} />
+          ) : visibleResults.length > 0 ? (
+            <EventList events={visibleResults} />
           ) : (
             <EmptyEvents />
           )}

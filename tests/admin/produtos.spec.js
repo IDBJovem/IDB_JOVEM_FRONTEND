@@ -1,9 +1,11 @@
 import { test, expect } from '../helpers/testWithCoverage.js';
 import { loginAsAdmin } from '../helpers/adminAuth';
+import { setupApiMock } from '../helpers/apiMock';
 
 test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsAdmin(page);
+    await setupApiMock(page);
     await page.goto('/admin/produtos', { waitUntil: 'domcontentloaded' });
   });
 
@@ -178,10 +180,14 @@ test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
     expect(alertMessage.length).toBeGreaterThan(0);
   });
 
-  test('deve testar upload de imagem no form (ProductForm L23-L30)', async ({ page }) => {
+  test('deve exibir preview ao informar o link da imagem (ProductForm)', async ({ page }) => {
     await page.goto('/admin/produtos/criar');
-    const inputLink = page.locator('input[name="image"]');
-    await inputLink.fill('https://drive.google.com/file/d/test/view');
+    const inputLink = page.locator('input[type="file"]');
+    await inputLink.setInputFiles({
+      name: 'test.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
+    });
     
     // Deve exibir o preview da imagem
     await expect(page.locator('img[alt="Preview do produto"]')).toBeVisible();
