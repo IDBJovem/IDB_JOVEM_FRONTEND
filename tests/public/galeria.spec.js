@@ -49,13 +49,11 @@ test.describe('Página de Galeria', () => {
     const locations = gridContainer.locator('p');
     const count = await locations.count();
 
-    // Os 9 cards do mock devem ter localização
     expect(count).toBeGreaterThan(0);
 
     // Verifica localizações específicas do mock
-    await expect(gridContainer.getByText('São Paulo, SP').first()).toBeVisible();
-    await expect(gridContainer.getByText('Brasília, DF')).toBeVisible();
-    await expect(gridContainer.getByText('Moçoro, RN')).toBeVisible();
+    await expect(gridContainer.getByText('Acampamento Central').first()).toBeVisible();
+    await expect(gridContainer.getByText('Centro de Convenções').first()).toBeVisible();
   });
 
   test('deve ter alt text correto nas imagens da galeria', async ({ page }) => {
@@ -75,28 +73,23 @@ test.describe('Página de Galeria', () => {
     }
 
     // Verifica alt text específico
-    await expect(imagens.first()).toHaveAttribute('alt', 'IDB Jovem & Teen One - São Paulo, SP');
+    await expect(imagens.first()).toHaveAttribute('alt', 'IDB TEEN CAMP - Acampamento Central');
   });
 
-  test('deve renderizar todos os 9 cards de galeria do mock', async ({ page }) => {
+  test('deve renderizar todos os cards de galeria do mock', async ({ page }) => {
     const gridContainer = page.locator('section > div.grid');
     await expect(gridContainer).toBeVisible();
 
-    // O mock useGallery tem 9 fotos
+    // O mock fornece 2 fotos (uma do evento 1, outra do evento 3)
     const imagens = gridContainer.locator('img');
-    expect(await imagens.count()).toBe(9);
+    expect(await imagens.count()).toBe(2);
 
     // Verifica nomes de eventos no grid
     const eventNames = gridContainer.locator('h3');
-    expect(await eventNames.count()).toBe(9);
+    expect(await eventNames.count()).toBe(2);
 
     // Verifica nomes de eventos específicos
-    await expect(gridContainer.getByText('Teen Camp').first()).toBeVisible();
-    await expect(gridContainer.getByText('ES NE AJO').first()).toBeVisible();
-    await expect(gridContainer.getByText('Imersão 2025')).toBeVisible();
-    await expect(gridContainer.getByText('Conferência SP')).toBeVisible();
-    await expect(gridContainer.getByText('Encontro Manaus')).toBeVisible();
-    await expect(gridContainer.getByText('Culto Jovem')).toBeVisible();
-    await expect(gridContainer.getByText('Retiro Norte')).toBeVisible();
+    await expect(gridContainer.getByText('IDB TEEN CAMP').first()).toBeVisible();
+    await expect(gridContainer.getByText('IMERSÃO 2027')).toBeVisible();
   });
 });

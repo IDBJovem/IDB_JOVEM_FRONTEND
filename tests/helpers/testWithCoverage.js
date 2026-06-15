@@ -2,6 +2,7 @@ import { test as baseTest } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { setupApiMocks } from './mockApi.js';
 
 export const test = baseTest.extend({
   context: async ({ context }, use) => {
@@ -12,6 +13,8 @@ export const test = baseTest.extend({
         }
       });
     });
+
+    await setupApiMocks(context);
 
     const coverages = [];
     await context.exposeFunction('__playwright_coverage', (coverage) => {

@@ -10,10 +10,9 @@ test.describe('Página Eventos Próximos', () => {
     await expect(titulo).toBeVisible();
   });
 
-  test('deve possuir um mapa (iframe) carregado', async ({ page }) => {
-    const iframe = page.locator('iframe[title="Mapa de Eventos Próximos"]');
-    await expect(iframe).toBeVisible();
-    await expect(iframe).toHaveAttribute('src', /google\.com\/maps\/embed/);
+  test('deve possuir um mapa leaflet carregado', async ({ page }) => {
+    const mapContainer = page.locator('.leaflet-container');
+    await expect(mapContainer).toBeVisible();
   });
 
   test('deve possuir um botão para voltar', async ({ page }) => {

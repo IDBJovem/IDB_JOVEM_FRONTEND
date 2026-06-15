@@ -33,15 +33,15 @@ test.describe('Página Inicial (Home)', () => {
     await expect(titulo).toBeVisible();
 
     // Deve ter botão de alternância
-    const btnAntigosLideres = page.getByRole('button', { name: /Antigos Líderes/i });
+    const btnAntigosLideres = page.getByRole('button', { name: /Galeria de Diretores/i });
     await expect(btnAntigosLideres).toBeVisible();
   });
 
   test('LideresSection - deve permitir alternar para antigos líderes', async ({ page }) => {
-    const btnAlternar = page.getByRole('button', { name: /Antigos Líderes/i });
+    const btnAlternar = page.getByRole('button', { name: /Galeria de Diretores/i });
     await btnAlternar.click();
 
-    const tituloAntigos = page.getByRole('heading', { name: /Antigos líderes/i });
+    const tituloAntigos = page.getByRole('heading', { name: /Galeria de Diretores/i });
     await expect(tituloAntigos).toBeVisible();
 
     // O botão deve mudar o texto

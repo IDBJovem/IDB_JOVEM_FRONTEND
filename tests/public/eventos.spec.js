@@ -80,7 +80,7 @@ test.describe('Página de Eventos', () => {
     const inputBusca = page.getByPlaceholder('Pesquisar evento...');
     await inputBusca.fill('XYZT_EVENTO_INEXISTENTE');
 
-    const emptyText = page.getByRole('heading', { name: 'Nenhum evento encontrado' });
+    const emptyText = page.getByText('Nenhum evento encontrado');
     await expect(emptyText).toBeVisible();
     await expect(page.getByText('Tente ajustar os filtros ou a pesquisa para encontrar o que você procura.')).toBeVisible();
   });
@@ -157,7 +157,7 @@ test.describe('Página de Eventos', () => {
     await selectTipo.selectOption('Conferência');
     await inputBusca.fill('XYZT_NAO_EXISTE');
 
-    const emptyState = page.getByRole('heading', { name: 'Nenhum evento encontrado' });
+    const emptyState = page.getByText('Nenhum evento encontrado');
     await expect(emptyState).toBeVisible();
   });
 

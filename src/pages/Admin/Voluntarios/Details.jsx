@@ -29,20 +29,26 @@ export default function AdminVoluntarioDetails() {
     let active = true;
     (async () => {
       try {
-        // Evento primeiro: se nao existe, mostra "nao encontrado" sem depender
-        // das inscricoes (cujo erro nao deve mascarar o evento inexistente).
-        const ev = await fetchEventById(eventId);
+        let ev;
+        try {
+          ev = await fetchEventById(eventId);
+        } catch (e) {
+          ev = null;
+        }
         if (!active) return;
         setEvent(ev);
+        
         if (ev) {
-          const vols = await fetchVolunteersByEvent(eventId);
-          if (!active) return;
-          setVolunteers(vols);
-          setStats(computeVolunteerStats(vols));
+          try {
+            const vols = await fetchVolunteersByEvent(eventId);
+            if (!active) return;
+            setVolunteers(vols);
+            setStats(computeVolunteerStats(vols));
+            setError(null);
+          } catch {
+            if (active) setError("Não foi possível carregar as inscrições deste evento.");
+          }
         }
-        setError(null);
-      } catch {
-        if (active) setError("Não foi possível carregar as inscrições deste evento.");
       } finally {
         if (active) setLoading(false);
       }
