@@ -13,25 +13,25 @@ export default function SobreSection() {
   return (
     <section className="w-full flex flex-col md:flex-row min-h-[400px]">
       {/* Imagem */}
-      <div className="w-full md:w-1/2">
+      <div className="w-full md:w-1/2 relative min-h-[300px] md:min-h-0">
         <img
           src={cultoImg}
           alt="Sobre o IDB Jovem"
-          className="w-full h-full min-h-[300px] md:min-h-[400px] object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         />
       </div>
 
       {/* Texto */}
-      <div className="w-full md:w-1/2 bg-[#D5650D] flex flex-col justify-center items-center py-12 md:py-16 px-8 md:px-12 text-center overflow-hidden">
+      <div className="w-full md:w-1/2 bg-[#D5650D] flex flex-col justify-center items-center py-16 md:py-24 px-8 md:px-12 text-center overflow-hidden">
         <h2
           className="font-handwriting text-white leading-none mb-8"
           style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)" }}
         >
           CONHEÇA O IDB
           <br />
-          JOVEM & TEEN
+          JOVEM <span className="font-sans">&</span> TEEN
         </h2>
-        <div className="max-w-md w-full mx-auto text-black text-base md:text-lg leading-relaxed mb-10 text-left">
+        <div className="max-w-md w-full mx-auto text-black text-base md:text-lg leading-relaxed mb-10 text-left min-h-[160px] md:min-h-[150px]">
           <TypewriterEffect
             words={bodyWords}
             className="text-left font-normal text-base md:text-lg"
