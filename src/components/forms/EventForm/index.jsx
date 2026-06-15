@@ -4,6 +4,7 @@ import { MapPin, CalendarDays, Users, Music, CalendarCog, ImagePlus } from "luci
 import LocationPicker from "./LocationPicker";
 import TimeInput from "../../ui/TimeInput";
 import { splitDateTime } from "../../../services/eventService";
+import { toDriveImageUrl } from "../../../utils/driveImage";
 
 const inputClass =
   "w-full border border-gray-300 rounded-lg px-4 py-3 bg-[#FFF8F3] text-sm text-[#1E1E1E] placeholder-[#1E1E1E]/40 focus:border-[#FF6D2C] focus:ring-2 focus:ring-[#FF6D2C]/20 transition-all";
