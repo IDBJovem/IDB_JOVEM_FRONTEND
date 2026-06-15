@@ -12,9 +12,9 @@ test.describe('Footer Layout', () => {
     const titulo = footer.getByRole('heading', { name: /ENTRE EM CONTATO/i });
     await expect(titulo).toBeVisible();
 
-    const emailLink = footer.getByRole('link', { name: /contato@idbjovem.com/i });
+    const emailLink = footer.getByRole('link', { name: /idbjovemnacional@gmail.com/i });
     await expect(emailLink).toBeVisible();
-    await expect(emailLink).toHaveAttribute('href', 'mailto:contato@idbjovem.com');
+    await expect(emailLink).toHaveAttribute('href', 'mailto:idbjovemnacional@gmail.com');
 
     const socialLinks = footer.getByRole('link', { name: /@idbjovemoficial/i });
     await expect(socialLinks).toHaveCount(2);
@@ -48,7 +48,7 @@ test.describe('Footer Layout', () => {
     const btnLogin = footer.getByRole('link', { name: /Login/i });
     await expect(btnLogin).toBeVisible();
 
-    const btnVoluntario = footer.getByRole('link', { name: /VIRAR VOLUNTÁRIO/i });
+    const btnVoluntario = footer.getByRole('link', { name: /SEJA UM VOLUNTÁRIO/i });
     await expect(btnVoluntario).toBeVisible();
 
     // Teste de navegação do Login no footer
@@ -59,7 +59,7 @@ test.describe('Footer Layout', () => {
   test('deve testar navegação de voluntário', async ({ page }) => {
     await page.goto('/');
     const footer = page.locator('footer#contato');
-    const btnVoluntario = footer.getByRole('link', { name: /VIRAR VOLUNTÁRIO/i });
+    const btnVoluntario = footer.getByRole('link', { name: /SEJA UM VOLUNTÁRIO/i });
 
     await btnVoluntario.click();
     // Como a página voluntário público pode não existir no AppRoutes base, garantimos apenas que o roteador tenta ir para voluntarios

@@ -37,8 +37,11 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
     // Preenche o form (UI nova: datas separadas + local pelo mapa)
     await page.getByPlaceholder('Nome do Evento').fill('Retiro Playwright');
     await page.locator('textarea[name="description"]').fill('Um evento para testar com E2E.');
-    await page.getByPlaceholder('Local do evento').fill('Sítio Teste');
-    await page.locator('input[name="date"]').fill('2029-12-31');
+    await page.getByPlaceholder('Digite o nome ou endereço do local').fill('Sítio Teste');
+    await page.locator('input[name="startDay"]').fill('2029-12-31');
+    await page.locator('input[name="startTime"]').fill('09:00');
+    await page.locator('input[name="endDay"]').fill('2029-12-31');
+    await page.locator('input[name="endTime"]').fill('18:00');
     await page.getByPlaceholder('Palestrantes').fill('Pr. Dev');
     await page.getByPlaceholder('Bandas').fill('Banda QA');
     await page.locator('input[name="linkFormularioVoluntarios"]').fill('https://forms.gle/teste');
@@ -47,11 +50,11 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
 
     // Redireciona para a tela de programação após criar
     await expect(page).toHaveURL(/\/admin\/eventos\/\d+\/programacao/);
-    
+
     // Clica em Concluir para voltar para a edição
     await page.getByRole('button', { name: 'Concluir' }).click();
     await expect(page).toHaveURL(/\/admin\/eventos\/\d+\/editar/);
-    
+
     // Volta para a lista de eventos
     await page.getByTitle('Voltar').click();
 
@@ -117,7 +120,10 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
     await page.goto('/admin/eventos/criar');
 
     // Deixa título vazio e preenche o resto
-    await page.locator('input[name="date"]').fill('2029-12-31');
+    await page.locator('input[name="startDay"]').fill('2029-12-31');
+    await page.locator('input[name="startTime"]').fill('09:00');
+    await page.locator('input[name="endDay"]').fill('2029-12-31');
+    await page.locator('input[name="endTime"]').fill('18:00');
 
     // Intercepta alerts do navegador, pois o app usa alert()
     let alertMessage = '';
@@ -269,15 +275,14 @@ test.describe('Admin - Gerenciamento de Programação do Evento', () => {
     const btnExcluir = page.getByTitle('Excluir atividade').first();
     await btnExcluir.click();
 
-      // Confirma no modal
-      const btnConfirmar = page.getByRole('button', { name: 'Sim' });
-      await btnConfirmar.click();
+    // Confirma no modal
+    const btnConfirmar = page.getByRole('button', { name: 'Sim' });
+    await btnConfirmar.click();
 
-      // Verifica se o contador diminuiu
-      const countAfter = await activityRows.count();
-      expect(countAfter).toBe(countBefore - 1);
-    }
-  });
+    // Verifica se o contador diminuiu
+    await expect(activityRows).toHaveCount(countBefore - 1);
+  }
+  );
 
   test('deve salvar a programação inteira', async ({ page }) => {
     const btnSalvar = page.getByRole('button', { name: 'Salvar' });
@@ -319,7 +324,10 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
 
     // Preenche título e datas mas NÃO seleciona o local no mapa
     await page.getByPlaceholder('Nome do Evento').fill('Evento Sem Local');
-    await page.locator('input[name="date"]').fill('2029-12-31');
+    await page.locator('input[name="startDay"]').fill('2029-12-31');
+    await page.locator('input[name="startTime"]').fill('09:00');
+    await page.locator('input[name="endDay"]').fill('2029-12-31');
+    await page.locator('input[name="endTime"]').fill('18:00');
 
     // Remove required dos inputs para bypass HTML5 validation
     await page.evaluate(() => {
@@ -412,8 +420,11 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
     // "Eventos Anteriores" com link "Detalhes"
     await page.goto('/admin/eventos/criar');
     await page.getByPlaceholder('Nome do Evento').fill('Evento Minimalista');
-    await page.locator('input[name="date"]').fill('2020-01-01');
-    await page.getByPlaceholder('Local do evento').fill('Local Teste');
+    await page.locator('input[name="startDay"]').fill('2020-01-01');
+    await page.locator('input[name="startTime"]').fill('09:00');
+    await page.locator('input[name="endDay"]').fill('2020-01-01');
+    await page.locator('input[name="endTime"]').fill('18:00');
+    await page.getByPlaceholder('Digite o nome ou endereço do local').fill('Local Teste');
     await page.getByRole('button', { name: 'Salvar' }).click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
 
@@ -481,8 +492,11 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
     // Cria um evento mínimo sem campos opcionais para atingir todos os branches de fallback
     await page.goto('/admin/eventos/criar');
     await page.getByPlaceholder('Nome do Evento').fill('Evento Sem Opcionais');
-    await page.locator('input[name="date"]').fill('2020-06-01');
-    await page.getByPlaceholder('Local do evento').fill('Local X');
+    await page.locator('input[name="startDay"]').fill('2020-06-01');
+    await page.locator('input[name="startTime"]').fill('09:00');
+    await page.locator('input[name="endDay"]').fill('2020-06-01');
+    await page.locator('input[name="endTime"]').fill('18:00');
+    await page.getByPlaceholder('Digite o nome ou endereço do local').fill('Local X');
     await page.getByRole('button', { name: 'Salvar' }).click();
     await expect(page).toHaveURL(/\/admin\/eventos/);
 

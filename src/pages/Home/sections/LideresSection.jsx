@@ -29,7 +29,7 @@ const STATIC_CURRENT_LEADERS = [
   {
     lider_id: 'static_4',
     nome: 'Pr. Silvio Modesto',
-    cargo: 'Diretor regional de jovens e adolescentes - Região sul',
+    cargo: 'Diretor regional de jovens e adolescentes Região sul',
     imagem_url: '/prSilvio.jpeg',
     is_antigo: false,
     ordem: 4,
@@ -37,7 +37,7 @@ const STATIC_CURRENT_LEADERS = [
   {
     lider_id: 'static_5',
     nome: 'Pr. Darlan Soares',
-    cargo: 'Diretor regional de jovens e adolescentes - Região Nordeste',
+    cargo: 'Diretor regional de jovens e adolescentes Região Nordeste',
     imagem_url: '/prDarlan.jpeg',
     is_antigo: false,
     ordem: 5,
@@ -45,7 +45,7 @@ const STATIC_CURRENT_LEADERS = [
   {
     lider_id: 'static_6',
     nome: 'Pr. Bill Watson',
-    cargo: 'Diretor regional de jovens e adolescentes - Região Norte',
+    cargo: 'Diretor regional de jovens e adolescentes Região Norte',
     imagem_url: '/prBill.jpeg',
     is_antigo: false,
     ordem: 6,
@@ -53,7 +53,7 @@ const STATIC_CURRENT_LEADERS = [
   {
     lider_id: 'static_7',
     nome: 'Pr. Áquila Olivera',
-    cargo: 'Diretor regional de jovens e adolescentes - Região sudeste',
+    cargo: 'Diretor regional de jovens e adolescentes Região sudeste',
     imagem_url: '/prAquila.jpeg',
     is_antigo: false,
     ordem: 7,

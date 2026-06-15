@@ -82,7 +82,7 @@ test.describe('Página Inicial (Home)', () => {
   });
 
   test('ProcessoVoluntario - deve exibir as etapas para se tornar voluntário', async ({ page }) => {
-    const titulo = page.getByRole('heading', { name: /Processo para virar/i });
+    const titulo = page.getByRole('heading', { name: /Torne-se/i });
     await expect(titulo).toBeVisible();
 
     // Verifica as etapas
