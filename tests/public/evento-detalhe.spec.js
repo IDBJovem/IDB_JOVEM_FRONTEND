@@ -2,7 +2,7 @@ import { test, expect } from '../helpers/testWithCoverage.js';
 
 test.describe('Página de Detalhes do Evento', () => {
   test('deve carregar informações de um evento válido', async ({ page }) => {
-    await page.goto('/eventos/evento-1');
+    await page.goto('/eventos/1-evento');
 
     // Hero Section
     const titulo = page.getByRole('heading', { name: 'IDB TEEN CAMP' });
@@ -48,7 +48,7 @@ test.describe('Página de Detalhes do Evento', () => {
   test('deve navegar para trás ao clicar no botão Voltar do Hero', async ({ page }) => {
     // Navega primeiro para eventos, depois para detalhes para ter histórico
     await page.goto('/eventos');
-    await page.goto('/eventos/evento-1');
+    await page.goto('/eventos/1-evento');
 
     const btnVoltar = page.getByLabel('Voltar');
     await expect(btnVoltar).toBeVisible();
@@ -58,7 +58,7 @@ test.describe('Página de Detalhes do Evento', () => {
   });
 
   test('deve renderizar os cards de speakers com nome e profissão', async ({ page }) => {
-    await page.goto('/eventos/evento-1');
+    await page.goto('/eventos/1-evento');
 
     // Seção de speakers deve existir
     const speakerSection = page.locator('section').filter({ hasText: 'Palestrantes' });
@@ -84,7 +84,7 @@ test.describe('Página de Detalhes do Evento', () => {
   });
 
   test('deve renderizar a programação com horários e atividades', async ({ page }) => {
-    await page.goto('/eventos/evento-1');
+    await page.goto('/eventos/1-evento');
 
     const scheduleSection = page.locator('section').filter({ hasText: 'Programação do evento' });
     await expect(scheduleSection).toBeVisible();
@@ -103,7 +103,7 @@ test.describe('Página de Detalhes do Evento', () => {
   });
 
   test('deve renderizar a galeria do evento quando existem fotos', async ({ page }) => {
-    await page.goto('/eventos/evento-1');
+    await page.goto('/eventos/1-evento');
 
     // evento-1 tem galeria com 1 foto
     const galeriaSection = page.locator('section').filter({ hasText: 'Galeria do evento' });
@@ -117,7 +117,7 @@ test.describe('Página de Detalhes do Evento', () => {
   });
 
   test('não deve renderizar galeria quando não existem fotos', async ({ page }) => {
-    await page.goto('/eventos/evento-2');
+    await page.goto('/eventos/2-evento');
 
     // Speakers e Schedule devem estar visíveis 
     await expect(page.getByRole('heading', { name: 'Palestrantes' })).toBeVisible();
@@ -128,7 +128,7 @@ test.describe('Página de Detalhes do Evento', () => {
   });
 
   test('deve carregar informações do evento-em-destaque com schedule completo', async ({ page }) => {
-    await page.goto('/eventos/evento-em-destaque');
+    await page.goto('/eventos/3-evento-em-destaque');
 
     const titulo = page.getByRole('heading', { name: 'IMERSÃO 2025' });
     await expect(titulo).toBeVisible();

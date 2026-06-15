@@ -81,24 +81,26 @@ export default function EventosSection({ events = [] }) {
           <div key={featured.id} className="relative z-10 flex flex-col items-center justify-center animate-fade-in-up px-4 min-w-0">
 
             {/* Container oval de fundo*/}
-            <div className="relative z-10 mb-10 flex justify-center items-center py-6 px-4 md:px-8 w-full">
+            <div className="relative z-10 mb-8 flex justify-center items-center py-8 px-6 md:px-10 w-full max-w-[85%] sm:max-w-[75%] md:max-w-[350px] aspect-[4/3] sm:aspect-auto sm:min-h-[160px]">
 
               <div
-                className="absolute inset-0 bg-[#DE6B16] rounded-[50%] -z-10"
-                style={{ transform: "scale(1.15, 1.3)" }}
+                className="absolute inset-0 bg-[#DE6B16] rounded-[100%] -z-10 shadow-lg"
+                style={{ transform: "scale(1.1, 1.2)" }}
               />
 
               <h3
-                className="font-black uppercase leading-[0.85] text-white text-center tracking-tighter flex flex-col"
-                style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)", transform: "scaleY(1.1)" }}
+                className="font-black uppercase leading-[0.95] text-white text-center tracking-tighter w-full line-clamp-3 sm:line-clamp-4 break-words"
+                style={{ fontSize: "clamp(1.8rem, 4vw, 3.2rem)", transform: "scaleY(1.05)" }}
+                title={featured.title}
               >
-                {featured.title.split(' ').map((word, i) => (
-                  <span key={i} className="block">{word}</span>
-                ))}
+                {featured.title}
               </h3>
             </div>
 
-            <p className="text-white text-base md:text-lg font-medium leading-relaxed text-center max-w-md mt-4 relative z-10">
+            <p 
+              className="text-white text-base md:text-lg font-medium leading-relaxed text-center max-w-md mt-2 relative z-10 line-clamp-3 sm:line-clamp-4"
+              title={featured.description}
+            >
               {featured.description}
             </p>
           </div>

@@ -180,12 +180,8 @@ test.describe('Admin - Gerenciamento de Produtos CRUD', () => {
 
   test('deve testar upload de imagem no form (ProductForm L23-L30)', async ({ page }) => {
     await page.goto('/admin/produtos/criar');
-    const inputLink = page.locator('input[type="file"]');
-    await inputLink.setInputFiles({
-      name: 'test.png',
-      mimeType: 'image/png',
-      buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
-    });
+    const inputLink = page.locator('input[name="image"]');
+    await inputLink.fill('https://drive.google.com/file/d/test/view');
     
     // Deve exibir o preview da imagem
     await expect(page.locator('img[alt="Preview do produto"]')).toBeVisible();
