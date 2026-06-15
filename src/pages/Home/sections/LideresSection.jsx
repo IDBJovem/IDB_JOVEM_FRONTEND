@@ -12,7 +12,7 @@ const STATIC_CURRENT_LEADERS = [
   },
   {
     lider_id: 'static_2',
-    nome: 'Raquel Gomes',
+    nome: 'Pra. Raquel Gomes',
     cargo: 'Diretora Nacional e regional de adolescentes',
     imagem_url: '/praRaquel.jpeg',
     is_antigo: false,
