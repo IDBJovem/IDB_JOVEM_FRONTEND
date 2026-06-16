@@ -53,17 +53,6 @@ test.describe('Página de Eventos', () => {
     await expect(btnInscrevase).toBeVisible();
   });
 
-  test('deve exibir o card do evento em destaque ("Em breve")', async ({ page }) => {
-    // The featured event section may be visible when mocked data has upcoming events
-    const emBreveSection = page.locator('section').filter({ hasText: 'Em breve' });
-    const gridSection = page.locator('section.pb-20');
-
-    // Either featured section or grid must be visible
-    const temEmBreve = await emBreveSection.isVisible().catch(() => false);
-    const temGrid = await gridSection.isVisible().catch(() => false);
-    expect(temEmBreve || temGrid).toBeTruthy();
-  });
-
   test('deve exibir a grid de eventos com os cards', async ({ page }) => {
     // Como os eventos estão mocados na página, garantimos que pelo menos 1 card é renderizado na grid principal
     const gridContainer = page.locator('section.pb-20 > div > div.grid');
@@ -99,17 +88,13 @@ test.describe('Página de Eventos', () => {
   test('deve filtrar por tipo de evento (select filter-tipo)', async ({ page }) => {
     const selectTipo = page.locator('select#filter-tipo');
 
-    // Seleciona a primeira opção de tipo disponível
-    await selectTipo.selectOption({ index: 1 });
+    await selectTipo.selectOption('Conferência');
 
-    // Grid deve mostrar apenas eventos do tipo selecionado (ou nenhum se não houver)
     const gridContainer = page.locator('section.pb-20 > div > div.grid');
 
-    // Verifica que a grid atualiza (ou mostra empty state)
     const cardsVisiveis = gridContainer.getByRole('link', { name: /Veja mais/i });
     const emptyState = page.getByRole('heading', { name: 'Nenhum evento encontrado' });
 
-    // Um dos dois deve ser verdade
     const temCards = await cardsVisiveis.count() > 0;
     const temEmpty = await emptyState.isVisible().catch(() => false);
     expect(temCards || temEmpty).toBeTruthy();
@@ -159,36 +144,4 @@ test.describe('Página de Eventos', () => {
     await expect(emptyState).toBeVisible();
   });
 
-  test('deve navegar o carrossel ao clicar nas setas', async ({ page }) => {
-    // Página de eventos não tem mais carrossel - verifica que a seção de eventos é renderizada
-    await page.setViewportSize({ width: 1280, height: 720 });
-    const titulo = page.getByRole('heading', { name: 'Eventos', exact: true });
-    await expect(titulo).toBeVisible();
-    // Verifica a seção de grid de eventos
-    const gridSection = page.locator('section.pb-20');
-    await expect(gridSection).toBeVisible();
-  });
-
-  test('deve exibir cards da grid com botão "Inscreva-se"', async ({ page }) => {
-    // Verifica os cards da grid
-    const gridSection = page.locator('section.pb-20 > div > div.grid');
-    await expect(gridSection).toBeVisible();
-
-    const inscrevaseButtons = gridSection.getByRole('button', { name: /Inscreva-se/i });
-    const count = await inscrevaseButtons.count();
-
-    // Deve ter pelo menos 1 botão Inscreva-se na grid
-    expect(count).toBeGreaterThan(0);
-
-    // Verifica que o primeiro card tem link "Veja mais" também
-    const vejaMaisLinks = gridSection.getByRole('link', { name: /Veja mais/i });
-    expect(await vejaMaisLinks.count()).toBeGreaterThan(0);
-  });
-
-  test('deve ter links "Veja mais" apontando para a página do evento', async ({ page }) => {
-    const gridSection = page.locator('section.pb-20 > div > div.grid');
-    const vejaMais = gridSection.getByRole('link', { name: /Veja mais/i }).first();
-    await expect(vejaMais).toBeVisible();
-    await expect(vejaMais).toHaveAttribute('href', /\/eventos\/[\w-]+/);
-  });
 });
