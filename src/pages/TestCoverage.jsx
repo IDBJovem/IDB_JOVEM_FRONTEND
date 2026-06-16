@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import ScrollToTop from '../components/ScrollToTop';
 import ProductCard from '../components/card/ProductCard';
@@ -13,6 +13,7 @@ import Dropdown from '../components/ui/Dropdown';
 import EmptyState from '../components/ui/EmptyState';
 import Modal from '../components/ui/Modal';
 import SectionTitle from '../components/ui/SectionTitle';
+import TimeInput from '../components/ui/TimeInput';
 import ActivityInlineForm from './Admin/Eventos/components/ActivityInlineForm';
 import ActivityRow from './Admin/Eventos/components/ActivityRow';
 import AdminTable from './Admin/components/AdminTable';
@@ -24,8 +25,10 @@ import EventosSection from './Home/sections/EventosSection';
 import GaleriaSection from './Home/sections/GaleriaSection';
 import LideresSection from './Home/sections/LideresSection';
 import ProdutosSection from './Home/sections/ProdutosSection';
+import CalendarioSection from './Home/sections/CalendarioSection';
 import { useAuth, AuthProvider } from '../context/AuthContext';
 import useModal from '../hooks/useModal';
+import useGeolocation from '../hooks/useGeolocation';
 import { formatDate, getCountdown } from '../utils/formatDate';
 import { fuzzyMatch, levenshteinDistance, normalizeString } from '../utils/stringUtils';
 import * as eventService from '../services/eventService';
@@ -40,6 +43,8 @@ import * as driveImage from '../utils/driveImage';
 
 export default function TestCoverage() {
   const modal = useModal();
+  const [timeValue, setTimeValue] = useState('10:30');
+  const geo = useGeolocation({ immediate: false });
 
   const handleFormSubmit = (data) => { void data; };
   const handleChange = (val) => { void val; };
@@ -293,6 +298,30 @@ export default function TestCoverage() {
     driveImage.toBackendImageUrl("https://drive.google.com/open?id=test123"); // open?id= pattern
     driveImage.toBackendImageUrl("https://drive.google.com/d/testid456"); // /d/ pattern
 
+    // === COVERAGE: useGeolocation request() when unsupported (L46-53) ===
+    // geo.request is already available – the test will call it via button
+
+    // === COVERAGE: volunteerService toVoluntario(null) L11 ===
+    volunteerService.getVolunteerById(99999).catch(() => {});
+
+    // === COVERAGE: handleCreateEvent L338 (lat/lng empty string and null) ===
+    eventService.handleCreateEvent({
+      title: 'Teste Lat Vazia',
+      tipoEvento: 'Conferência',
+      date: '2025-01-01T09:00',
+      endDate: '2025-01-02T18:00',
+      latitude: '',
+      longitude: '',
+    }).catch(() => {});
+    eventService.handleCreateEvent({
+      title: 'Teste Lat Null',
+      tipoEvento: 'Conferência',
+      date: '2025-01-01T09:00',
+      endDate: '2025-01-02T18:00',
+      latitude: null,
+      longitude: null,
+    }).catch(() => {});
+
   }, []);
 
   return (
@@ -345,7 +374,7 @@ export default function TestCoverage() {
       <EmptyState message="Custom empty" icon={<span>📦</span>} className="test-empty" />
       <EmptyState />
 
-      <Modal isOpen={true} onClose={handleClose}>
+      <Modal isOpen={false} onClose={handleClose}>
         <div id="modal-content">Modal Content</div>
       </Modal>
 
@@ -374,6 +403,27 @@ export default function TestCoverage() {
       <GaleriaSection />
       <LideresSection />
       <ProdutosSection />
+
+      {/* TimeInput – rendered to exercise all branches via Playwright interactions */}
+      <div id="time-input-test">
+        <TimeInput
+          name="testTime"
+          value={timeValue}
+          onChange={(e) => setTimeValue(e.target.value)}
+          wrapperClassName="test-wrapper"
+          className="test-input"
+        />
+      </div>
+
+      {/* CalendarioSection with future events to exercise sort branch L33 */}
+      <CalendarioSection events={[
+        { id: 901, title: 'Evento Z', date: new Date(Date.now() + 86400000 * 5).toISOString(), location: 'Local A', description: 'Desc A', slug: '901-evento-z' },
+        { id: 902, title: 'Evento A', date: new Date(Date.now() + 86400000 * 2).toISOString(), location: 'Local B', description: 'Desc B', slug: '902-evento-a' },
+      ]} />
+
+      {/* Button to trigger geolocation request (exercises useGeolocation.request L45-53) */}
+      <button id="geo-request-btn" onClick={geo.request}>Request Geo</button>
+      <span id="geo-status">{geo.status}</span>
 
     </div>
   );

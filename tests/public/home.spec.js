@@ -207,7 +207,7 @@ test.describe('Página Inicial (Home)', () => {
     await page.route(/.*\/evento(\?.*)?$/, async route => route.abort('failed'));
     await page.route(/.*\/evento\/.*\/galeria$/, async route => route.abort('failed'));
     await page.route(/.*\/lider(\?.*)?$/, async route => route.abort('failed'));
-    await page.route(/.*\/produto(\?.*)?$/, async route => route.abort('failed'));
+    await page.route(/.*\/produto\/?(\?.*)?$/, async route => route.abort('failed'));
 
     await page.goto('/');
 

@@ -40,7 +40,7 @@ export default function GaleriaSection({ gallery = [] }) {
             modules={[Autoplay]}
             spaceBetween={16}
             slidesPerView="auto"
-            loop={true}
+            loop={displayGallery.length > 2}
             autoplay={{
               delay: 3000,
               disableOnInteraction: false,
