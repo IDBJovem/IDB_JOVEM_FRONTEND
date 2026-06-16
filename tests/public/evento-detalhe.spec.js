@@ -146,4 +146,50 @@ test.describe('Página de Detalhes do Evento', () => {
     const scheduleSection = page.locator('section').filter({ hasText: 'Programação do evento' });
     await expect(scheduleSection.getByText('Abertura')).toBeVisible();
   });
+
+  test('deve cobrir o botão Seja Voluntário no Hero com linkFormularioVoluntarios', async ({ page }) => {
+    await page.goto('/eventos/1-retiro-de-verao');
+    
+    // Intercepta window.open
+    await page.evaluate(() => {
+      window.open = () => null;
+    });
+
+    const btnVoluntario = page.getByRole('button', { name: 'Seja Voluntário' });
+    await expect(btnVoluntario).toBeVisible();
+    await btnVoluntario.click();
+  });
+
+  test('deve cobrir o botão Seja Voluntário no Hero sem linkFormularioVoluntarios', async ({ page }) => {
+    await page.goto('/eventos/2-acampamento');
+    
+    const btnVoluntario = page.getByRole('button', { name: 'Seja Voluntário' });
+    await expect(btnVoluntario).toBeVisible();
+    await btnVoluntario.click(); // Não deve fazer nada, cobre a branch if (event.link...)
+  });
+
+  test('deve cobrir as falhas (catch) no useEventDetails para schedule, gallery e speakers', async ({ page }) => {
+    // Intercepta as chamadas auxiliares e falha de propósito
+    await page.route('**/evento/*/atividade', async route => route.abort('failed'));
+    await page.route('**/evento/*/galeria', async route => route.abort('failed'));
+    await page.route('**/evento/*/participantes', async route => route.abort('failed'));
+
+    await page.goto('/eventos/1-retiro-de-verao');
+
+    // A página ainda carrega (evento 1), mas sem programação, palestrantes ou galeria
+    await expect(page.getByRole('heading', { name: 'Retiro de Verão' })).toBeVisible();
+    
+    // As seções correspondentes não devem estar visíveis ou devem estar vazias
+    await expect(page.getByRole('heading', { name: 'Programação do evento' })).not.toBeVisible();
+  });
+
+  test('deve cobrir falha geral no evento (catch fetchEventById)', async ({ page }) => {
+    // Intercepta a chamada do evento principal e falha
+    await page.route('**/evento/1', async route => route.abort('failed'));
+
+    await page.goto('/eventos/1-retiro-de-verao');
+
+    const tituloErro = page.getByRole('heading', { name: 'Evento não encontrado' });
+    await expect(tituloErro).toBeVisible();
+  });
 });

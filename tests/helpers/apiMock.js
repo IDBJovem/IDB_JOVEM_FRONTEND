@@ -201,10 +201,21 @@ function makeSeed() {
         resposta_id: "r3",
         link_resposta: "",
       },
+      {
+        evento_id: 1000,
+        voluntario_id: 9999,
+        nome: 'Voluntário de Teste',
+        email: 'teste@voluntario.com',
+        status: 'pendente',
+        resposta_id: 'r9999',
+        link_resposta: '',
+      }
     ],
     nextEventId: 1000,
     nextActivityId: 2000,
     nextProductId: 3000,
+    nextSpeakerId: 500,
+    nextVoluntarioId: 1000,
   };
 }
 
@@ -286,9 +297,49 @@ export async function setupApiMock(page) {
       }
 
       // ---------- BANDA/PALESTRANTE ----------
+      m = path.match(/\/banda-palestrante\/(\d+)$/);
+      if (m) {
+        const spkId = Number(m[1]);
+        const all = Object.values(db.speakers).flat();
+        const idx = all.findIndex((s) => s.participante_id === spkId);
+        if (method === "GET") {
+          if (idx === -1) return route.fulfill(notFound());
+          return route.fulfill(json(all[idx]));
+        }
+        if (method === "PUT") {
+          // Find and update in the speakers map
+          for (const evId of Object.keys(db.speakers)) {
+            const si = db.speakers[evId].findIndex((s) => s.participante_id === spkId);
+            if (si !== -1) {
+              db.speakers[evId][si] = { ...db.speakers[evId][si], ...body, participante_id: spkId };
+              return route.fulfill(json(db.speakers[evId][si]));
+            }
+          }
+          return route.fulfill(notFound());
+        }
+        if (method === "DELETE") {
+          for (const evId of Object.keys(db.speakers)) {
+            const si = db.speakers[evId].findIndex((s) => s.participante_id === spkId);
+            if (si !== -1) db.speakers[evId].splice(si, 1);
+          }
+          return route.fulfill(json({}, 204));
+        }
+      }
       if (path.match(/\/banda-palestrante\/?$/) && method === "GET") {
         const all = Object.values(db.speakers).flat();
         return route.fulfill(json(all));
+      }
+      if (path.match(/\/banda-palestrante\/?$/) && method === "POST") {
+        const created = {
+          participante_id: db.nextSpeakerId++,
+          nome: body.nome,
+          profissao: body.profissao || "",
+          link_foto: body.link_foto || "",
+        };
+        // Add to event 1 speakers by default
+        if (!db.speakers[1]) db.speakers[1] = [];
+        db.speakers[1].push(created);
+        return route.fulfill(json(created));
       }
 
       // ---------- FORMULARIO (inscrições por evento) ----------
@@ -319,6 +370,19 @@ export async function setupApiMock(page) {
           })
         );
       }
+      m = path.match(/\/voluntarios\/(\d+)$/);
+      if (m) {
+        const volId = Number(m[1]);
+        if (method === "GET") {
+          const vol = db.inscricoes.find((i) => i.voluntario_id === volId);
+          return route.fulfill(vol ? json({ voluntario_id: vol.voluntario_id, nome: vol.nome, email: vol.email }) : notFound());
+        }
+        if (method === "DELETE") {
+          const idx = db.inscricoes.findIndex((i) => i.voluntario_id === volId);
+          if (idx !== -1) db.inscricoes.splice(idx, 1);
+          return route.fulfill(json({}, 204));
+        }
+      }
       m = path.match(/\/voluntarios\/evento\/(\d+)\/contagem$/);
       if (m) {
         const eventId = Number(m[1]);
@@ -332,6 +396,18 @@ export async function setupApiMock(page) {
         return route.fulfill(
           json(db.inscricoes.filter((i) => i.evento_id === eventId))
         );
+      }
+      if (path.match(/\/voluntarios\/?$/) && method === "GET") {
+        const all = db.inscricoes.map((i) => ({ voluntario_id: i.voluntario_id, nome: i.nome, email: i.email }));
+        return route.fulfill(json(all));
+      }
+      if (path.match(/\/voluntarios\/?$/) && method === "POST") {
+        const created = {
+          voluntario_id: db.nextVoluntarioId++,
+          nome: body.nome,
+          email: body.email,
+        };
+        return route.fulfill(json(created));
       }
 
       // ---------- ATIVIDADES ----------
@@ -375,6 +451,28 @@ export async function setupApiMock(page) {
       }
 
       // ---------- PARTICIPANTES (palestrantes do evento) ----------
+      m = path.match(/\/evento\/(\d+)\/participantes\/(\d+)$/);
+      if (m) {
+        const eventId = Number(m[1]);
+        const spkId = Number(m[2]);
+        if (method === "POST") {
+          // Link speaker to event
+          if (!db.speakers[eventId]) db.speakers[eventId] = [];
+          const all = Object.values(db.speakers).flat();
+          const spk = all.find((s) => s.participante_id === spkId);
+          if (spk && !db.speakers[eventId].find((s) => s.participante_id === spkId)) {
+            db.speakers[eventId].push(spk);
+          }
+          return route.fulfill(json({ evento_id: eventId, participante_id: spkId }));
+        }
+        if (method === "DELETE") {
+          if (db.speakers[eventId]) {
+            const si = db.speakers[eventId].findIndex((s) => s.participante_id === spkId);
+            if (si !== -1) db.speakers[eventId].splice(si, 1);
+          }
+          return route.fulfill(json({}, 204));
+        }
+      }
       m = path.match(/\/evento\/(\d+)\/participantes$/);
       if (m) {
         const eventId = Number(m[1]);

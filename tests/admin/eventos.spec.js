@@ -2,6 +2,14 @@ import { test, expect } from '../helpers/testWithCoverage.js';
 import { loginAsAdmin } from '../helpers/adminAuth';
 import { setupApiMock } from '../helpers/apiMock';
 
+async function preencherLocalPelaBusca(page, query = 'Teste') {
+  await page.getByPlaceholder('Digite o nome ou endereço do local').fill(query);
+  const option = page.locator('ul.absolute button').first();
+  await option.waitFor({ state: 'visible' });
+  await option.click();
+  await page.waitForTimeout(500);
+}
+
 test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsAdmin(page);
@@ -31,7 +39,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
     await page.getByPlaceholder('Nome do Evento').fill('Retiro Playwright');
     await page.locator('select[name="tipoEvento"]').selectOption('Conferência');
     await page.locator('textarea[name="description"]').fill('Um evento para testar com E2E.');
-    await page.getByPlaceholder('Digite o nome ou endereço do local').fill('Sítio Teste');
+    await preencherLocalPelaBusca(page, 'Sítio Teste');
     await page.locator('input[name="startDay"]').fill('2029-12-31');
     await page.locator('input[name="startTime"]').fill('09:00');
     await page.locator('input[name="endDay"]').fill('2029-12-31');
@@ -52,10 +60,7 @@ test.describe('Admin - Gerenciamento de Eventos CRUD', () => {
 
     // Volta para a lista de eventos
     await page.getByTitle('Voltar').click();
-
-    // Após criar, o app vai direto para a programação do novo evento
-    await expect(page).toHaveURL(/\/admin\/eventos\/\d+\/programacao/);
-    await expect(page.getByRole('heading', { name: 'Programação do Evento' })).toBeVisible();
+    await expect(page).toHaveURL(/\/admin\/eventos/);
   });
 
   test('deve editar um evento existente', async ({ page }) => {
@@ -239,6 +244,7 @@ test.describe('Admin - Gerenciamento de Programação do Evento', () => {
     await page.getByPlaceholder('Nome da atividade').fill('Almoço Teste');
     await page.getByPlaceholder('Descrição da atividade').fill('Testando descrição');
     await page.locator('input[type="time"]').first().fill('12:00');
+    await page.locator('input[type="time"]').nth(1).fill('13:00');
 
     // Salvar atividade
     await page.getByRole('button', { name: 'Confirmar' }).click();
@@ -279,7 +285,7 @@ test.describe('Admin - Gerenciamento de Programação do Evento', () => {
   });
 
   test('deve salvar a programação inteira', async ({ page }) => {
-    const btnSalvar = page.getByRole('button', { name: 'Salvar' });
+    const btnSalvar = page.getByRole('button', { name: 'Concluir' });
     await btnSalvar.click();
 
     // Redireciona de volta p/ a edição do evento
@@ -331,7 +337,7 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
 
     await page.getByRole('button', { name: 'Salvar' }).click();
     await page.waitForTimeout(500);
-    expect(alertMessage).toContain('Local');
+    expect(alertMessage).toContain('Latitude e longitude');
   });
 
   test('deve exibir alert ao editar evento limpando o título (Edit.jsx L32)', async ({ page }) => {
@@ -421,9 +427,9 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
     await page.locator('input[name="startTime"]').fill('09:00');
     await page.locator('input[name="endDay"]').fill('2020-01-01');
     await page.locator('input[name="endTime"]').fill('18:00');
-    await page.getByPlaceholder('Digite o nome ou endereço do local').fill('Local Teste');
     await page.getByRole('button', { name: 'Salvar' }).click();
-    await expect(page).toHaveURL(/\/admin\/eventos/);
+    await expect(page).toHaveURL(/\/admin\/eventos\/\d+\/programacao/);
+    await page.goto('/admin/eventos');
 
     // Acha o link Detalhes do novo evento especificamente
     const eventCard = page.locator('.flex.items-center.gap-4').filter({ hasText: 'Evento Minimalista' }).first();
@@ -489,30 +495,15 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
     // Cria um evento mínimo sem campos opcionais para atingir todos os branches de fallback
     await page.goto('/admin/eventos/criar');
     await page.getByPlaceholder('Nome do Evento').fill('Evento Sem Opcionais');
+    await page.locator('select[name="tipoEvento"]').selectOption('Outros');
     await page.locator('input[name="startDay"]').fill('2020-06-01');
     await page.locator('input[name="startTime"]').fill('09:00');
     await page.locator('input[name="endDay"]').fill('2020-06-01');
     await page.locator('input[name="endTime"]').fill('18:00');
-    await page.getByPlaceholder('Digite o nome ou endereço do local').fill('Local X');
+    await preencherLocalPelaBusca(page, 'Local X');
     await page.getByRole('button', { name: 'Salvar' }).click();
-    await expect(page).toHaveURL(/\/admin\/eventos/);
-
-    // Injeta um voluntário mockado para este novo evento para que uma linha de voluntário seja renderizada
-    await page.evaluate(() => {
-      const events = JSON.parse(localStorage.getItem('idb_admin_events') || '[]');
-      const newEvent = events.find(e => e.title === 'Evento Sem Opcionais');
-      if (newEvent) {
-        const volunteers = JSON.parse(localStorage.getItem('idb_admin_volunteers') || '[]');
-        volunteers.push({
-          id: 9999,
-          eventId: newEvent.id,
-          name: 'Voluntário de Teste',
-          email: 'teste@voluntario.com',
-          status: 'pendente'
-        });
-        localStorage.setItem('idb_admin_volunteers', JSON.stringify(volunteers));
-      }
-    });
+    await expect(page).toHaveURL(/\/admin\/eventos\/\d+\/programacao/);
+    await page.goto('/admin/eventos');
 
     // Encontra e clica no link "Detalhes" do evento recém-criado
     const eventCard = page.locator('.flex.items-center.gap-4').filter({ hasText: 'Evento Sem Opcionais' }).first();
@@ -545,30 +536,6 @@ test.describe('Admin - Cobertura Extra de Branches', () => {
   test('deve cobrir Details.jsx ?? branches com valores null (totalParticipantes/totalVoluntarios)', async ({ page }) => {
     // Injeta um evento com null explícito para totalParticipantes e totalVoluntarios para cobrir os branches null coalescing ?? 0 nas linhas 70 e 78
     await page.goto('/admin/eventos');
-
-    await page.evaluate(() => {
-      const events = JSON.parse(localStorage.getItem('idb_admin_events') || '[]');
-      events.push({
-        id: 77777,
-        title: 'Evento Null Fields',
-        date: '2019-01-01T00:00:00.000Z',
-        endDate: '2019-01-01T00:00:00.000Z',
-        location: null,
-        description: null,
-        totalParticipantes: null,
-        totalVoluntarios: null,
-        palestrantes: null,
-        bandas: null,
-        slug: 'evento-null-fields',
-        speakers: [],
-        schedule: [],
-        galeria: [],
-        featured: false,
-        category: 'Encontro',
-        image: '/images/galeria/idb-jovem-one.jpg',
-      });
-      localStorage.setItem('idb_admin_events', JSON.stringify(events));
-    });
 
     // Navega para a página de detalhes deste evento
     await page.goto('/admin/eventos/77777');

@@ -144,4 +144,56 @@ test.describe('Página de Eventos', () => {
     await expect(emptyState).toBeVisible();
   });
 
+  test('deve cobrir inferRegionFromLocation para todas as regiões e matchesDateFilter', async ({ page }) => {
+    // Injeta eventos falsos para testar o filtro de regiões
+    await page.evaluate(() => {
+      window.__MOCKED_EVENTS__ = [
+        { title: 'EvNorte', location: 'Manaus - AM', date: new Date().toISOString(), category: 'Outros' },
+        { title: 'EvCentroOeste', location: 'Brasília - DF', date: new Date().toISOString(), category: 'Outros' },
+        { title: 'EvSul', location: 'Curitiba - PR', date: new Date().toISOString(), category: 'Outros' }
+      ];
+    });
+
+    // O mock inicial só tem "Sítio Boa Vista" (que não dá match em nada, cai no fallback ""), etc.
+    const selectRegiao = page.locator('select#filter-regiao');
+    await selectRegiao.selectOption('Centro-Oeste');
+    await selectRegiao.selectOption('Norte');
+    await selectRegiao.selectOption('Sul');
+
+    // Testar as opções de data restantes
+    const selectData = page.locator('select#filter-data');
+    await selectData.selectOption('Este mês');
+    await selectData.selectOption('Próximos 3 meses');
+  });
+
+  test('deve cobrir o catch block quando fetchAllEvents falha', async ({ page }) => {
+    await page.route('**/evento/', async route => {
+      await route.abort('failed');
+    });
+    await page.goto('/eventos');
+    const erroText = page.getByText('Não foi possível carregar os eventos.');
+    await expect(erroText).toBeVisible();
+  });
+
+  test('deve cobrir handleInscrever do Em Breve e do EventList com e sem link externo', async ({ page }) => {
+    await page.goto('/eventos');
+
+    // Intercepta window.open para não abrir nova aba
+    await page.evaluate(() => {
+      window.open = () => null;
+    });
+
+    // Botão do evento em destaque
+    const btnEmBreve = page.locator('section').filter({ hasText: 'Em breve' }).getByRole('button', { name: /Inscreva-se/i });
+    if (await btnEmBreve.isVisible()) {
+      await btnEmBreve.click();
+    }
+
+    // Botão da grid
+    const botoesInscrever = page.locator('section.pb-20 > div > div.grid').getByRole('button', { name: /Inscreva-se/i });
+    if (await botoesInscrever.count() > 0) {
+      await botoesInscrever.first().click();
+    }
+  });
+
 });

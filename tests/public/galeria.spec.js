@@ -86,4 +86,17 @@ test.describe('Página de Galeria', () => {
     await expect(gridContainer.getByText('Retiro de Verão').first()).toBeVisible();
     await expect(gridContainer.getByText('Congresso 2020').first()).toBeVisible();
   });
+
+  test('deve tratar erro (catch block) se a api falhar ao carregar galeria agregada', async ({ page }) => {
+    await page.route('**/evento/', async route => route.abort('failed'));
+    await page.goto('/galeria');
+    
+    // Deve renderizar a página vazia sem travar
+    const titulo = page.getByRole('heading', { name: /Galeria de fotos/i });
+    await expect(titulo).toBeVisible();
+
+    // A grid não deve ter imagens
+    const imagens = page.locator('section > div.grid img');
+    expect(await imagens.count()).toBe(0);
+  });
 });

@@ -201,4 +201,26 @@ test.describe('Página Inicial (Home)', () => {
     await step4.hover({ force: true });
     await page.waitForTimeout(100);
   });
+
+  test('deve cobrir falhas nas APIs e catch blocks (useHomeData, Lideres, Produtos)', async ({ page }) => {
+    // Falha em eventos, galeria agregada, líderes e produtos usando regex para cobrir URLs da API
+    await page.route(/.*\/evento(\?.*)?$/, async route => route.abort('failed'));
+    await page.route(/.*\/evento\/.*\/galeria$/, async route => route.abort('failed'));
+    await page.route(/.*\/lider(\?.*)?$/, async route => route.abort('failed'));
+    await page.route(/.*\/produto(\?.*)?$/, async route => route.abort('failed'));
+
+    await page.goto('/');
+
+    // Hero Section pode estar vazio ou sem timer mas deve renderizar o título
+    await expect(page.getByRole('heading', { name: 'IDB JOVEM & TEEN', exact: true })).toBeVisible();
+
+    // Líderes fallback (não exibe nada ou exibe vazio)
+    await expect(page.getByRole('heading', { name: /Nosso Organograma/i })).toBeVisible();
+    
+    // Produtos fallback (produtos vazio)
+    await expect(page.getByRole('heading', { name: /Conheça nossos produtos/i })).toBeVisible();
+
+    // Calendário (eventos vazio)
+    await expect(page.getByRole('heading', { name: /Calendário de Eventos/i })).toBeVisible();
+  });
 });
